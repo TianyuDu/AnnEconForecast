@@ -25,7 +25,8 @@ def load_dataset(
         header="infer",
         parse_dates=[0],
         date_parser=parser,
-        index_col=0)
+        index_col=0,
+        engine="python")
     print(f"Dataset loaded.\
     \n\tIndex type: {str(df.index.dtype)}\
     \n\tData type: {str(df.values.dtype)}")
