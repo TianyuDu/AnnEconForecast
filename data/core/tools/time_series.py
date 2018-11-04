@@ -50,3 +50,22 @@ def gen_supervised(
     X = pd.concat(cols, axis=1)
     return X, df
 
+
+def clean_nan(
+    X: pd.DataFrame,
+    y: pd.DataFrame
+) -> Tuple[pd.DataFrame]:
+    # target_col = [y.columns] if y.columns is not list else y.columns
+    target_col = y.columns[0]
+    aggreagate = pd.concat([X, y], axis=1)
+    ori_len = len(aggreagate)
+
+    aggreagate.dropna(inplace=True)
+    new_len = len(aggreagate)
+    print(f"{ori_len - new_len} ({(ori_len - new_len) / ori_len * 100:0.2f}%) observations with Nan are dropped.")
+    
+    return (
+        aggreagate.drop(columns=target_col),
+        aggreagate[target_col].to_frame()
+    )
+
