@@ -8,6 +8,7 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import datetime
+from datetime import datetime
 
 from constants import UNRATE_DIR
 
@@ -22,8 +23,10 @@ def load_dataset(
         dir,
         sep=",",
         header="infer",
-        parse_date=[0],
+        parse_dates=[0],
         date_parser=parser,
         index_col=0)
-    print(f"Dataset loaded, with type {df.values.dtype}.")
+    print(f"Dataset loaded.\
+    \n\tIndex type: {str(df.index.dtype)}\
+    \n\tData type: {str(df.values.dtype)}")
     return df
