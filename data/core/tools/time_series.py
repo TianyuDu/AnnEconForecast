@@ -5,15 +5,16 @@ object.
 
 import numpy as np
 import pandas as pd
+from typing import Tuple, List
 
 
 def differencing(
-    src_df = pd.DataFrame,
+    src_df: pd.DataFrame,
     order: int=1,
     periods: int=1
 ) -> pd.DataFrame:
     df = src_df.copy()
-    
+
     for od in range(order):
         df = df.diff(periods=periods)
 
@@ -21,10 +22,19 @@ def differencing(
     df.columns = new_cols
     return df
 
-
 def invert_diff(
-    src_df = pd.DataFrame,
+    src_df: pd.DataFrame,
     order: int=1,
     periods: int=1
 ) -> pd.DataFrame:
+    pass
+
+
+def gen_supervised_diff(
+    src_df: pd.DataFrame,
+    predictors: List[Tuple[int]]
+) -> pd.DataFrame:
+    """
+    predictors format: ()
+    """
     pass
