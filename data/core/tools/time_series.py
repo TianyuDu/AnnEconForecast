@@ -55,8 +55,7 @@ def clean_nan(
     X: pd.DataFrame,
     y: pd.DataFrame
 ) -> Tuple[pd.DataFrame]:
-    # target_col = [y.columns] if y.columns is not list else y.columns
-    target_col = y.columns[0]
+    target_col = list(y.columns)
     aggreagate = pd.concat([X, y], axis=1)
     ori_len = len(aggreagate)
 
@@ -66,6 +65,6 @@ def clean_nan(
     
     return (
         aggreagate.drop(columns=target_col),
-        aggreagate[target_col].to_frame()
+        aggreagate[target_col]
     )
 
