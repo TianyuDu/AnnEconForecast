@@ -27,7 +27,7 @@ def invert_diff(
     order: int=1,
     periods: int=1
 ) -> pd.DataFrame:
-    pass
+    raise NotImplementedError
 
 
 def gen_supervised(
