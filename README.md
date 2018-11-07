@@ -1,37 +1,51 @@
-## Welcome to EFANN
+# Economic Forecasting w/ Artificial Neural Networks (EFANN)
 
-### What's this
+## What's this
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+EFANN is a project about the intermixing of economics, computer science and statistics.
 
-### Markdown
+The aim of this project is to implement various time-series prediction models in python. And then we apply those models on economic data and compare their efficiency and accuracy on real world data.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+## Model Road Map: Univariate Neural Networks
 
-- Bulleted
-- List
+#### Deep Neural Networks: Univariate [In Progress]
 
-1. Numbered
-2. List
+* Notebook demo directory: `./notebooks/baseline_neural_net.ipynb`
 
-**Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
-```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+#### Recurrent Neural Networks: Univariate [In Progress]
 
-### Jekyll Themes
+* Notebook demo directory: `./notebooks/baseline_rnn.ipynb`
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/TianyuDu/EFANN/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
-### Support or Contact
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+## Model road Map: Multivariate Neural Networks
+
+#### Multivariate Deep Neural Net
+
+#### Multivariate RNN [Planned]
+
+#### ConvRNN [Planned]
+
+#### RNN with Gradient Boosting Machine Feature Selection
+
+
+
+## Road Map: Statistical Models
+
+#### ARMA (Planned)
+
+#### ARIMA (Planned)
+
+#### VAR (Planned)
+
+
+
+## References & Data Sources
+
+
+
+
