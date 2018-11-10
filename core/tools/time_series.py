@@ -36,6 +36,7 @@ def gen_supervised(
 ) -> Tuple[pd.DataFrame]:
     """
     predictors format: (order, period)
+    generate supervised learning problem.
     """
     df = src_df.copy()
     main_name = df.columns[0]
@@ -50,6 +51,29 @@ def gen_supervised(
     X = pd.concat(cols, axis=1)
     return X, df
 
+
+def gen_supervised_rnn(
+    src_df: pd.DataFrame,
+    lags: int,
+) -> Tuple[np.ndarray]:
+    """
+    Args:
+        src_df: source Series or DataFrame,
+        lags: total number of lags used in one observation.
+    Return 
+    """
+    assert lags > 0
+    target = src_df.copy()
+    X = target.shift(1)
+    df = pd.concat([X, target], axis=1)
+    df.dropna(inplace=True)
+    samples = list()
+    for t in range(len(src_df)-lags):
+        obs = df[t:t+lags].values
+        samples.append(obs)
+    
+    samples = np.array(samples)
+    return samples[:,:,0], samples[:,:,1]
 
 def clean_nan(
     X: pd.DataFrame,
