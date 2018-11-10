@@ -3,9 +3,10 @@ This package contains methods to manipulate time series
 object.
 """
 
+from typing import List, Tuple
+
 import numpy as np
 import pandas as pd
-from typing import Tuple, List
 
 
 def differencing(
