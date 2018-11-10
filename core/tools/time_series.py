@@ -76,9 +76,9 @@ def gen_supervised_rnn(
 
     samples = np.array(samples)
 
-    return samples[:, :, 0], samples[:, :, 1]
+    return samples[:,:,0], samples[:,:,1]
 
-    
+
 def clean_nan(
     X: pd.DataFrame,
     y: pd.DataFrame
