@@ -22,6 +22,7 @@ def differencing(
     df.columns = new_cols
     return df
 
+
 def invert_diff(
     src_df: pd.DataFrame,
     order: int=1,
@@ -30,13 +31,14 @@ def invert_diff(
     raise NotImplementedError
 
 
-def gen_supervised(
+def gen_supervised_dnn(
     src_df: pd.DataFrame,
     predictors: List[int]
 ) -> Tuple[pd.DataFrame]:
     """
     predictors format: (order, period)
     generate supervised learning problem.
+    # Customized predictors. (Non-consecutive)
     """
     df = src_df.copy()
     main_name = df.columns[0]
@@ -52,9 +54,11 @@ def gen_supervised(
     return X, df
 
 
-def gen_supervised_rnn(
+def gen_supervised_time_series(
     src_df: pd.DataFrame,
     lags: int,
+    target_column: str,
+    sequence_label: bool=False,
 ) -> Tuple[np.ndarray]:
     """
     Args:
@@ -62,21 +66,34 @@ def gen_supervised_rnn(
         lags: total number of lags used in one observation.
     Return 
     """
-    assert lags > 0
-    target = src_df.copy()
-    X = target.shift(1)
+    assert lags > 0, "Lags(Periods of looking back) must be positive."
+    X = src_df.copy()  # Predictor(s).
+
+    # Copy the one-period-future value of target series and
+    # use it as the label.
+    target = X[target_column].shift(-1)
+
+    # Append the label column to predictors.
+    # So the last column of df is the future(shifted) target.
     df = pd.concat([X, target], axis=1)
     df.dropna(inplace=True)
 
-    samples = list()
+    observations = [df[t:t+lags].values for t in range(len(df)-lags)]
 
-    for t in range(len(df)-lags):
-        obs = df[t:t+lags].values
-        samples.append(obs)
+    observations = np.array(observations)
+    num_obs = len(observations)
+    print(f"Total {num_obs} observations generated.")
 
-    samples = np.array(samples)
+    if sequence_label:
+        X, y = (observations[:, :, :-1],
+                observations[:, :, -1].reshape(num_obs, -1, 1))
+    else:
+        X, y = (observations[:, :, :-1],
+                observations[:, -1, -1].reshape(num_obs, 1, 1))
 
-    return samples[:,:,0], samples[:,:,1]
+    print("Note: shape format: (num_obs, time_steps, num_inputs/outputs)")
+    print(f"X shape = {X.shape}, y shape = {y.shape}")
+    return X, y
 
 
 def clean_nan(
@@ -90,9 +107,8 @@ def clean_nan(
     aggreagate.dropna(inplace=True)
     new_len = len(aggreagate)
     print(f"{ori_len - new_len} ({(ori_len - new_len) / ori_len * 100:0.2f}%) observations with Nan are dropped.")
-    
+
     return (
         aggreagate.drop(columns=target_col),
         aggreagate[target_col]
     )
-

@@ -25,11 +25,7 @@ src.dropna(inplace=True)
 
 lags = 5
 
-samples = list()
-for t in range(len(src) - lags - 1):
-        obs = src[t:t+lags].values
-        samples.append(obs)
+sample_df = pd.DataFrame([2*i for i in range(20)])
+sample_df.columns = ["main"]
 
-s = np.array(samples)
-
-s = gen_supervised_rnn(df, 10)
+X, y = gen_supervised_rnn(sample_df, 5, "main", sequence_label=False)
