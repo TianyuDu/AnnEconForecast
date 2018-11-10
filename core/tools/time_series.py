@@ -67,14 +67,18 @@ def gen_supervised_rnn(
     X = target.shift(1)
     df = pd.concat([X, target], axis=1)
     df.dropna(inplace=True)
+
     samples = list()
-    for t in range(len(src_df)-lags):
+
+    for t in range(len(df)-lags):
         obs = df[t:t+lags].values
         samples.append(obs)
-    
-    samples = np.array(samples)
-    return samples[:,:,0], samples[:,:,1]
 
+    samples = np.array(samples)
+
+    return samples[:, :, 0], samples[:, :, 1]
+
+    
 def clean_nan(
     X: pd.DataFrame,
     y: pd.DataFrame
