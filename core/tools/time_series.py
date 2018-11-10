@@ -54,7 +54,7 @@ def gen_supervised_dnn(
     return X, df
 
 
-def gen_supervised_time_series(
+def gen_supervised_sequence(
     src_df: pd.DataFrame,
     lags: int,
     target_column: str,
