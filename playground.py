@@ -28,4 +28,4 @@ lags = 5
 sample_df = pd.DataFrame([2*i for i in range(20)])
 sample_df.columns = ["main"]
 
-X, y = gen_supervised_rnn(sample_df, 5, "main", sequence_label=False)
+X, y = gen_supervised_sequence(sample_df, 5, "main", sequence_label=False)
