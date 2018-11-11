@@ -2,10 +2,10 @@
 This file contains all operation methods on time series data.
 """
 
+from typing import List, Tuple, Union
+
 import numpy as np
 import pandas as pd
-
-from typing import List, Tuple, Union
 
 
 def differencing(
@@ -32,10 +32,13 @@ def differencing(
     Returns:
         [0] A data frame containing the result, some of data points are Nan.
     """
-    assert isinstance(periods, list) or isinstance(periods, int), "periods should be an integer or a list of integers."
+    assert isinstance(periods, list) or isinstance(
+        periods, int), "periods should be an integer or a list of integers."
     if isinstance(periods, list):
-        assert len(periods) == order, "list periods should have the length of order."
-        assert all([isinstance(p, int) for p in periods]), "all elements in list of periods should be integers."
+        assert len(
+            periods) == order, "list periods should have the length of order."
+        assert all([isinstance(p, int) for p in periods]
+                   ), "all elements in list of periods should be integers."
 
     df = src_df.copy()
 
@@ -78,7 +81,7 @@ def gen_supervised_dnn(
             An integer or a list of integersorders that will be applied for each lagged predictor above.
             If an integer is passed in, all lagged will be applied with the same order.
             If a list is passed, it should have the same length as predictor_lags.
-            
+
             Example: predictor_lags = [1, 2, 3, 5] and predictor_orders = 1
                 x[t-1], x[t-2], x[t-3] and x[t-5] will be used as predictors to predict x[t].
                 And those five values above contribute one observation in data.
@@ -86,17 +89,21 @@ def gen_supervised_dnn(
         [0] Predictor array with shape (num_obs, len(predictor_index))
         [1] Response array with shape (num_obs, 1)
     """
-    assert all([isinstance(i, int) for i in predictor_lags]), "all elements in predictor lags should be integers."
+    assert all([isinstance(i, int) for i in predictor_lags]
+               ), "all elements in predictor lags should be integers."
 
     if isinstance(predictor_orders, list):
-        assert len(predictor_orders) == len(predictor_lags), "order and lag lists should have the same length."
-        assert all([(i > 0 and isinstance(i, int)) for i in predictor_orders]), "all elements in predictor orders should be positive integers."
+        assert len(predictor_orders) == len(
+            predictor_lags), "order and lag lists should have the same length."
+        assert all([(i > 0 and isinstance(i, int)) for i in predictor_orders]
+                   ), "all elements in predictor orders should be positive integers."
         orders = predictor_orders
     elif isinstance(predictor_orders, int):
         assert predictor_orders > 1, "predictor order should be a positive integer."
         orders = [predictor_orders] * len(predictor_lags)
     else:
-        raise TypeError("predictor_orders should be either an integer or a list of integers.")
+        raise TypeError(
+            "predictor_orders should be either an integer or a list of integers.")
 
     df = src_df.copy()
     main_name = df.columns[0]
