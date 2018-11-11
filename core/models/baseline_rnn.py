@@ -76,6 +76,7 @@ class BaselineRnn(Model):
         print("Building metrics and operations...")
         self.loss = tf.reduce_mean(
             tf.square(self.outputs, self.y))
-        self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate)
+        self.optimizer = tf.train.AdamOptimizer(
+            learning_rate=self.learning_rate)
         self.train = self.optimizer.minimize(self.loss)
         self.init = tf.global_variables_initializer()
