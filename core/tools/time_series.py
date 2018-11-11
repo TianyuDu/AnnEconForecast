@@ -5,20 +5,47 @@ This file contains all operation methods on time series data.
 import numpy as np
 import pandas as pd
 
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 
 def differencing(
     src_df: pd.DataFrame,
     order: int=1,
-    periods: int=1
+    periods: Union[int, List[int]]=1
 ) -> pd.DataFrame:
+    """
+    Generate the differenced data frame of the given data frame.
+    With order=1:
+    After[t] = Original[t] - Original[t-periods].
+    The differencing will be called again if order > 1.
+
+    Args:
+        src_df:
+            A time-series or panel dataframe.
+        order:
+            Order of differencing, the total times of recursive differencing will be called.
+        periods:
+            Nummber of periods of looking back while each recursive differncing stage is executed.
+            To implement different periods of looking back in each stage of differencing, pass 
+            a list of integers with length equals order of differencing.
+            To use the same periods of looking back in each stage, pass an integer.
+    Returns:
+        [0] A data frame containing the result, some of data points are Nan.
+    """
+    assert isinstance(periods, list) or isinstance(periods, int), "periods should be an integer or a list of integers."
+    if isinstance(periods, list):
+        assert len(periods) == order, "list periods should have the length of order."
+        assert all([isinstance(p, int) for p in periods]), "all elements in list of periods should be integers."
+
     df = src_df.copy()
 
-    for od in range(order):
-        df = df.diff(periods=periods)
+    # Alternatively, the for loop can be implement as a recursion.
+    for i in range(order):
+        lookback = periods[i] if isinstance(periods, list) else periods
+        df = df.diff(periods=lookback)
 
-    new_cols = [col+f"_od{periods}_pd{order}" for col in df.columns]
+    # Rename column.
+    new_cols = [col+f"_period{periods}_order{order}" for col in df.columns]
     df.columns = new_cols
     return df
 
@@ -36,6 +63,7 @@ def gen_supervised_dnn(
     predictors: List[int]
 ) -> Tuple[pd.DataFrame]:
     """
+    Generate Supervised Learning problem 
     predictors format: (order, period)
     generate supervised learning problem.
     # Customized predictors. (Non-consecutive)
