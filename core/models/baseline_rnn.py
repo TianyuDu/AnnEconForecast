@@ -74,14 +74,14 @@ class BaselineRnn(Model):
         )
         self.rnn_output, self.states = tf.nn.dynamic_rnn(
             self.cell, self.X, dtype=tf.float32)
-        self.outputs = tf.layers.dense(self.rnn_output, self.num_outputs)
+        if self.SL:
+            self.outputs = tf.layers.dense(self.rnn_output, self.num_outputs)
+        else:  # Single time period prediction based on the LAST output only.
+            self.outputs = tf.layers.dense(self.rnn_output[:, -1, :], self.num_outputs)
     
     def build_training(self) -> None:
         print("Building metrics and operations...")
-        if self.SL:
-            self.loss = tf.reduce_mean(tf.square(self.outputs - self.y))
-        else:
-            self.loss = tf.reduce_mean(tf.square(self.outputs[:,-1] - self.y))
+        self.loss = tf.reduce_mean(tf.square(self.outputs - self.y))
         self.optimizer = tf.train.AdamOptimizer(
             learning_rate=self.learning_rate)
         self.train = self.optimizer.minimize(self.loss)
