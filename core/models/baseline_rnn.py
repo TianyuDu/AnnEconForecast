@@ -70,7 +70,7 @@ class BaselineRnn(Model):
         )
         self.rnn_output, self.states = tf.nn.dynamic_rnn(
             self.cell, self.X, dtype=tf.float32)
-        self.output = tf.layers.dense(self.rnn_output, self.num_outputs)
+        self.outputs = tf.layers.dense(self.rnn_output, self.num_outputs)
     
     def build_training(self) -> None:
         print("Building metrics and operations...")
