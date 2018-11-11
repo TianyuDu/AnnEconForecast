@@ -57,7 +57,7 @@ class BaselineRnn(Model):
             [None, self.num_time_steps, self.num_inputs],
             name="Input_placeholder")
 
-        if self.SL :
+        if self.SL:
             TS = self.num_time_steps
         else:
             TS = 1
