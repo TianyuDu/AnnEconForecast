@@ -116,13 +116,31 @@ def gen_supervised_sequence(
     src_df: pd.DataFrame,
     lags: int,
     target_column: str,
-    sequence_label: bool=False,
+    sequential_label: bool=False,
 ) -> Tuple[np.ndarray]:
     """
+    CURRENT VERSION: SINGLE OUTPUT SERIES, SO NUM_OUTPUTS = 1.
+    The supervised learning problem generator for recurrent neural networks,
+    training predictors is a consecutive series.
     Args:
-        src_df: source Series or DataFrame,
-        lags: total number of lags used in one observation.
-    Return 
+        src_df:
+            Source time series or panel data in DataFrame format.
+        lags:
+            Total number of lags used as predictors.
+            Example: lags=10
+                Then sequence (x[t-10], x[t-9], ..., x[t-1]) will be used as training predictor
+                to predict x[t].
+        target_column:
+            Column name of target column in source panel data.
+        sequence_label:
+            See returns section below.    
+    Returns:
+        X: The array with shape (num_obs, lags, num_inputs), where num_inputs is the number of columns in src_df.
+        y: if sequential_label is True, then with shape (num_obs, lags, 1).
+        if False, with shape (num_obs, 1, 1)
+        Example: with lags=10,
+            If sequential_label=True, a typical element in y would be (x[t-9], x[t-8], ..., x[t]).
+            If sequential_label=False, a typical element wooudl be (x[t]).
     """
     assert lags > 0, "Lags(Periods of looking back) must be positive."
     X = src_df.copy()  # Predictor(s).
@@ -142,7 +160,7 @@ def gen_supervised_sequence(
     num_obs = len(observations)
     print(f"Total {num_obs} observations generated.")
 
-    if sequence_label:
+    if sequential_label:
         X, y = (observations[:, :, :-1],
                 observations[:, :, -1].reshape(num_obs, -1, 1))
     else:
