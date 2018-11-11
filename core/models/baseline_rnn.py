@@ -60,7 +60,7 @@ class BaselineRnn(Model):
         nts = {True: self.num_time_steps, False: 1}
         self.y = tf.placeholder(
             tf.float32,
-            [None, nts, self.num_outputs],
+            [None, nts[sequential_label], self.num_outputs],
             name="Output_placeholder")
 
     def build_rnn(self) -> None:
