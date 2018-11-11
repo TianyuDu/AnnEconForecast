@@ -62,7 +62,7 @@ def gen_supervised_dnn(
     src_df: pd.DataFrame,
     predictor_lags: List[int],
     predictor_orders: List[int]
-) -> Tuple[pd.DataFrame]:
+) -> Tuple[np.ndarray]:
     """
     Generate Supervised Learning Problem for basic deep neural networks.
     Predictor is NOT a time series. 
@@ -83,8 +83,8 @@ def gen_supervised_dnn(
                 x[t-1], x[t-2], x[t-3] and x[t-5] will be used as predictors to predict x[t].
                 And those five values above contribute one observation in data.
     Returns:
-        [0] Predictor data frame with shape (num_obs, len(predictor_index))
-        [1] Response dataframe with shape (num_obs, 1)
+        [0] Predictor array with shape (num_obs, len(predictor_index))
+        [1] Response array with shape (num_obs, 1)
     """
     assert all([isinstance(i, int) for i in predictor_lags]), "all elements in predictor lags should be integers."
 
@@ -109,7 +109,7 @@ def gen_supervised_dnn(
         cols.append(predictor)
 
     X = pd.concat(cols, axis=1)
-    return X, df
+    return X.values, df.values
 
 
 def gen_supervised_sequence(
@@ -120,6 +120,7 @@ def gen_supervised_sequence(
 ) -> Tuple[np.ndarray]:
     """
     CURRENT VERSION: SINGLE OUTPUT SERIES, SO NUM_OUTPUTS = 1.
+    AND ONE-PERIOD FORECASTING ONLY. IF MULTIPLE PREDICTION IS NEEDED, COULD RUN PREDICTION RECURSIVELY.
     The supervised learning problem generator for recurrent neural networks,
     training predictors is a consecutive series.
     Args:
@@ -162,7 +163,7 @@ def gen_supervised_sequence(
 
     if sequential_label:
         X, y = (observations[:, :, :-1],
-                observations[:, :, -1].reshape(num_obs, -1, 1))
+                observations[:, :, -1].reshape(num_obs, lags, 1))
     else:
         X, y = (observations[:, :, :-1],
                 observations[:, -1, -1].reshape(num_obs, 1, 1))
