@@ -45,6 +45,7 @@ class BaselineRnn(Model):
         self.read_parameters(para)
         self.build_placeholders(sequential_label)
         self.build_rnn()
+        self.build_training()
 
     def build_placeholders(
         self,
@@ -62,13 +63,14 @@ class BaselineRnn(Model):
             [None, nts, self.num_outputs],
             name="Output_placeholder")
 
-    def build_rnn(
-        self
-    ) -> None:
-        print
+    def build_rnn(self) -> None:
+        print("Building core rnn...")
         self.cell = tf.contrib.rnn.LSTMCell(
             num_units=self.num_neurons
         )
         self.rnn_output, self.states = tf.nn.dynamic_rnn(
             self.cell, self.X, dtype=tf.float32)
         self.output = tf.layers(self.rnn_output, self.num_outputs)
+    
+    def build_training(self) -> None:
+        print("Building metrics and operations...")
