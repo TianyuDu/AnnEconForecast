@@ -31,7 +31,7 @@ class Model:
         self,
         para: Dict[str, object]
     ) -> None:
-        print("BaselineRnn: loading parameters")
+        print("Model: loading parameters")
         for para_name, value in zip(para.keys(), para.values()):
             exec(f"self.{para_name} = {value}")
 
@@ -43,6 +43,7 @@ class BaselineRnn(Model):
         sequential_label: bool=True
     ) -> None:
         self.read_parameters(para)
+        tf.reset_default_graph()
         self.build_placeholders(sequential_label)
         self.build_rnn()
         self.build_training()
@@ -57,10 +58,14 @@ class BaselineRnn(Model):
             [None, self.num_time_steps, self.num_inputs],
             name="Input_placeholder")
 
-        nts = {True: self.num_time_steps, False: 1}
+        if sequential_label:
+            TS = self.num_time_steps
+        else:
+            TS = 1
+            
         self.y = tf.placeholder(
             tf.float32,
-            [None, nts[sequential_label], self.num_outputs],
+            [None, TS, self.num_outputs],
             name="Output_placeholder")
 
     def build_rnn(self) -> None:
@@ -74,8 +79,7 @@ class BaselineRnn(Model):
     
     def build_training(self) -> None:
         print("Building metrics and operations...")
-        self.loss = tf.reduce_mean(
-            tf.square(self.outputs, self.y))
+        self.loss = tf.reduce_mean(tf.square(self.outputs - self.y))
         self.optimizer = tf.train.AdamOptimizer(
             learning_rate=self.learning_rate)
         self.train = self.optimizer.minimize(self.loss)
