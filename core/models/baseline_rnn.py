@@ -45,7 +45,7 @@ class BaselineRnn(Model):
         self.SL = sequential_label
         self.read_parameters(para)
         tf.reset_default_graph()
-        self.build_placeholders(self.SL)
+        self.build_placeholders()
         self.build_rnn()
         self.build_training()
 
