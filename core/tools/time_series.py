@@ -1,12 +1,11 @@
 """
-This package contains methods to manipulate time series 
-object.
+This file contains all operation methods on time series data.
 """
-
-from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
+
+from typing import List, Tuple
 
 
 def differencing(
