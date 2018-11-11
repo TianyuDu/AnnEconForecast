@@ -60,22 +60,52 @@ def invert_diff(
 
 def gen_supervised_dnn(
     src_df: pd.DataFrame,
-    predictors: List[int]
+    predictor_lags: List[int],
+    predictor_orders: List[int]
 ) -> Tuple[pd.DataFrame]:
     """
-    Generate Supervised Learning problem 
-    predictors format: (order, period)
-    generate supervised learning problem.
-    # Customized predictors. (Non-consecutive)
+    Generate Supervised Learning Problem for basic deep neural networks.
+    Predictor is NOT a time series. 
+    Predictors are non-consecutive.
+
+    Args:
+        src_df:
+            A time-series or panel dataframe.
+        predictor_lags:
+            List of integers, lagged values with degree given that would 
+            be used as predictors of the value at each time period.
+        predictor_orders:
+            An integer or a list of integersorders that will be applied for each lagged predictor above.
+            If an integer is passed in, all lagged will be applied with the same order.
+            If a list is passed, it should have the same length as predictor_lags.
+            
+            Example: predictor_lags = [1, 2, 3, 5] and predictor_orders = 1
+                x[t-1], x[t-2], x[t-3] and x[t-5] will be used as predictors to predict x[t].
+                And those five values above contribute one observation in data.
+    Returns:
+        [0] Predictor data frame with shape (num_obs, len(predictor_index))
+        [1] Response dataframe with shape (num_obs, 1)
     """
+    assert all([isinstance(i, int) for i in predictor_lags]), "all elements in predictor lags should be integers."
+
+    if isinstance(predictor_orders, list):
+        assert len(predictor_orders) == len(predictor_lags), "order and lag lists should have the same length."
+        assert all([(i > 0 and isinstance(i, int)) for i in predictor_orders]), "all elements in predictor orders should be positive integers."
+        orders = predictor_orders
+    elif isinstance(predictor_orders, int):
+        assert predictor_orders > 1, "predictor order should be a positive integer."
+        orders = [predictor_orders] * len(predictor_lags)
+    else:
+        raise TypeError("predictor_orders should be either an integer or a list of integers.")
+
     df = src_df.copy()
     main_name = df.columns[0]
     df.columns = [f"{main_name}_target"]
 
     cols = list()
-    for p in predictors:
-        predictor = df.shift(periods=p)
-        predictor.columns = [f"{main_name}_lag{p}"]
+    for (o, l) in zip(orders, predictor_lags):
+        predictor = differencing(df, order=o, periods=l)
+        predictor.columns = [f"{main_name}_periods{l}_order{o}"]
         cols.append(predictor)
 
     X = pd.concat(cols, axis=1)
