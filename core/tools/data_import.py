@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import datetime
 from datetime import datetime
 
-from constants import UNRATE_DIR
+from constants import *
 
 
 def load_dataset(
