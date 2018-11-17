@@ -26,10 +26,12 @@ df = load_dataset(
     "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/DEXCAUS.csv")
 prepared_df = differencing(df, periods=PERIODS, order=ORDER)
 prepared_df.head()
+prepared_df.dropna(inplace=True)
 
 TRAIN_RATIO = 0.9
 # Normalize the sequence
-
+scaler = StandardScaler().fit(prepared_df[:int(TRAIN_RATIO*len(prepared_df))].values)
+prepared_df["DEXCAUS_period1_order1"] = scaler.transform(prepared_df.values)
 
 X_raw, y_raw = gen_supervised_sequence(
     prepared_df, LAGS, prepared_df.columns[0], sequential_label=False)
