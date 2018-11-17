@@ -30,4 +30,7 @@ def load_dataset(
     print(f"Dataset loaded.\
     \n\tIndex type: {str(df.index.dtype)}\
     \n\tData type: {str(df.values.dtype)}")
+    col_name = df.columns[0]
+    df = df[df[col_name] != "."]
+    df = df.astype(np.float32)
     return df
