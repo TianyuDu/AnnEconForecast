@@ -16,22 +16,25 @@ from core.tools.visualize import *
 from core.models.baseline_rnn import *
 from constants import *
 
+pprint(DATA_DIR)
 
 # Pre-processing Parameters
 PERIODS = 1
 ORDER = 1
-LAGS = 90
+LAGS = 12
 
-df = load_dataset(
-    "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/DEXCAUS.csv")
+df = load_dataset(DATA_DIR["1"])
 prepared_df = differencing(df, periods=PERIODS, order=ORDER)
 prepared_df.head()
 prepared_df.dropna(inplace=True)
 
-TRAIN_RATIO = 0.9
+prepared_df.head()
+
+TRAIN_RATIO = 0.8
+
 # Normalize the sequence
 scaler = StandardScaler().fit(prepared_df[:int(TRAIN_RATIO*len(prepared_df))].values)
-prepared_df["DEXCAUS_period1_order1"] = scaler.transform(prepared_df.values)
+prepared_df.iloc[:,0] = scaler.transform(prepared_df.values)
 
 X_raw, y_raw = gen_supervised_sequence(
     prepared_df, LAGS, prepared_df.columns[0], sequential_label=False)
@@ -52,33 +55,33 @@ y_train = op(y_train)
 y_test = op(y_test)
 y_val = op(y_val)
 
-print(f"Training and testing set generated,\
-\nX_train shape: {X_train.shape}\
-\ny_train shape: {y_train.shape}\
-\nX_test shape: {X_test.shape}\
-\ny_test shape: {y_test.shape}\
-\nX_validation shape: {X_val.shape}\
-\ny_validation shape: {y_val.shape}")
+print(f"Training and testing set generated,\nX_train shape: {X_train.shape}\ny_train shape: {y_train.shape}\nX_test shape: {X_test.shape}\ny_test shape: {y_test.shape}\nX_validation shape: {X_val.shape}\ny_validation shape: {y_val.shape}")
 
 # Model Parameters
 num_time_steps = LAGS
 # Number of series used to predict. (including concurrent)
 num_inputs = 1
 num_outputs = 1
-num_neurons = 64
+num_neurons = 2048
 # Number of output series
-learning_rate = 0.1
-epochs = 100
+learning_rate = 0.01
+epochs = 500
 # Training Settings
-report_periods = epochs // 10
+report_periods = epochs // 20
 
+# the 
 tf.reset_default_graph()
 X = tf.placeholder(tf.float32, [None, num_time_steps, num_inputs])
 y = tf.placeholder(tf.float32, [None, num_outputs])
 
-cell = tf.contrib.rnn.LSTMCell(
-    num_units=num_neurons, activation=tf.nn.relu)
-rnn_outputs, states = tf.nn.dynamic_rnn(cell, X, dtype=tf.float32)
+cell = tf.nn.rnn_cell.LSTMCell(
+    num_units=num_neurons)
+
+multi_cell = tf.nn.rnn_cell.MultiRNNCell(
+    [tf.nn.rnn_cell.LSTMCell(num_units=x)
+    for x in [512, num_neurons]]
+)
+rnn_outputs, states = tf.nn.dynamic_rnn(multi_cell, X, dtype=tf.float32)
 stacked_output = tf.reshape(rnn_outputs, [-1, num_time_steps * num_neurons])
 
 W = tf.Variable(tf.random_normal([num_time_steps * num_neurons, 1]), dtype=tf.float32)
@@ -90,12 +93,25 @@ pred = tf.add(tf.matmul(stacked_output, W), b)
 
 loss = tf.losses.mean_squared_error(y, pred)
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+# gvs = optimizer.compute_gradients(loss)
+# capped_gvs = [(tf.clip_by_value(grad, -10., 10.), var) for grad, var in gvs]
+# train = optimizer.apply_gradients(capped_gvs)
 train = optimizer.minimize(loss)
 
+
+# X_batches = X_train[:-84].reshape(100, -1, num_time_steps, num_inputs)
+# y_batches = y_train[:-84].reshape(100, -1, num_outputs)
+# print(X_batches.shape)
+# print(y_batches.shape)
+
+
+start = datetime.now()
 hist = {"train": [], "val": []}
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    for e in range(500):
+    for e in range(epochs):
+#         for X_batch, y_batch in zip(X_batches, y_batches):
+#             sess.run(train, feed_dict={X: X_batch, y: y_batch})
         sess.run(train, feed_dict={X: X_train, y: y_train})
         train_mse = loss.eval(feed_dict={X: X_train, y: y_train})
         val_mse = loss.eval(feed_dict={X: X_val, y: y_val})
@@ -108,6 +124,7 @@ with tf.Session() as sess:
     p_train = pred.eval(feed_dict={X: X_train})
     p_test = pred.eval(feed_dict={X: X_test})
     p_val = pred.eval(feed_dict={X: X_val})
+print(f"Time taken for {epochs} epochs: ", datetime.now()-start)
 
 
 plt.close()
@@ -116,7 +133,18 @@ plt.plot(p_train.reshape(-1, 1), alpha=0.6)
 plt.plot(y_train.reshape(-1, 1), alpha=0.6)
 plt.legend(["Training Prediction", "Training Actual"])
 plt.grid(True)
+plt.title("Training Set Result")
 plt.show()
+
+# plt.close()
+# plt.figure(figsize=(16, 8))
+# plt.plot(p_train.reshape(-1, 1)[-100:], alpha=0.6)
+# plt.plot(y_train.reshape(-1, 1)[-100:], alpha=0.6)
+# plt.legend(["Training Prediction", "Training Actual"])
+# plt.grid(True)
+# plt.title("Training Set Result: last 100")
+# plt.show()
+
 
 plt.close()
 plt.figure(figsize=(32, 16))
@@ -124,12 +152,22 @@ plt.plot(p_test.reshape(-1, 1), alpha=0.6)
 plt.plot(y_test.reshape(-1, 1), alpha=0.6)
 plt.legend(["Testing Prediction", "Testing Actual"])
 plt.grid(True)
+plt.title("Testing Set Result")
 plt.show()
 
+# plt.close()
+# plt.figure(figsize=(16, 8))
+# plt.plot(p_test.reshape(-1, 1)[-100:], alpha=0.6)
+# plt.plot(y_test.reshape(-1, 1)[-100:], alpha=0.6)
+# plt.legend(["Testing Prediction", "Testing Actual"])
+# plt.grid(True)
+# plt.title("Testing set Result: last 100")
+# plt.show()
+
 plt.close()
-plt.figure(size=(32, 16))
-plt.plot(np.log(hist["train"]))
-plt.plot(np.log(hist["val"]))
+plt.figure(figsize=(16, 8))
+plt.plot(np.log(hist["train"][5:]))
+plt.plot(np.log(hist["val"][5:]))
 plt.legend(["Training Loss", "Validation Loss"])
 plt.grid(True)
 plt.show()
