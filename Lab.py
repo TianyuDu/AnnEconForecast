@@ -23,7 +23,7 @@ PERIODS = 1
 ORDER = 1
 LAGS = 12
 
-df = load_dataset(DATA_DIR["1"])
+df = load_dataset(DATA_DIR["0"])
 prepared_df = differencing(df, periods=PERIODS, order=ORDER)
 prepared_df.head()
 prepared_df.dropna(inplace=True)
@@ -62,41 +62,58 @@ num_time_steps = LAGS
 # Number of series used to predict. (including concurrent)
 num_inputs = 1
 num_outputs = 1
-num_neurons = 2048
+num_neurons = 64
 # Number of output series
 learning_rate = 0.01
 epochs = 500
 # Training Settings
-report_periods = epochs // 20
+report_periods = 1
 
-# the 
+# the graph
 tf.reset_default_graph()
-X = tf.placeholder(tf.float32, [None, num_time_steps, num_inputs])
-y = tf.placeholder(tf.float32, [None, num_outputs])
 
-cell = tf.nn.rnn_cell.LSTMCell(
-    num_units=num_neurons)
+with tf.name_scope("Data_feed"):
+    X = tf.placeholder(tf.float32, [None, num_time_steps, num_inputs], name="Predictor_X")
+    y = tf.placeholder(tf.float32, [None, num_outputs], name="Label_y")
 
-multi_cell = tf.nn.rnn_cell.MultiRNNCell(
-    [tf.nn.rnn_cell.LSTMCell(num_units=x)
-    for x in [512, num_neurons]]
-)
-rnn_outputs, states = tf.nn.dynamic_rnn(multi_cell, X, dtype=tf.float32)
-stacked_output = tf.reshape(rnn_outputs, [-1, num_time_steps * num_neurons])
+with tf.name_scope("RNN"):
+    cell = tf.nn.rnn_cell.LSTMCell(
+        num_units=num_neurons,
+        name="LSTM_Cell")
 
-W = tf.Variable(tf.random_normal([num_time_steps * num_neurons, 1]), dtype=tf.float32)
-b = tf.Variable(tf.random_normal([1]), dtype=tf.float32)
+    # multi_cell = tf.nn.rnn_cell.MultiRNNCell(
+    #     [tf.nn.rnn_cell.LSTMCell(num_units=x)
+    #     for x in [512, num_neurons]]
+    # )
 
-pred = tf.add(tf.matmul(stacked_output, W), b)
+    rnn_outputs, states = tf.nn.dynamic_rnn(cell, X, dtype=tf.float32)
+    stacked_output = tf.reshape(rnn_outputs, [-1, num_time_steps * num_neurons])
+
+with tf.name_scope("Output_layer"):
+    W = tf.Variable(tf.random_normal([num_time_steps * num_neurons, 1]), dtype=tf.float32, name="Weight")
+    b = tf.Variable(tf.random_normal([1]), dtype=tf.float32, name="Bias")
+
+    pred = tf.add(tf.matmul(stacked_output, W), b, name="Prediction")
+
+    tf.summary.histogram("weights", W)
+    tf.summary.histogram("biases", b)
+    tf.summary.histogram("predictions", pred)
 
 # pred = tf.layers.dense(stacked_output, 1)
 
-loss = tf.losses.mean_squared_error(y, pred)
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
-# gvs = optimizer.compute_gradients(loss)
-# capped_gvs = [(tf.clip_by_value(grad, -10., 10.), var) for grad, var in gvs]
-# train = optimizer.apply_gradients(capped_gvs)
-train = optimizer.minimize(loss)
+with tf.name_scope("Metrics"):
+    loss = tf.reduce_mean(tf.square(y - pred), name="mse")
+
+    mape = tf.reduce_mean(tf.abs(tf.divide(y - pred, y)))
+    tf.summary.scalar("mean_squared_error", loss)
+    tf.summary.scalar("mean_absolute_percentage_error", mape)
+
+with tf.name_scope("Train"):
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate, name="Adam_optimizer")
+    # gvs = optimizer.compute_gradients(loss)
+    # capped_gvs = [(tf.clip_by_value(grad, -10., 10.), var) for grad, var in gvs]
+    # train = optimizer.apply_gradients(capped_gvs)
+    train = optimizer.minimize(loss)
 
 
 # X_batches = X_train[:-84].reshape(100, -1, num_time_steps, num_inputs)
@@ -104,10 +121,17 @@ train = optimizer.minimize(loss)
 # print(X_batches.shape)
 # print(y_batches.shape)
 
+tb_dir = "./tensorboard/test/1"
 
 start = datetime.now()
 hist = {"train": [], "val": []}
 with tf.Session() as sess:
+    merged_summary = tf.summary.merge_all()
+    train_writer = tf.summary.FileWriter(tb_dir + "/train")
+    val_writer = tf.summary.FileWriter(tb_dir + "/validation")
+    train_writer.add_graph(sess.graph)
+    # val_writer.add_graph(sess.graph)
+
     sess.run(tf.global_variables_initializer())
     for e in range(epochs):
 #         for X_batch, y_batch in zip(X_batches, y_batches):
@@ -118,23 +142,27 @@ with tf.Session() as sess:
         hist["train"].append(train_mse)
         hist["val"].append(val_mse)
         if e % report_periods == 0:
+            s_train = sess.run(merged_summary, feed_dict={X: X_train, y: y_train})
+            s_val = sess.run(merged_summary, feed_dict={X: X_val, y:y_val})
+            train_writer.add_summary(s_train, e)
+            val_writer.add_summary(s_val, e)
             print(
                 f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
 
-    p_train = pred.eval(feed_dict={X: X_train})
-    p_test = pred.eval(feed_dict={X: X_test})
-    p_val = pred.eval(feed_dict={X: X_val})
+    # p_train = pred.eval(feed_dict={X: X_train})
+    # p_test = pred.eval(feed_dict={X: X_test})
+    # p_val = pred.eval(feed_dict={X: X_val})
 print(f"Time taken for {epochs} epochs: ", datetime.now()-start)
 
 
-plt.close()
-plt.figure(figsize=(32, 16))
-plt.plot(p_train.reshape(-1, 1), alpha=0.6)
-plt.plot(y_train.reshape(-1, 1), alpha=0.6)
-plt.legend(["Training Prediction", "Training Actual"])
-plt.grid(True)
-plt.title("Training Set Result")
-plt.show()
+# plt.close()
+# plt.figure(figsize=(32, 16))
+# plt.plot(p_train.reshape(-1, 1), alpha=0.6)
+# plt.plot(y_train.reshape(-1, 1), alpha=0.6)
+# plt.legend(["Training Prediction", "Training Actual"])
+# plt.grid(True)
+# plt.title("Training Set Result")
+# plt.show()
 
 # plt.close()
 # plt.figure(figsize=(16, 8))
@@ -146,14 +174,14 @@ plt.show()
 # plt.show()
 
 
-plt.close()
-plt.figure(figsize=(32, 16))
-plt.plot(p_test.reshape(-1, 1), alpha=0.6)
-plt.plot(y_test.reshape(-1, 1), alpha=0.6)
-plt.legend(["Testing Prediction", "Testing Actual"])
-plt.grid(True)
-plt.title("Testing Set Result")
-plt.show()
+# plt.close()
+# plt.figure(figsize=(32, 16))
+# plt.plot(p_test.reshape(-1, 1), alpha=0.6)
+# plt.plot(y_test.reshape(-1, 1), alpha=0.6)
+# plt.legend(["Testing Prediction", "Testing Actual"])
+# plt.grid(True)
+# plt.title("Testing Set Result")
+# plt.show()
 
 # plt.close()
 # plt.figure(figsize=(16, 8))
@@ -164,10 +192,10 @@ plt.show()
 # plt.title("Testing set Result: last 100")
 # plt.show()
 
-plt.close()
-plt.figure(figsize=(16, 8))
-plt.plot(np.log(hist["train"][5:]))
-plt.plot(np.log(hist["val"][5:]))
-plt.legend(["Training Loss", "Validation Loss"])
-plt.grid(True)
-plt.show()
+# plt.close()
+# plt.figure(figsize=(16, 8))
+# plt.plot(np.log(hist["train"][5:]))
+# plt.plot(np.log(hist["val"][5:]))
+# plt.legend(["Training Loss", "Validation Loss"])
+# plt.grid(True)
+# plt.show()
