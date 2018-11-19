@@ -70,7 +70,8 @@ class BaselineRnn(Model):
     def build_rnn(self) -> None:
         print("Building core rnn...")
         self.cell = tf.contrib.rnn.LSTMCell(
-            num_units=self.num_neurons
+            num_units=self.num_neurons,
+            activation=tf.nn.relu
         )
         self.rnn_output, self.states = tf.nn.dynamic_rnn(
             self.cell, self.X, dtype=tf.float32)

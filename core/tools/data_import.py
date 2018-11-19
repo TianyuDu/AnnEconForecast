@@ -10,11 +10,12 @@ import matplotlib.pyplot as plt
 import datetime
 from datetime import datetime
 
-from constants import UNRATE_DIR
+from constants import *
 
 
 def load_dataset(
     dir: str,
+    remove: object=None
 ) -> pd.DataFrame:
     def parser(x):
 	    return datetime.strptime(x, "%Y-%m-%d")
@@ -30,4 +31,8 @@ def load_dataset(
     print(f"Dataset loaded.\
     \n\tIndex type: {str(df.index.dtype)}\
     \n\tData type: {str(df.values.dtype)}")
+    col_name = df.columns[0]
+    if remove is not None:
+        df = df[df[col_name] != remove]
+    df = df.astype(np.float32)
     return df
