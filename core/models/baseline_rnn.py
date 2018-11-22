@@ -18,7 +18,7 @@ parameters = {
     "num_time_steps": 24,
     "num_inputs": 1,
     "num_outputs": 1,
-    "num_neurons": 64,
+    "num_neurons": 2048,
     "learning_rate": 0.1
 }
 
