@@ -15,6 +15,7 @@ from core.tools.time_series import *
 from core.tools.visualize import *
 from core.models.baseline_rnn import *
 from core.models.stat_models import *
+from core.tools.metrics import *
 from constants import *
 
 pprint(DATA_DIR)

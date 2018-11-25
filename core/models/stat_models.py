@@ -1,12 +1,13 @@
 """
-Basic statistical models 
+Basic statistical models.
+Create: Nov. 25 2018
 """
 import numpy as np
 import pandas as pd
 from typing import Dict
 import sklearn
 
-class persistence_model:
+class PersistenceModel:
     def __init__(
         self
     ) -> None:
