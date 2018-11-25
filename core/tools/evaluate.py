@@ -38,12 +38,13 @@ train, test = df[:int(0.8*len(df))], df[int(0.8*len(df)):]
 
 # ======== End Test Code ========
 
+
 def run_persistence_model(
     test_series: pd.DataFrame
 ) -> Dict[str, float]:
     model = PersistenceModel()
     pred = model.predict(df)
-    metrics = merged_score(actual=df, pred=pred)
+    metrics = merged_scores(actual=df, pred=pred)
     print(f"Persistence prediction on {len(test_series)} observations.")
     for m, v in zip(metrics.keys(), metrics.values()):
         print(f"\t{m}={v}")
@@ -56,6 +57,7 @@ def run_arima(
     order: Tuple[int]
 ) -> Dict[str, float]:
     print(f"Evaluating ARIMA performance on time series.\
+    \nMode: Simple Forecasting\
     \nConfig:\
     \n\tOrder(p,d,q)={order}\
     \n\tTraining set size: {len(train_series)}\
@@ -66,19 +68,49 @@ def run_arima(
     pred = model_fit.forecast(steps=len(train_series))[0]
     pred = pd.DataFrame(pred)
 
-    metrics = merged_score(actual=test_series, pred=pred)
     print(f"ARIMA{order} prediction on {len(test_series)} observations.")
-    for m, v in zip(metrics.keys(), metrics.values()):
-        print(f"\t{m}={v}")
+    metrics = merged_scores(actual=test_series, pred=pred)
     return metrics
 
 
 def run_arima_rolling_forecast(
     train_series: pd.DataFrame,
     test_series: pd.DataFrame,
-    order: Tuple[int]
+    order: Tuple[int],
+    verbose: bool=False
 ) -> Dict[str, float]:
-    pass
+    print(f"Evaluating ARIMA performance on time series.\
+    \nMode: Rolling Forecasting\
+    \nConfig:\
+    \n\tOrder(p,d,q)={order}\
+    \n\tTraining set size: {len(train_series)}\
+    \n\tTesting set (to be forecasted) size: {len(test_series)}\
+    ")
+
+    def f(x): return x.values.reshape(-1,)
+    train, test = f(train_series), f(test_series)
+    history = [x for x in train]
+    pred = list()
+    for t in range(len(test_series)):
+        model = statsmodel.tsa.arima_model.ARIMA(
+            history, order=order
+        )
+        model_fit = model.fit(disp=0)
+        output = model_fit.forecast()
+        yhat = output[0]
+        pred.append(yhat)
+        obs = test[t]
+        hist.append(obs)
+        if verbose:
+            print(f"Test step [{t}]: Predicted={yhat}, expected={obs}")
+    error = sklearn.metrics.mean_squared_error(test, pred)
+    if verbose:
+        print("Test MSE: {error}")
+    metrics = merged_scores(
+        actual=test_series,
+        pred=pd.DataFrame(pred),
+        verbose=True)
+    return metrics
 
 
 # ==== Test Code ====

@@ -7,7 +7,7 @@ import pandas as pd
 from typing import Dict
 
 
-def merged_score(
+def merged_scores(
     actual: pd.DataFrame,
     pred: pd.DataFrame
 ) -> Dict[str, float]:
