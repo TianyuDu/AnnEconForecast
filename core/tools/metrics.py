@@ -10,7 +10,7 @@ from typing import Dict
 def merged_scores(
     actual: pd.DataFrame,
     pred: pd.DataFrame,
-    verbose: bool=False
+    verbose: bool = False
 ) -> Dict[str, float]:
     acceptable_types = (
         float, int, np.float32, np.float64, np.int32, np.int64)
@@ -30,10 +30,13 @@ def merged_scores(
     act_val = actual.values.reshape(-1,)
     pred_val = pred.values.reshape(-1,)
 
-    MAE = lambda x, y: np.mean(np.abs(x - y))
-    MSE = lambda x, y: np.mean((x - y)**2)
-    RMSE = lambda x, y: np.sqrt(MSE(x, y))
-    MAPE = lambda x, y: np.mean(np.abs((x - y) / y))
+    def MAE(x, y): return np.mean(np.abs(x - y))
+
+    def MSE(x, y): return np.mean((x - y)**2)
+
+    def RMSE(x, y): return np.sqrt(MSE(x, y))
+
+    def MAPE(x, y): return np.mean(np.abs((x - y) / y))
 
     # mean absolute error
     metric_dict["mae"] = MAE(pred_val, act_val)
@@ -50,4 +53,3 @@ def merged_scores(
             print(f"\t{m}={v}")
 
     return metric_dict
-

@@ -75,7 +75,7 @@ def run_arima_rolling_forecast(
     train_series: pd.DataFrame,
     test_series: pd.DataFrame,
     order: Tuple[int],
-    verbose: bool=False
+    verbose: bool = False
 ) -> Dict[str, float]:
     print(f"Evaluating ARIMA performance on time series.\
     \nMode: Rolling Forecasting\
@@ -104,12 +104,13 @@ def run_arima_rolling_forecast(
     error = sklearn.metrics.mean_squared_error(test, pred)
     if verbose:
         print("Test MSE: {error}")
-    
+
     print(f"ARIMA{order} rollign prediction on {len(test_series)} observations.")
     metrics = merged_scores(
         actual=test_series,
         pred=pd.DataFrame(pred),
-        verbose=True)
+        verbose=True
+    )
     return metrics
 
 
