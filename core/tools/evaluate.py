@@ -49,6 +49,7 @@ def run_persistence_model(
         print(f"\t{m}={v}")
     return metrics
 
+
 def run_arima(
     train_series: pd.DataFrame,
     test_series: pd.DataFrame,
@@ -71,10 +72,20 @@ def run_arima(
         print(f"\t{m}={v}")
     return metrics
 
+
+def run_arima_rolling_forecast(
+    train_series: pd.DataFrame,
+    test_series: pd.DataFrame,
+    order: Tuple[int]
+) -> Dict[str, float]:
+    pass
+
+
+# ==== Test Code ====
 pred = run_arima(
     train,
     test,
-    (14,1,1)
+    (14, 1, 1)
 )
 
 run_persistence_model(test)
