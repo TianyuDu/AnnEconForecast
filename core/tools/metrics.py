@@ -9,7 +9,8 @@ from typing import Dict
 
 def merged_scores(
     actual: pd.DataFrame,
-    pred: pd.DataFrame
+    pred: pd.DataFrame,
+    verbose: bool=False
 ) -> Dict[str, float]:
     acceptable_types = (
         float, int, np.float32, np.float64, np.int32, np.int64)
@@ -42,6 +43,11 @@ def merged_scores(
     metric_dict["rmse"] = RMSE(pred_val, act_val)
     # mean absolute percentage error
     metric_dict["mape"] = MAPE(pred_val, act_val)
+
+    if verbose:
+        print("Loss Summary:")
+        for m, v in zip(metric_dict.keys(), metric_dict.values()):
+            print(f"\t{m}={v}")
 
     return metric_dict
 

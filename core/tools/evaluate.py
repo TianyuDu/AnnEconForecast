@@ -44,10 +44,8 @@ def run_persistence_model(
 ) -> Dict[str, float]:
     model = PersistenceModel()
     pred = model.predict(df)
-    metrics = merged_scores(actual=df, pred=pred)
     print(f"Persistence prediction on {len(test_series)} observations.")
-    for m, v in zip(metrics.keys(), metrics.values()):
-        print(f"\t{m}={v}")
+    metrics = merged_scores(actual=df, pred=pred, verbose=True)
     return metrics
 
 
@@ -68,8 +66,8 @@ def run_arima(
     pred = model_fit.forecast(steps=len(train_series))[0]
     pred = pd.DataFrame(pred)
 
-    print(f"ARIMA{order} prediction on {len(test_series)} observations.")
-    metrics = merged_scores(actual=test_series, pred=pred)
+    print(f"ARIMA{order} simple prediction on {len(test_series)} observations.")
+    metrics = merged_scores(actual=test_series, pred=pred, verbose=True)
     return metrics
 
 
@@ -106,6 +104,8 @@ def run_arima_rolling_forecast(
     error = sklearn.metrics.mean_squared_error(test, pred)
     if verbose:
         print("Test MSE: {error}")
+    
+    print(f"ARIMA{order} rollign prediction on {len(test_series)} observations.")
     metrics = merged_scores(
         actual=test_series,
         pred=pd.DataFrame(pred),
