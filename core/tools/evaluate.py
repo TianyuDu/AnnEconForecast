@@ -23,8 +23,6 @@ from pprint import pprint
 from typing import Dict, Union, Tuple
 import statsmodels
 
-import sys
-sys.path.extend(["../"])
 
 # ======== Start Test Code ========
 pprint(DATA_DIR)
@@ -35,6 +33,7 @@ ORDER = 1
 LAGS = 12
 df = load_dataset(DATA_DIR["0"])
 train, test = df[:int(0.8*len(df))], df[int(0.8*len(df)):]
+train_short, test_short = train[:200], test[:20]
 
 # ======== End Test Code ========
 
@@ -90,7 +89,7 @@ def run_arima_rolling_forecast(
     history = [x for x in train]
     pred = list()
     for t in range(len(test_series)):
-        model = statsmodel.tsa.arima_model.ARIMA(
+        model = statsmodels.tsa.arima_model.ARIMA(
             history, order=order
         )
         model_fit = model.fit(disp=0)
@@ -98,27 +97,35 @@ def run_arima_rolling_forecast(
         yhat = output[0]
         pred.append(yhat)
         obs = test[t]
-        hist.append(obs)
+        history.append(obs)
         if verbose:
-            print(f"Test step [{t}]: Predicted={yhat}, expected={obs}")
+            print(f"Test Step: [{t}/{len(test_series)}]: Predicted={yhat}, expected={obs}")
+    
     error = sklearn.metrics.mean_squared_error(test, pred)
     if verbose:
-        print("Test MSE: {error}")
+        print(f"Test MSE: {error}")
+    print(f"ARIMA{order} rolling prediction on {len(test_series)} observations.")
 
-    print(f"ARIMA{order} rollign prediction on {len(test_series)} observations.")
+    pred_df = pd.DataFrame(pred)
     metrics = merged_scores(
         actual=test_series,
-        pred=pd.DataFrame(pred),
-        verbose=True
-    )
+        pred=pred_df,
+        verbose=True)
     return metrics
 
 
 # ==== Test Code ====
-pred = run_arima(
+arima = run_arima(
     train,
     test,
     (14, 1, 1)
 )
 
-run_persistence_model(test)
+persistence = run_persistence_model(test)
+
+arima_rolling = run_arima_rolling_forecast(
+    train_short,
+    test_short,
+    order=(6, 1, 1),
+    verbose=True
+)
