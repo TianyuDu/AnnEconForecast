@@ -24,20 +24,6 @@ from typing import Dict, Union, Tuple
 import statsmodels
 
 
-# ======== Start Test Code ========
-pprint(DATA_DIR)
-
-# Pre-processing Parameters
-PERIODS = 1
-ORDER = 1
-LAGS = 12
-df = load_dataset(DATA_DIR["0"])
-train, test = df[:int(0.8*len(df))], df[int(0.8*len(df)):]
-train_short, test_short = train[:200], test[:20]
-
-# ======== End Test Code ========
-
-
 def run_persistence_model(
     test_series: pd.DataFrame
 ) -> Dict[str, float]:
@@ -114,18 +100,26 @@ def run_arima_rolling_forecast(
     return metrics
 
 
-# ==== Test Code ====
-arima = run_arima(
-    train,
-    test,
-    (14, 1, 1)
-)
+if __name__ == "__main__":
+    # Pre-processing Parameters
+    PERIODS = 1
+    ORDER = 1
+    LAGS = 12
+    df = load_dataset(DATA_DIR["0"])
+    train, test = df[:int(0.8*len(df))], df[int(0.8*len(df)):]
+    train_short, test_short = train[:200], test[:20]
 
-persistence = run_persistence_model(test)
+    arima = run_arima(
+        train,
+        test,
+        (14, 1, 1)
+    )
 
-arima_rolling = run_arima_rolling_forecast(
-    train_short,
-    test_short,
-    order=(6, 1, 1),
-    verbose=True
-)
+    persistence = run_persistence_model(test)
+
+    arima_rolling = run_arima_rolling_forecast(
+        train_short,
+        test_short,
+        order=(6, 1, 1),
+        verbose=True
+    )
