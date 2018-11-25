@@ -20,7 +20,8 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib
 import matplotlib.pyplot as plt
 from pprint import pprint
-from typing import Dict, Union
+from typing import Dict, Union, Tuple
+import statsmodels
 
 import sys
 sys.path.extend(["../"])
@@ -33,6 +34,7 @@ PERIODS = 1
 ORDER = 1
 LAGS = 12
 df = load_dataset(DATA_DIR["0"])
+train, test = df[:int(0.8*len(df))], df[int(0.8*len(df)):]
 
 # ======== End Test Code ========
 
@@ -47,3 +49,32 @@ def run_persistence_model(
         print(f"\t{m}={v}")
     return metrics
 
+def run_arima(
+    train_series: pd.DataFrame,
+    test_series: pd.DataFrame,
+    order: Tuple[int]
+) -> Dict[str, float]:
+    print(f"Evaluating ARIMA performance on time series.\
+    \nConfig:\
+    \n\tOrder(p,d,q)={order}\
+    \n\tTraining set size: {len(train_series)}\
+    \n\tTesting set (to be forecasted) size: {len(test_series)}\
+    ")
+    model = statsmodels.tsa.arima_model.ARIMA(test_series, order=order)
+    model_fit = model.fit(disp=1)
+    pred = model_fit.forecast(steps=len(train_series))[0]
+    pred = pd.DataFrame(pred)
+
+    metrics = merged_score(actual=test_series, pred=pred)
+    print(f"ARIMA{order} prediction on {len(test_series)} observations.")
+    for m, v in zip(metrics.keys(), metrics.values()):
+        print(f"\t{m}={v}")
+    return metrics
+
+pred = run_arima(
+    train,
+    test,
+    (14,1,1)
+)
+
+run_persistence_model(test)

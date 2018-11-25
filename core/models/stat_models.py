@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 from typing import Dict
 import sklearn
+from statsmodels.tsa.arima_model import ARIMA
+from sklearn.metrics import mean_squared_error
 
 class PersistenceModel:
     def __init__(
@@ -22,9 +24,3 @@ class PersistenceModel:
         pred.columns = new_column_names
         pred.fillna(value=0.0, inplace=True)
         return pred
-
-class ARIMA:
-    def __init__(
-        self
-    ) -> None:
-        pass
