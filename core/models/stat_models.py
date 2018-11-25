@@ -11,7 +11,7 @@ class persistence_model:
         self
     ) -> None:
         pass
-        
+
     def predict(
         self,
         series: pd.DataFrame
@@ -19,6 +19,6 @@ class persistence_model:
         pred = series.shift(1)
         new_column_names = [col+"_pred" for col in pred.columns]
         pred.columns = new_column_names
-        pred.fillna(value=0.0, inpalce=True)
+        pred.fillna(value=0.0, inplace=True)
         return pred
 
