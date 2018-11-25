@@ -7,8 +7,7 @@ import pandas as pd
 from typing import Dict
 
 
-def score(
-    self,
+def merged_score(
     actual: pd.DataFrame,
     pred: pd.DataFrame
 ) -> Dict[str, float]:
@@ -30,10 +29,10 @@ def score(
     act_val = actual.values.reshape(-1,)
     pred_val = pred.values.reshape(-1,)
 
-    MAE = lambda x, y: np.sum(np.abs(x - y))
-    MSE = lambda x, y: np.sum((x - y)**2)
+    MAE = lambda x, y: np.mean(np.abs(x - y))
+    MSE = lambda x, y: np.mean((x - y)**2)
     RMSE = lambda x, y: np.sqrt(MSE(x, y))
-    MAPE = lambda x, y: np.sum(np.abs((x - y) / y))
+    MAPE = lambda x, y: np.mean(np.abs((x - y) / y))
 
     # mean absolute error
     metric_dict["mae"] = MAE(pred_val, act_val)

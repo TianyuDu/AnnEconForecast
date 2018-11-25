@@ -20,18 +20,30 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib
 import matplotlib.pyplot as plt
 from pprint import pprint
+from typing import Dict, Union
 
 import sys
 sys.path.extend(["../"])
 
-
+# ======== Start Test Code ========
 pprint(DATA_DIR)
 
 # Pre-processing Parameters
 PERIODS = 1
 ORDER = 1
 LAGS = 12
-
 df = load_dataset(DATA_DIR["0"])
 
-pmodel
+# ======== End Test Code ========
+
+def run_persistence_model(
+    test_series: pd.DataFrame
+) -> Dict[str, float]:
+    model = PersistenceModel()
+    pred = model.predict(df)
+    metrics = merged_score(actual=df, pred=pred)
+    print(f"Persistence prediction on {len(test_series)} observations.")
+    for m, v in zip(metrics.keys(), metrics.values()):
+        print(f"\t{m}={v}")
+    return metrics
+

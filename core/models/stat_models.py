@@ -23,3 +23,8 @@ class PersistenceModel:
         pred.fillna(value=0.0, inplace=True)
         return pred
 
+class ARIMA:
+    def __init__(
+        self
+    ) -> None:
+        pass
