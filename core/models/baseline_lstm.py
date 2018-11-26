@@ -80,14 +80,25 @@ def normalize(
     )
 
 
-def core_model() -> None:
+def exec_core(
+    num_time_setps: float,
+    num_inputs: int,
+    num_outputs: int,
+) -> None:
     print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
 
     with tf.name_scope("Data_feed"):
         X = tf.placeholder(
-            tf.float32, [None, num_time_steps, num_inputs], name="Feature_X")
-        y = tf.placeholder(tf.float32, [None, num_outputs], name="Label_y")
+            tf.float32,
+            [None, num_time_steps, num_inputs],
+            name="Feature_X"
+        )
+        y = tf.placeholder(
+            tf.float32,
+            [None, num_outputs],
+            name="Label_y"
+        )
 
     with tf.name_scope("RNN"):
         cell = tf.nn.rnn_cell.LSTMCell(
