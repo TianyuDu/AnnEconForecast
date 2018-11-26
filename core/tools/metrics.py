@@ -49,7 +49,7 @@ def merged_scores(
 
     if verbose:
         print("Loss Summary:")
-        for m, v in zip(metric_dict.keys(), metric_dict.values()):
+        for m, v in metric_dict.items():
             print(f"\t{m}={v}")
 
     return metric_dict

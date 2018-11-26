@@ -98,8 +98,7 @@ def exec_core(
     print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
 
-    for i in ["X_train", "X_val", "X_test", "y_train", "y_val", "y_test"]:
-        exec(f"{i} = data_collection['{i}']")
+    globals().update(data_collection)
 
     with tf.name_scope("DATA_FEED"):
         X = tf.placeholder(
