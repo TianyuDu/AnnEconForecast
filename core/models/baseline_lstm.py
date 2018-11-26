@@ -85,16 +85,21 @@ def normalize(
 
 
 def exec_core(
+    epochs: int,
     num_time_steps: float,
     num_inputs: int,
     num_outputs: int,
     num_neurons: int,
     learning_rate: float,
     tensorboard_dir: str,
+    data_collection: Dict[str, np.ndarray],
     clip_grad: Union[bool, float]=None
 ) -> Dict[str, float]:
     print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
+
+    for i in ["X_train", "X_val", "X_test", "y_train", "y_val", "y_test"]:
+        exec(f"{i} = data_collection['{i}']")
 
     with tf.name_scope("DATA_FEED"):
         X = tf.placeholder(
