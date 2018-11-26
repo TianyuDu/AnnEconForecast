@@ -30,10 +30,7 @@ All models that are planned, under development and finished can be found here.
 
 ## Statistical Models
 
-* [<u>Planned</u>] ARMA
-
-* [<u>Planned</u>] ARIMA
-
-* [<u>Planned</u>] VAR
-* [<u>Planned</u>] Non-linear
-
+* [<u>Done</u>] Persistence prediction as a baseline model
+* [<u>Done</u>] Autoregressive Integrated Moving Average (ARIMA)
+* [<u>Planned</u>] Vector Autoregression (VAR)
+* [<u>Planned</u>] Nonlinear Autoregressive Exogenous Models (NARX)
