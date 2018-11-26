@@ -42,14 +42,15 @@ def prepare_dataset(
 # Normalize the sequence
 def normalize(
     df: pd.DataFrame,
-    train_ratio: float
+    train_ratio: float,
+    lags: int
 ) -> Tuple[np.ndarray]:
     scaler = StandardScaler().fit(
         df[:int(train_ratio*len(df))].values)
     df.iloc[:, 0] = scaler.transform(df.values)
 
     X_raw, y_raw = gen_supervised_sequence(
-        df, LAGS, df.columns[0], sequential_label=False)
+        df, lags, df.columns[0], sequential_label=False)
 
     (X_train, X_test, y_train, y_test) = train_test_split(
         X_raw, y_raw,
@@ -90,7 +91,7 @@ def exec_core(
     num_neurons: int,
     learning_rate: float,
     tensorboard_dir: str,
-    clip_grad: Union=None
+    clip_grad: Union[bool, float]=None
 ) -> Dict[str, float]:
     print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
@@ -145,10 +146,20 @@ def exec_core(
     with tf.name_scope("OPTIMIZER"):
         optimizer = tf.train.AdamOptimizer(
             learning_rate=learning_rate, name="Adam_optimizer")
-        # gvs = optimizer.compute_gradients(loss)
-        # capped_gvs = [(tf.clip_by_value(grad, -10., 10.), var) for grad, var in gvs]
-        # train = optimizer.apply_gradients(capped_gvs)
-        train = optimizer.minimize(loss)
+        
+        if clip_grad is None:
+            print("Note: no gradient clipping is applied.\
+            \nIf possible gradient exploding detected (e.g. nan loss), try use clip_grad.")
+            train = optimizer.minimize(loss)
+        else:
+            print("Applying gradient clipping...")
+            print(f"\tClip by values: {clip_grad}")
+            gvs = optimizer.compute_gradients(loss)
+            capped_gvs = [
+                (tf.clip_by_value(grad, - clip_grad, clip_grad), var)
+                for grad, var in gvs
+            ]
+            train = optimizer.apply_gradients(capped_gvs)
 
 
     # X_batches = X_train[:-84].reshape(100, -1, num_time_steps, num_inputs)
