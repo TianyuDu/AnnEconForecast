@@ -58,21 +58,26 @@ def normalize(
         test_size=0.1,
         shuffle=False
     )
+
+    def trans(x): return x.reshape(-1, 1)
+
+    y_train = trans(y_train)
+    y_test = trans(y_test)
+    y_val = trans(y_val)
+
+    print(
+        f"Training and testing set generated,\
+        \nX_train shape: {X_train.shape}\
+        \ny_train shape: {y_train.shape}\
+        \nX_test shape: {X_test.shape}\
+        \ny_test shape: {y_test.shape}\
+        \nX_validation shape: {X_val.shape}\
+        \ny_validation shape: {y_val.shape}")
+
     return (
         X_train, X_val, X_test,
         y_train, y_val, y_test
     )
-
-
-def op(x): return x.reshape(-1, 1)
-
-
-y_train = op(y_train)
-y_test = op(y_test)
-y_val = op(y_val)
-
-print(
-    f"Training and testing set generated,\nX_train shape: {X_train.shape}\ny_train shape: {y_train.shape}\nX_test shape: {X_test.shape}\ny_test shape: {y_test.shape}\nX_validation shape: {X_val.shape}\ny_validation shape: {y_val.shape}")
 
 # Model Parameters
 num_time_steps = LAGS
