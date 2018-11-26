@@ -1,2 +1,2 @@
-# Economic Forecasting with Artificial Neural Networks
+# Artificial Neural Networks in Economic Forecasting (ANNEF)
 
