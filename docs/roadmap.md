@@ -18,22 +18,22 @@ All models that are planned, under development and finished can be found here.
 
 ## Multivariate Neural Networks
 
-* Multivariate Deep Neural Net 
+* [<u>Planned</u>] Multivariate Deep Neural Net
 
-* Multivariate RNN [Planned]
+* [<u>Planned</u>] Multivariate RNN
 
-* ConvRNN [Planned]
+* [<u>Planned</u>] Conv-RNN
 
-* RNN with Gradient Boosting Machine Feature Selection
+* [<u>Planned</u>] RNN with Gradient Boosting Machine Feature Selection
 
 
 
 ## Statistical Models
 
-* ARMA (Planned)
+* [<u>Planned</u>] ARMA
 
-* ARIMA (Planned)
+* [<u>Planned</u>] ARIMA
 
-* VAR (Planned)
-* Non-linear (Planned)
+* [<u>Planned</u>] VAR
+* [<u>Planned</u>] Non-linear
 
