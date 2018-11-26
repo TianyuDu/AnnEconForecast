@@ -1,24 +1,27 @@
 """
 This file contains the baseline LSTM model for time series forecasting.
 """
-from constants import *
-from core.tools.metrics import *
-from core.models.stat_models import *
-from core.models.baseline_rnn import *
-from core.tools.visualize import *
-from core.tools.time_series import *
-from core.tools.data_import import *
-import numpy as np
-import pandas as pd
-import tensorflow as tf
-import sklearn
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+import sys
+from pprint import pprint
+from typing import Dict, Union
+
 import matplotlib
 import matplotlib.pyplot as plt
-from pprint import pprint
+import numpy as np
+import pandas as pd
+import sklearn
+import tensorflow as tf
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
-import sys
+from constants import *
+from core.models.baseline_rnn import *
+from core.models.stat_models import *
+from core.tools.data_import import *
+from core.tools.metrics import *
+from core.tools.time_series import *
+from core.tools.visualize import *
+
 sys.path.extend(["../"])
 
 def prepare_dataset(
@@ -84,11 +87,15 @@ def exec_core(
     num_time_setps: float,
     num_inputs: int,
     num_outputs: int,
-) -> None:
+    num_neurons: int,
+    learning_rate: float,
+    tensorboard_dir: str,
+    clip_grad: Union=None
+) -> Dict[str, float]:
     print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
 
-    with tf.name_scope("Data_feed"):
+    with tf.name_scope("DATA_FEED"):
         X = tf.placeholder(
             tf.float32,
             [None, num_time_steps, num_inputs],
@@ -100,10 +107,11 @@ def exec_core(
             name="Label_y"
         )
 
-    with tf.name_scope("RNN"):
+    with tf.name_scope("RECURRENT_UNITS"):
         cell = tf.nn.rnn_cell.LSTMCell(
             num_units=num_neurons,
-            name="LSTM_Cell")
+            name="LSTM_Cell"
+        )
 
         # multi_cell = tf.nn.rnn_cell.MultiRNNCell(
         #     [tf.nn.rnn_cell.LSTMCell(num_units=x)
@@ -114,7 +122,7 @@ def exec_core(
         stacked_output = tf.reshape(
             rnn_outputs, [-1, num_time_steps * num_neurons])
 
-    with tf.name_scope("Output_layer"):
+    with tf.name_scope("OUTPUT_LAYER"):
         W = tf.Variable(tf.random_normal(
             [num_time_steps * num_neurons, 1]), dtype=tf.float32, name="Weight")
         b = tf.Variable(tf.random_normal([1]), dtype=tf.float32, name="Bias")
@@ -127,14 +135,14 @@ def exec_core(
 
     # pred = tf.layers.dense(stacked_output, 1)
 
-    with tf.name_scope("Metrics"):
+    with tf.name_scope("METRICS"):
         loss = tf.reduce_mean(tf.square(y - pred), name="mse")
 
         mape = tf.reduce_mean(tf.abs(tf.divide(y - pred, y)))
         tf.summary.scalar("mean_squared_error", loss)
         tf.summary.scalar("mean_absolute_percentage_error", mape)
 
-    with tf.name_scope("Train"):
+    with tf.name_scope("OPTIMIZER"):
         optimizer = tf.train.AdamOptimizer(
             learning_rate=learning_rate, name="Adam_optimizer")
         # gvs = optimizer.compute_gradients(loss)
@@ -148,10 +156,10 @@ def exec_core(
     # print(X_batches.shape)
     # print(y_batches.shape)
 
-    tb_dir = "./tensorboard/test/1"
+    tb_dir = tensorboard_dir
 
     start = datetime.now()
-    hist = {"train": [], "val": []}
+    # hist = {"train": [], "val": []}
     with tf.Session() as sess:
         merged_summary = tf.summary.merge_all()
         train_writer = tf.summary.FileWriter(tb_dir + "/train")
@@ -166,8 +174,8 @@ def exec_core(
             sess.run(train, feed_dict={X: X_train, y: y_train})
             train_mse = loss.eval(feed_dict={X: X_train, y: y_train})
             val_mse = loss.eval(feed_dict={X: X_val, y: y_val})
-            hist["train"].append(train_mse)
-            hist["val"].append(val_mse)
+            # hist["train"].append(train_mse)
+            # hist["val"].append(val_mse)
             if e % report_periods == 0:
                 s_train = sess.run(merged_summary, feed_dict={
                                 X: X_train, y: y_train})
@@ -178,6 +186,8 @@ def exec_core(
                     f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
 
         # p_train = pred.eval(feed_dict={X: X_train})
-        # p_test = pred.eval(feed_dict={X: X_test})
+        p_test = pred.eval(feed_dict={X: X_test})
         # p_val = pred.eval(feed_dict={X: X_val})
-    print(f"Time taken for {epochs} epochs: ", datetime.now()-start)
+    print(f"Time taken for [{epochs}] epochs: ", datetime.now()-start)
+    metric_test = merged_scores(actual=y_test, pred=p_test, verbose=True)
+    return metric_test
