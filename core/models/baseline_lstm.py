@@ -88,7 +88,7 @@ def exec_core(
     parameters: Dict[str, object],
     data_collection: Dict[str, np.ndarray],
     clip_grad: Union[bool, float]=None
-) -> Dict[str, float]:
+) -> Tuple[Dict[str, float], Dict[str, np.ndarray]]:
     print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
 
@@ -197,9 +197,10 @@ def exec_core(
                 print(
                     f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
 
-        # p_train = pred.eval(feed_dict={X: X_train})
+        p_train = pred.eval(feed_dict={X: X_train})
         p_test = pred.eval(feed_dict={X: X_test})
-        # p_val = pred.eval(feed_dict={X: X_val})
+        p_val = pred.eval(feed_dict={X: X_val})
+
         print("Saving the trained model...")
         saver.save(sess, model_path)
     print(f"Time taken for [{epochs}] epochs: ", datetime.now()-start)
@@ -208,4 +209,9 @@ def exec_core(
         pred=pd.DataFrame(p_test),
         verbose=True
     )
-    return metric_test
+    predictions = {
+        "train": p_train,
+        "test": p_test,
+        "val": p_val
+    }
+    return (metric_test, predictions)
