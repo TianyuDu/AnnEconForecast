@@ -1,0 +1,18 @@
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {section}{\numberline {2}A Brief Introduction to Neural Network}{2}
+\contentsline {section}{\numberline {3}Methodology}{2}
+\contentsline {subsection}{\numberline {3.1}Neural Network}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {subsection}{\numberline {3.2}Compare to classical macroeconomic models}{3}
+\contentsline {paragraph}{}{3}
+\contentsline {section}{\numberline {4}Model 1: Single Series}{4}
+\contentsline {subsection}{\numberline {4.1}Data}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsection}{\numberline {4.2}Model architecture}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {section}{\numberline {5}Result}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {section}{\numberline {6}Extension: Adding Context Series into Model}{6}
+\contentsline {section}{\numberline {7}Conclusion}{6}
+\contentsline {section}{\numberline {8}Reference}{6}

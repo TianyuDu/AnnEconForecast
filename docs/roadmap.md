@@ -1,6 +1,8 @@
-# Project Road Map
+# Road Map
 
-## Model Road Map: Univariate Neural Networks
+All models that are planned, under development and finished can be found here.
+
+## Univariate Neural Networks
 
 #### Deep Neural Networks: Univariate [In Progress]
 
@@ -14,23 +16,24 @@
 
 
 
-## Model road Map: Multivariate Neural Networks
+## Multivariate Neural Networks
 
-#### Multivariate Deep Neural Net
+* Multivariate Deep Neural Net 
 
-#### Multivariate RNN [Planned]
+* Multivariate RNN [Planned]
 
-#### ConvRNN [Planned]
+* ConvRNN [Planned]
 
-#### RNN with Gradient Boosting Machine Feature Selection
+* RNN with Gradient Boosting Machine Feature Selection
 
 
 
-## Road Map: Statistical Models
+## Statistical Models
 
-#### ARMA (Planned)
+* ARMA (Planned)
 
-#### ARIMA (Planned)
+* ARIMA (Planned)
 
-#### VAR (Planned)
+* VAR (Planned)
+* Non-linear (Planned)
 
