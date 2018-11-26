@@ -1,6 +1,6 @@
 # Artificial Neural Networks in Economic Forecasting (ANNEF)
 
-## What's this?
+## About This Project
 
 ANNEF is a project about the intermixing of economics, computer science and statistics.
 
