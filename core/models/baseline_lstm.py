@@ -92,7 +92,7 @@ def exec_core(
     print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
 
-    globals.().update(parameters)
+    globals().update(parameters)
     globals().update(data_collection)
 
     with tf.name_scope("DATA_FEED"):
