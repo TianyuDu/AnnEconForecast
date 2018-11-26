@@ -85,7 +85,7 @@ def normalize(
 
 
 def exec_core(
-    num_time_setps: float,
+    num_time_steps: float,
     num_inputs: int,
     num_outputs: int,
     num_neurons: int,
