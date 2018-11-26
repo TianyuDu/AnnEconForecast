@@ -21,13 +21,6 @@ from pprint import pprint
 import sys
 sys.path.extend(["../"])
 
-pprint(DATA_DIR)
-
-# Pre-processing Parameters
-PERIODS = 1
-ORDER = 1
-LAGS = 12
-
 def prepare_dataset(
     file_dir: str,
     periods: int=1,
@@ -43,28 +36,32 @@ def prepare_dataset(
     return prepared_df
 
 
-prepared_df = prepare_dataset(DATA_DIR["0"], periods=PERIODS, order=ORDER)
-
-
-TRAIN_RATIO = 0.8
-
 # Normalize the sequence
-scaler = StandardScaler().fit(
-    prepared_df[:int(TRAIN_RATIO*len(prepared_df))].values)
-prepared_df.iloc[:, 0] = scaler.transform(prepared_df.values)
+def normalize(
+    df: pd.DataFrame,
+    train_ratio: float
+) -> Tuple[np.ndarray]:
+    scaler = StandardScaler().fit(
+        df[:int(train_ratio*len(df))].values)
+    df.iloc[:, 0] = scaler.transform(df.values)
 
-X_raw, y_raw = gen_supervised_sequence(
-    prepared_df, LAGS, prepared_df.columns[0], sequential_label=False)
+    X_raw, y_raw = gen_supervised_sequence(
+        df, LAGS, df.columns[0], sequential_label=False)
 
-(X_train, X_test, y_train, y_test) = train_test_split(
-    X_raw, y_raw,
-    test_size=1 - TRAIN_RATIO,
-    shuffle=False)
+    (X_train, X_test, y_train, y_test) = train_test_split(
+        X_raw, y_raw,
+        test_size=1 - train_ratio,
+        shuffle=False)
 
-(X_train, X_val, y_train, y_val) = train_test_split(
-    X_train, y_train,
-    test_size=0.1,
-    shuffle=False)
+    (X_train, X_val, y_train, y_val) = train_test_split(
+        X_train, y_train,
+        test_size=0.1,
+        shuffle=False
+    )
+    return (
+        X_train, X_val, X_test,
+        y_train, y_val, y_test
+    )
 
 
 def op(x): return x.reshape(-1, 1)
