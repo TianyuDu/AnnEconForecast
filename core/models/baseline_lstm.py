@@ -171,6 +171,7 @@ def exec_core(
     start = datetime.now()
     # hist = {"train": [], "val": []}
     with tf.Session() as sess:
+        saver = tf.train.Saver()
         merged_summary = tf.summary.merge_all()
         train_writer = tf.summary.FileWriter(tb_dir + "/train")
         val_writer = tf.summary.FileWriter(tb_dir + "/validation")
@@ -192,12 +193,15 @@ def exec_core(
                 s_val = sess.run(merged_summary, feed_dict={X: X_val, y: y_val})
                 train_writer.add_summary(s_train, e)
                 val_writer.add_summary(s_val, e)
+            if e % (report_periods * 10) == 0:
                 print(
                     f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
 
         # p_train = pred.eval(feed_dict={X: X_train})
         p_test = pred.eval(feed_dict={X: X_test})
         # p_val = pred.eval(feed_dict={X: X_val})
+        print("Saving the trained model...")
+        saver.save(sess, model_path)
     print(f"Time taken for [{epochs}] epochs: ", datetime.now()-start)
     metric_test = merged_scores(
         actual=pd.DataFrame(y_test),
