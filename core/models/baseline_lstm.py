@@ -92,6 +92,7 @@ def exec_core(
     num_neurons: int,
     learning_rate: float,
     tensorboard_dir: str,
+    report_periods: int,
     data_collection: Dict[str, np.ndarray],
     clip_grad: Union[bool, float]=None
 ) -> Dict[str, float]:
@@ -204,5 +205,9 @@ def exec_core(
         p_test = pred.eval(feed_dict={X: X_test})
         # p_val = pred.eval(feed_dict={X: X_val})
     print(f"Time taken for [{epochs}] epochs: ", datetime.now()-start)
-    metric_test = merged_scores(actual=y_test, pred=p_test, verbose=True)
+    metric_test = merged_scores(
+        actual=pd.DataFrame(y_test),
+        pred=pd.DataFrame(p_test),
+        verbose=True
+    )
     return metric_test
