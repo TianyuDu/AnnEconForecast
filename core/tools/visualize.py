@@ -23,7 +23,7 @@ def plot_checkpoints(
     actual: np.ndarray,
     key: str
 ):
-    #     width = np.ceil(np.sqrt(len(predictions))).astype(int)
+    # width = np.ceil(np.sqrt(len(predictions))).astype(int)
     f, axarr = plt.subplots(
         len(predictions.keys()),
         sharex=False,
