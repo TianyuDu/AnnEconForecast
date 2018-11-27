@@ -118,18 +118,18 @@ def exec_core(
             name="Label_y"
         )
 
-    with tf.name_scope("RECURRENT_UNITS"):
-        multi_cell = tf.nn.rnn_cell.MultiRNNCell(
-            [tf.nn.rnn_cell.LSTMCell(
-                num_units=x,
-                name=f"LSTM_Cell_{i}"
-                )
-            for i, x in enumerate(num_neurons)]
-        )
+    # with tf.name_scope("RECURRENT_UNITS"):
+    multi_cell = tf.nn.rnn_cell.MultiRNNCell(
+        [tf.nn.rnn_cell.LSTMCell(
+            num_units=x,
+            name=f"LSTM_Cell_{i}"
+            )
+        for i, x in enumerate(num_neurons)]
+    )
 
-        rnn_outputs, states = tf.nn.dynamic_rnn(multi_cell, X, dtype=tf.float32)
-        stacked_output = tf.reshape(
-            rnn_outputs, [-1, num_time_steps * num_neurons[-1]])
+    rnn_outputs, states = tf.nn.dynamic_rnn(multi_cell, X, dtype=tf.float32)
+    stacked_output = tf.reshape(
+        rnn_outputs, [-1, num_time_steps * num_neurons[-1]])
 
     with tf.name_scope("OUTPUT_LAYER"):
         W = tf.Variable(tf.random_normal(
