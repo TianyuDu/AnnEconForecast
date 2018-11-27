@@ -26,6 +26,19 @@ from core.tools.rnn_prepare import *
 sys.path.extend(["../"])
 
 
+# ======== Test ========
+sample_parameters = {
+    "epochs": 250,
+    "num_time_steps": 12,
+    "num_inputs": 1,
+    "num_outputs": 1,
+    "num_neurons": (128, 64),
+    "learning_rate": 0.01,
+    "report_periods": 10,
+    "tensorboard_dir": f"/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/tensorboard/{EXPERIMENT_NAME}",
+    "model_path": f"/Users/tianyudu/Desktop/{EXPERIMENT_NAME}/my_model"
+}
+# ======== End ========
 def exec_core(
     parameters: Dict[str, object],
     data_collection: Dict[str, np.ndarray],
