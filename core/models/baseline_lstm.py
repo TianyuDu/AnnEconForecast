@@ -3,7 +3,7 @@ This file contains the baseline LSTM model for time series forecasting.
 """
 import sys
 from pprint import pprint
-from typing import Dict, Union
+from typing import Dict, Union, Iterable
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -87,13 +87,21 @@ def normalize(
 def exec_core(
     parameters: Dict[str, object],
     data_collection: Dict[str, np.ndarray],
-    clip_grad: Union[bool, float]=None
-) -> Tuple[Dict[str, float], Dict[str, np.ndarray]]:
+    clip_grad: float=None,
+    prediction_checkpoints: Iterable[int]=-1
+) -> Tuple[
+        Dict[str, float],
+        Dict[int, Dict[str, np.ndarray]]
+]:
     print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
 
     globals().update(parameters)
     globals().update(data_collection)
+
+    predictions = dict()
+    assert all(isinstance(x, int) for x in prediction_checkpoints), "Invalid checkpoint of recording."
+    assert all(-1 <= x <= epochs for x in prediction_checkpoints), "Checkpoint out of range."
 
     with tf.name_scope("DATA_FEED"):
         X = tf.placeholder(
@@ -194,12 +202,28 @@ def exec_core(
                 train_writer.add_summary(s_train, e)
                 val_writer.add_summary(s_val, e)
             if e % (report_periods * 10) == 0:
+                # print 10 times less frequently than the record frequency.
                 print(
                     f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
+            if e in prediction_checkpoints:
+                p_train = pred.eval(feed_dict={X: X_train})
+                p_test = pred.eval(feed_dict={X: X_test})
+                p_val = pred.eval(feed_dict={X: X_val})
+                predictions[e] = {
+                    "train": p_train,
+                    "test": p_test,
+                    "val": p_val
+                }
 
-        p_train = pred.eval(feed_dict={X: X_train})
-        p_test = pred.eval(feed_dict={X: X_test})
-        p_val = pred.eval(feed_dict={X: X_val})
+        if prediction_checkpoints == -1:
+            p_train = pred.eval(feed_dict={X: X_train})
+            p_test = pred.eval(feed_dict={X: X_test})
+            p_val = pred.eval(feed_dict={X: X_val})
+            predictions[0] = {
+                "train": p_train,
+                "test": p_test,
+                "val": p_val
+            }
 
         print("Saving the trained model...")
         saver.save(sess, model_path)
@@ -209,9 +233,4 @@ def exec_core(
         pred=pd.DataFrame(p_test),
         verbose=True
     )
-    predictions = {
-        "train": p_train,
-        "test": p_test,
-        "val": p_val
-    }
     return (metric_test, predictions)
