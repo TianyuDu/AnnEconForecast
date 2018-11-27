@@ -88,7 +88,7 @@ def exec_core(
     parameters: Dict[str, object],
     data_collection: Dict[str, np.ndarray],
     clip_grad: float=None,
-    prediction_checkpoints: Iterable[int]=-1
+    prediction_checkpoints: Iterable[int]=[-1]
 ) -> Tuple[
         Dict[str, float],
         Dict[int, Dict[str, np.ndarray]]
@@ -100,9 +100,8 @@ def exec_core(
     globals().update(data_collection)
 
     predictions = dict()
-    if prediction_checkpoints != -1:
-        assert all(isinstance(x, int) for x in prediction_checkpoints), "Invalid checkpoint of recording."
-        assert all(-1 <= x <= epochs for x in prediction_checkpoints), "Checkpoint out of range."
+    assert all(isinstance(x, int) for x in prediction_checkpoints), "Invalid checkpoint of recording."
+    assert all(-1 <= x <= epochs for x in prediction_checkpoints), "Checkpoint out of range."
 
     with tf.name_scope("DATA_FEED"):
         X = tf.placeholder(
@@ -216,7 +215,7 @@ def exec_core(
                     "val": p_val
                 }
 
-        if prediction_checkpoints == -1:
+        if -1 in prediction_checkpoints:
             p_train = pred.eval(feed_dict={X: X_train})
             p_test = pred.eval(feed_dict={X: X_test})
             p_val = pred.eval(feed_dict={X: X_val})
