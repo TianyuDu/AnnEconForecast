@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/ec2-user/AnnEconForecast/saved_models/ec2-demo/my_model"
+all_model_checkpoint_paths: "/home/ec2-user/AnnEconForecast/saved_models/ec2-demo/my_model"
