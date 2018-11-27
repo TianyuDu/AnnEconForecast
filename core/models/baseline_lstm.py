@@ -21,6 +21,7 @@ from core.tools.data_import import *
 from core.tools.metrics import *
 from core.tools.time_series import *
 from core.tools.visualize import *
+from core.tools.rnn_prepare import *
 
 sys.path.extend(["../"])
 
