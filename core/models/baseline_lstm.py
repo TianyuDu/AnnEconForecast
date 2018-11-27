@@ -219,7 +219,7 @@ def exec_core(
             p_train = pred.eval(feed_dict={X: X_train})
             p_test = pred.eval(feed_dict={X: X_test})
             p_val = pred.eval(feed_dict={X: X_val})
-            predictions[0] = {
+            predictions[epochs] = {
                 "train": p_train,
                 "test": p_test,
                 "val": p_val
