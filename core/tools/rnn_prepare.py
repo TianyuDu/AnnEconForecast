@@ -87,15 +87,40 @@ def prepare_dataset(
     return prepared_df
 
 
-# Normalize the sequence
-def normalize(
+
+
+def generate_splited_dataset(
     df: pd.DataFrame,
     train_ratio: float,
+    val_ratio: float,
     lags: int
 ) -> Tuple[np.ndarray]:
-    scaler = StandardScaler().fit(
-        df[:int(train_ratio*len(df))].values)
-    df.iloc[:, 0] = scaler.transform(df.values)
+    """
+    Generate and split the prepared dataset for RNN training into training, testing and validation sets.
+    Args:
+        df:
+            A dataframe containing the prepared dataset returned from prepare_dataset method.
+        train_ratio:
+            A float representing the ratio of the whole dataset to be used as training set.
+        val_ratio:
+            A float denoting the ratio of the whole dataset to be used as validation set.
+        ** Note the sum of train_ratio and val_ratio should between 0 and 1.
+        lags:
+            An integer indicating 
+    Returns:
+        return a 6-tuple.
+        Univariate case format:
+            X: (num_samples, lags, 1)
+            y: (num_samples, 1)
+        Tuple format:
+            (X_train, X_val, X_test, y_train, y_test, y_val)
+    """
+    # ======== Args Check ========
+
+    # ======== Core ========
+    # scaler = StandardScaler().fit(
+    #     df[:int(train_ratio*len(df))].values)
+    # df.iloc[:, 0] = scaler.transform(df.values)
 
     X_raw, y_raw = gen_supervised_sequence(
         df, lags, df.columns[0], sequential_label=False)
