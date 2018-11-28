@@ -97,13 +97,19 @@ def normalize(
         raw:
             A dataframe of raw data.
         train_ratio:
-            The ratio of 
+            The ratio of all observations that should be considered as the training set.
+            The scaler will be fit on the training subset only.
+    Returns:
+        A normalized dataframe with the same shape as raw dataframe.
     """
+    # ======== Args Check ========
+
+    # ======== Core ========
     df = raw.copy()
     scaler = StandardScaler().fit(
         df[:int(train_ratio*len(df))].values
     )
-    print(f"Scaling based on the first {int(train_ratio*len(df))} observations.")
+    print(f"StandardScaler applied, scaling based on the first {int(train_ratio*len(df))} observations.")
     df.iloc[:, 0] = scaler.transform(df.values)
     return df
 
