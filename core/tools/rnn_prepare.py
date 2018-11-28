@@ -103,7 +103,9 @@ def normalize(
         A normalized dataframe with the same shape as raw dataframe.
     """
     # ======== Args Check ========
-
+    assert isinstance(raw, pd.DataFrame), "Raw dataset should be a pandas DataFrame."
+    assert isinstance(train_ratio, float), "Training set ratio should be a float."
+    assert 0 < train_ratio <= 1, "Training set ratio should be positive and at most 1."
     # ======== Core ========
     df = raw.copy()
     scaler = StandardScaler().fit(
