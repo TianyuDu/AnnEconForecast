@@ -143,7 +143,14 @@ def generate_splited_dataset(
             (X_train, X_val, X_test, y_train, y_test, y_val)
     """
     # ======== Args Check ========
-
+    assert isinstance(raw, pd.DataFrame), "Raw dataset should be a pandas dataframe."
+    assert isinstance(
+        train_ratio, float) and 0 < train_ratio <= 1, "train_ratio should be a float within range (0,1]."
+    assert isinstance(
+        val_ratio, float) and 0 < val_ratio <= 1, "val_ratio should be a float within range (0,1]"
+    assert isinstance(
+        lags, int
+    ) and lags >= 1, "lags should be an integer at least 1."
     # ======== Core ========
     test_ratio = 1 - train_ratio - val_ratio
     df = normalize(
