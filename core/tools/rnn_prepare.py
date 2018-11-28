@@ -91,10 +91,19 @@ def normalize(
     raw: pd.DataFrame,
     train_ratio: float
 ) -> pd.DataFrame:
+    """
+    Normalize the dataset based on a training subset and apply the scaler to the whole set.
+    Args:
+        raw:
+            A dataframe of raw data.
+        train_ratio:
+            The ratio of 
+    """
     df = raw.copy()
     scaler = StandardScaler().fit(
         df[:int(train_ratio*len(df))].values
     )
+    print(f"Scaling based on the first {int(train_ratio*len(df))} observations.")
     df.iloc[:, 0] = scaler.transform(df.values)
     return df
 
@@ -128,6 +137,7 @@ def generate_splited_dataset(
     # ======== Args Check ========
 
     # ======== Core ========
+    test_ratio = 1 - train_ratio - val_ratio
     df = normalize(
         raw,
         train_ratio
@@ -138,12 +148,12 @@ def generate_splited_dataset(
 
     (X_train, X_test, y_train, y_test) = train_test_split(
         X_raw, y_raw,
-        test_size=1 - train_ratio,
+        test_size=test_ratio,
         shuffle=False)
 
     (X_train, X_val, y_train, y_val) = train_test_split(
         X_train, y_train,
-        test_size=0.1,
+        test_size=val_ratio / (val_ratio + train_ratio),
         shuffle=False
     )
 
