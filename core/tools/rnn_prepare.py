@@ -87,10 +87,20 @@ def prepare_dataset(
     return prepared_df
 
 
+def normalize(
+    raw: pd.DataFrame,
+    train_ratio: float
+) -> pd.DataFrame:
+    df = raw.copy()
+    scaler = StandardScaler().fit(
+        df[:int(train_ratio*len(df))].values
+    )
+    df.iloc[:, 0] = scaler.transform(df.values)
+    return df
 
 
 def generate_splited_dataset(
-    df: pd.DataFrame,
+    raw: pd.DataFrame,
     train_ratio: float,
     val_ratio: float,
     lags: int
@@ -98,7 +108,7 @@ def generate_splited_dataset(
     """
     Generate and split the prepared dataset for RNN training into training, testing and validation sets.
     Args:
-        df:
+        raw:
             A dataframe containing the prepared dataset returned from prepare_dataset method.
         train_ratio:
             A float representing the ratio of the whole dataset to be used as training set.
@@ -118,9 +128,10 @@ def generate_splited_dataset(
     # ======== Args Check ========
 
     # ======== Core ========
-    # scaler = StandardScaler().fit(
-    #     df[:int(train_ratio*len(df))].values)
-    # df.iloc[:, 0] = scaler.transform(df.values)
+    df = normalize(
+        raw,
+        train_ratio
+    )
 
     X_raw, y_raw = gen_supervised_sequence(
         df, lags, df.columns[0], sequential_label=False)
