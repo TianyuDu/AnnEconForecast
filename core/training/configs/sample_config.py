@@ -21,26 +21,22 @@ file_config = {
 
 # Model training parameters
 train_param = {
-    "epochs": 1500,
-    "num_time_steps": [6, 12, 24],
+    "epochs": 300,
+    "num_time_steps": [12, 24],
     "num_inputs": 1,
     "num_outputs": 1,
     "num_neurons": [
-        (256, 128),
         (256, 128, 64),
-        (512, 256),
         (512, 256, 128),
-        (1024, 512),
         (1024, 512, 256)
     ],
     "learning_rate": [
         0.3,
         0.1,
-        0.03,
-        0.01
+        0.03
     ],
     "report_periods": 10,
-    "tensorboard_dir": "~/Desktop/tb/",
-    "model_path": "~/Desktop/saved_models/",
-    "fig_path": "~/Desktop/model_figs/"
+    "tensorboard_dir": "/home/ec2-user/AnnEconForecast/test_dir/tb/",
+    "model_path": "/home/ec2-user/AnnEconForecast/test_dir/saved_models/",
+    "fig_path": "/home/ec2-user/AnnEconForecast/test_dir/model_figs/"
 }

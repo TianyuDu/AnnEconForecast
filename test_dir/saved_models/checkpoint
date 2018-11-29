@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/ec2-user/AnnEconForecast/test_dir/saved_models/num_time_steps=24-num_neurons=(512, 256, 128)-learning_rate=0.1"
+all_model_checkpoint_paths: "/home/ec2-user/AnnEconForecast/test_dir/saved_models/num_time_steps=24-num_neurons=(512, 256, 128)-learning_rate=0.1"
