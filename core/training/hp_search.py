@@ -51,7 +51,7 @@ for att in dir(config):
 parameter_collection = hps_methods.gen_hparam_set(config.train_param)
 
 
-def individual_train(para):
+def individual_train(para) -> None:
     prepared_df = rnn_prepare.prepare_dataset(
         file_dir=FILE_DIR,
         periods=PERIODS,
@@ -88,3 +88,8 @@ def individual_train(para):
 
     fig = visualize.plot_checkpoints(predictions, y_test, "test")
     plt.savefig(para["fig_path"]+"pred_records.svg")
+
+
+for (i, para) in enumerate(parameter_collection):
+    print(f"Control: executing [{i}]-th hyper-parameter searching session...")
+    individual_train(para)
