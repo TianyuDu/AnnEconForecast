@@ -36,7 +36,7 @@ train_param = {
         0.03
     ],
     "report_periods": 10,
-    "tensorboard_dir": "/home/ec2-user/AnnEconForecast/test_dir/tb/",
-    "model_path": "/home/ec2-user/AnnEconForecast/test_dir/saved_models/",
-    "fig_path": "/home/ec2-user/AnnEconForecast/test_dir/model_figs/"
+    "tensorboard_dir": "/home/ec2-user/hps_test/tensorboard/",
+    "model_path": "/home/ec2-user/hps_test/saved_models/",
+    "fig_path": "/home/ec2-user/hps_test/model_figs/"
 }
