@@ -48,7 +48,7 @@ for att in dir(config):
         exec(f"globals().update")
 
 
-parameter_collection = hps_methods.gen_para_set(training_config)
+parameter_collection = hps_methods.gen_hparam_set(training_config)
 
 for para in parameter_collection:
     prepared_df = rnn_prepare.prepare_dataset(

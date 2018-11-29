@@ -4,12 +4,15 @@ for hyper-parameter searching / grid searching
 """
 import itertools
 import copy
-from typing import List
+from typing import List, Dict, Union
 
 
-def gen_para_set(
-    src_dic: dict
-) -> List[dict]:
+def gen_hparam_set(
+    src_dic: Dict[str, Union[List[object], object]]
+) -> List[str, object]:
+    """
+    TODO: Stopped here.
+    """
     gen = list()
     detected_list_keys = list()
     detected_list_vals = list()
@@ -33,5 +36,3 @@ def gen_para_set(
 
     print(f"Total number of parameter sets generated: {len(gen)}")
     return gen
-    
-g = gen_para_set(parameters)
