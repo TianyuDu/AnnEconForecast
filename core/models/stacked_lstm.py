@@ -58,8 +58,8 @@ def exec_core(
     predictions = dict()
     assert all(isinstance(x, int)
                for x in prediction_checkpoints), "Invalid checkpoint of recording."
-    assert all(-1 <= x <=
-               epochs for x in prediction_checkpoints), "Checkpoint out of range."
+    assert all(
+        -1 <= x <= epochs for x in prediction_checkpoints), "Checkpoint out of range."
 
     with tf.name_scope("DATA_FEED"):
         X = tf.placeholder(
