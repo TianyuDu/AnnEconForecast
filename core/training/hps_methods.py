@@ -47,9 +47,9 @@ def gen_hparam_set(
         ],
         "learning_rate": [0.3, 0.1, 0.03],
         "report_periods": 10,
-        "tensorboard_dir": "~/Desktop/tb/",
-        "model_path": "~/Desktop/saved_models/",
-        "fig_path": "~/Desktop/model_figs/"
+        "tensorboard_dir": "/home/ec2-user/hps_test/tensorboard/",
+        "model_path": "/home/ec2-user/hps_test/saved_models/",
+        "fig_path": "/home/ec2-user/hps_test/model_figs/"
     }
     # ======== END ========
     # ======== Args Check ========
