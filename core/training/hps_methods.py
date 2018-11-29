@@ -48,7 +48,8 @@ def gen_hparam_set(
         "learning_rate": [0.3, 0.1, 0.03],
         "report_periods": 10,
         "tensorboard_dir": "~/Desktop/tb/",
-        "model_path": "~/Desktop/saved_models/"
+        "model_path": "~/Desktop/saved_models/",
+        "fig_path": "~/Desktop/model_figs/"
     }
     # ======== END ========
     # ======== Args Check ========
@@ -76,6 +77,7 @@ def gen_hparam_set(
             new_para[key] = coor[i]
         new_para["tensorboard_dir"] += hparam_str
         new_para["model_path"] += hparam_str
+        new_para["repr_str"] = hparam_str
         gen.append(new_para)
 
     print(f"Total number of parameter sets generated: {len(gen)}")

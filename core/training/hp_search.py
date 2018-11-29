@@ -50,7 +50,8 @@ for att in dir(config):
 
 parameter_collection = hps_methods.gen_hparam_set(training_config)
 
-for para in parameter_collection:
+
+def individual_train(para):
     prepared_df = rnn_prepare.prepare_dataset(
         file_dir=FILE_DIR,
         periods=PERIODS,
@@ -74,14 +75,13 @@ for para in parameter_collection:
     }
 
     def checkpoints(z): return [
-        z*x for x in range(1, parameters["epochs"] // z)] + [-1]
+        z*x for x in range(1, para["epochs"] // z)] + [-1]
     
     (metrics_dict, predictions) = stacked_lstm.exec_core(
-        parameters=parameters,
+        parameters=para,
         data_collection=data_collection,
         clip_grad=None,
         prediction_checkpoints=checkpoints(
-            parameters["epochs"] // 10
+            para["epochs"] // 10
         )
     )
-    

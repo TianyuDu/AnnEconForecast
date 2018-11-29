@@ -41,5 +41,6 @@ parameters = {
     ],
     "report_periods": 10,
     "tensorboard_dir": "~/Desktop/tb/",
-    "model_path": "~/Desktop/saved_models/"
+    "model_path": "~/Desktop/saved_models/",
+    "fig_path": "~/Desktop/model_figs/"
 }
