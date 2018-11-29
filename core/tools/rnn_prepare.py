@@ -29,7 +29,8 @@ def prepare_dataset(
     file_dir: str,
     periods: int=1,
     order: int=1,
-    verbose: bool=True
+    verbose: bool=True,
+    remove: object=None
 ) -> pd.DataFrame:
     """
     Prepare the dataset for RNN Training.
@@ -68,7 +69,10 @@ def prepare_dataset(
     if verbose:
         print(f"Retrieving raw data from {file_dir}...")
 
-    df = data_import.load_dataset(file_dir)
+    df = data_import.load_dataset(
+        file_dir,
+        remove=remove
+    )
     if verbose:
         print(f"Processing data, taking (periods, order)=({periods}, {order})...")
     prepared_df = time_series.differencing(
