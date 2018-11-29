@@ -29,7 +29,6 @@ sys.path.extend(["../"])
 def exec_core(
     parameters: Dict[str, object],
     data_collection: Dict[str, np.ndarray],
-    clip_grad: float=None,  # TODO: remove this, this should be removed, gradient clipping is now in parameters.
     prediction_checkpoints: Iterable[int]=[-1],
     verbose: bool=False
 ) -> Tuple[
