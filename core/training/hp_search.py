@@ -1,5 +1,6 @@
 """
 The default hyper-parameter searching program.
+This is a control script.
 """
 import numpy as np
 import pandas as pd
@@ -10,7 +11,7 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib
 import matplotlib.pyplot as plt
 from pprint import pprint
-from typing import Dict
+from typing import Dict, List
 
 import sys
 sys.path.append(".../")
@@ -24,7 +25,6 @@ import core.tools.rnn_prepare as rnn_prepare
 
 import core.models.stacked_lstm as stacked_lstm
 
-
 # data preparation phase.
 pprint(constants.DATA_DIR)
 choice = None
@@ -36,21 +36,54 @@ FILE_DIR = constants.DATA_DIR[choice]
 
 print(f"Dataset chosen: \n{FILE_DIR}")
 
+config_name = input("Name of configuration file to load >>> ")
 
-# Configuration:
-default_data_para = {
-    PERIODS: 1,
-    ORDER: 1,
-    LAGS: 12,
-    TRAIN_RATIO: 0.8
-}
+exec(f"import core.training.configs.{config_name} as config")
 
-if input("Specify data processing parameters? [y/n]>>>").upper() == "Y":
-    PERIODS = int(input("Periods[int] >>>"))
-    ORDER = int(input("Order[int] >>>"))
-    LAGS = int(input("Lags[int] >>>"))
-    TRAIN_RATIO = float(input("Ratio of training set[float] >>>"))
-else:
-    globals().update(default_data_para)
+for att in dir(config):
+    if att.endswith("_config"):
+        print(f"Loading: {att}")
+        exec(f"globals().update")
 
-EXPERIMENT_NAME = input()
+def gen_para_set(
+    src_dic: dict
+) -> List[dict]:
+    raise NotImplementedError
+
+para_set = gen_para_set(training_config)
+
+for para in para_set:
+    prepared_df = rnn_prepare.prepare_dataset(
+        file_dir=FILE_DIR,
+        periods=PERIODS,
+        order=ORDER,
+        remove=None
+    )
+    (X_train, X_val, X_test,
+     y_train, y_val, y_test) = rnn_prepare.generate_splited_dataset(
+        raw=prepared_df,
+        train_ratio=0.8,
+        val_ratio=0.1,
+        lags=para["num_time_steps"]
+    )
+    data_collection = {
+        "X_train": X_train,
+        "X_val": X_val,
+        "X_test": X_test,
+        "y_train": y_train,
+        "y_val": y_val,
+        "y_test": y_test
+    }
+
+    def checkpoints(z): return [
+        z*x for x in range(1, parameters["epochs"] // z)] + [-1]
+    
+    (metrics_dict, predictions) = stacked_lstm.exec_core(
+        parameters=parameters,
+        data_collection=data_collection,
+        clip_grad=None,
+        prediction_checkpoints=checkpoints(
+            parameters["epochs"] // 10
+        )
+    )
+    
