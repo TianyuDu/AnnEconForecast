@@ -8,16 +8,36 @@ from typing import List, Dict, Union
 
 
 def gen_hparam_set(
-    src_dic: Dict[str, Union[List[object], object]]
+    src_dict: Dict[str, Union[List[object], object]]
 ) -> List[str, object]:
     """
-    TODO: Stopped here.
+    Generate a collection of hyperparameters for hyparam searching.
+    NOTE: in this version, a parameter configuration object is a 
+        dictionary with string as keys. When a parameter config
+        is fed into a model training session, we use 'globals().update(param_config)'
+        to read the config.
+    Args:
+        src_dict:
+            A dictionary with string-keys exactly the same as the sample
+            input config below.
+            NOTE: for parameters that one wish to search over certain set
+                of potential choices, put a LIST of feasible values at the 
+                corresponding value in src_dict.
+            Example:
+                to search over learning_rate parameter,
+                set src_dict["learning_rate"] = [0.1, 0.03, 0.01] etc.
+    Returns:
+        A list (iterable) with all combination of candidates in 
+            flexiable (to be searched) parameters.
     """
+    # ======== EXAMPLE INPUT ========
+
+    # ======== END ========    
     gen = list()
     detected_list_keys = list()
     detected_list_vals = list()
 
-    for k, v in src_dic.items():
+    for k, v in src_dict.items():
         if isinstance(v, list):
             detected_list_keys.append(k)
             detected_list_vals.append(v)
@@ -25,7 +45,7 @@ def gen_hparam_set(
     cartesian_prod = list(itertools.product(*detected_list_vals))
 
     for coor in cartesian_prod:
-        new_para = copy.deepcopy(src_dic)
+        new_para = copy.deepcopy(src_dict)
         hparam_str = "-".join(
             f"{k}={v}" for k, v in zip(detected_list_keys, coor))
         for i, key in enumerate(detected_list_keys):
