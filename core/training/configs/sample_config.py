@@ -20,7 +20,7 @@ file_config = {
 }
 
 # Model training parameters
-parameters = {
+train_param = {
     "epochs": 1500,
     "num_time_steps": [6, 12, 24],
     "num_inputs": 1,

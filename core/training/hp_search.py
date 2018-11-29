@@ -25,7 +25,7 @@ import core.tools.rnn_prepare as rnn_prepare
 
 import core.models.stacked_lstm as stacked_lstm
 
-import hps_methods
+import core.training.hps_methods
 
 # data preparation phase.
 pprint(constants.DATA_DIR)
@@ -48,7 +48,7 @@ for att in dir(config):
         exec(f"globals().update")
 
 
-parameter_collection = hps_methods.gen_hparam_set(training_config)
+parameter_collection = hps_methods.gen_hparam_set(config.train_param)
 
 
 def individual_train(para):

@@ -9,7 +9,7 @@ from typing import List, Dict, Union
 
 def gen_hparam_set(
     src_dict: Dict[str, Union[List[object], object]]
-) -> List[str, object]:
+) -> List[Dict[str, object]]:
     """
     Generate a collection of hyperparameters for hyparam searching.
     NOTE: in this version, a parameter configuration object is a 
