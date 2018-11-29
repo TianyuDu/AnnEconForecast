@@ -32,7 +32,7 @@ def gen_hparam_set(
     """
 
     # ======== EXAMPLE INPUT ========
-    parameters = {
+    sample_param = {
         "epochs": 1500,
         "num_time_steps": [6, 12, 24],
         "num_inputs": 1,
@@ -50,7 +50,13 @@ def gen_hparam_set(
         "tensorboard_dir": "~/Desktop/tb/",
         "model_path": "~/Desktop/saved_models/"
     }
-    # ======== END ========    
+    # ======== END ========
+    # ======== Args Check ========
+    assert all(
+        k in sample_param.keys()
+        for k in src_dict.keys()
+    ), "Missing parameter(s) detected."
+    # ======== END ========
     gen = list()
     detected_list_keys = list()
     detected_list_vals = list()
