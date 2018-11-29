@@ -26,7 +26,7 @@ parameters = {
     "num_inputs": 1,
     "num_outputs": 1,
     "num_neurons": [
-        (256, 128)
+        (256, 128),
         (256, 128, 64),
         (512, 256),
         (512, 256, 128),
@@ -40,6 +40,6 @@ parameters = {
         0.01
     ],
     "report_periods": 10,
-    "tensorboard_dir": None,
-    "model_path": None
+    "tensorboard_dir": "~/Desktop/tb/",
+    "model_path": "~/Desktop/saved_models/"
 }

@@ -25,6 +25,8 @@ import core.tools.rnn_prepare as rnn_prepare
 
 import core.models.stacked_lstm as stacked_lstm
 
+import hps_methods
+
 # data preparation phase.
 pprint(constants.DATA_DIR)
 choice = None
@@ -45,14 +47,10 @@ for att in dir(config):
         print(f"Loading: {att}")
         exec(f"globals().update")
 
-def gen_para_set(
-    src_dic: dict
-) -> List[dict]:
-    raise NotImplementedError
 
-para_set = gen_para_set(training_config)
+parameter_collection = hps_methods.gen_para_set(training_config)
 
-for para in para_set:
+for para in parameter_collection:
     prepared_df = rnn_prepare.prepare_dataset(
         file_dir=FILE_DIR,
         periods=PERIODS,
