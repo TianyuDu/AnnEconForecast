@@ -50,7 +50,8 @@ def prepare_dataset(
 
         verbose:
             A bool indicating whether report should be printed during the process.
-
+        remove:
+            Any observation with value equals the "remove" object will be dropped.
     Returns:
         A dataframe of prepared dataset.
     """
