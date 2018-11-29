@@ -22,12 +22,15 @@ file_config = {
 # Model training parameters
 train_param = {
     "epochs": 300,
-    "num_time_steps": [12, 24],
+    "num_time_steps": [6, 12, 24],
     "num_inputs": 1,
     "num_outputs": 1,
     "num_neurons": [
+        (256, 128),
         (256, 128, 64),
+        (512, 256),
         (512, 256, 128),
+        (1024, 512),
         (1024, 512, 256)
     ],
     "learning_rate": [
