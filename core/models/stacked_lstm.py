@@ -26,30 +26,18 @@ from core.tools.rnn_prepare import *
 sys.path.extend(["../"])
 
 
-# ======== Test ========
-# EXPERIMENT_NAME = "TEST"
-# sample_parameters = {
-#     "epochs": 250,
-#     "num_time_steps": 12,
-#     "num_inputs": 1,
-#     "num_outputs": 1,
-#     "num_neurons": (128, 64),
-#     "learning_rate": 0.01,
-#     "report_periods": 10,
-#     "tensorboard_dir": f"/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/tensorboard/{EXPERIMENT_NAME}",
-#     "model_path": f"/Users/tianyudu/Desktop/{EXPERIMENT_NAME}/my_model"
-# }
-# ======== End ========
 def exec_core(
     parameters: Dict[str, object],
     data_collection: Dict[str, np.ndarray],
-    clip_grad: float = None,
-    prediction_checkpoints: Iterable[int] = [-1]
+    clip_grad: float=None,  # TODO: remove this, this should be removed, gradient clipping is now in parameters.
+    prediction_checkpoints: Iterable[int]=[-1],
+    verbose: bool=False
 ) -> Tuple[
         Dict[str, float],
         Dict[int, Dict[str, np.ndarray]]
-]:
-    print("Resetting Tensorflow defalut graph...")
+]:  
+    if verbose:
+        print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
 
     globals().update(parameters)
@@ -111,12 +99,14 @@ def exec_core(
             learning_rate=learning_rate, name="Adam_optimizer")
 
         if clip_grad is None:
-            print("Note: no gradient clipping is applied.\
-            \nIf possible gradient exploding detected (e.g. nan loss), try use clip_grad.")
+            if verbose:
+                print("Note: no gradient clipping is applied.\
+                \nIf possible gradient exploding detected (e.g. nan loss), try use clip_grad.")
             train = optimizer.minimize(loss)
         else:
-            print("Applying gradient clipping...")
-            print(f"\tClip by values: {clip_grad}")
+            if verbose:
+                print("Applying gradient clipping...")
+                print(f"\tClip by values: {clip_grad}")
             gvs = optimizer.compute_gradients(loss)
             capped_gvs = [
                 (tf.clip_by_value(grad, - clip_grad, clip_grad), var)
@@ -159,8 +149,9 @@ def exec_core(
                 val_writer.add_summary(s_val, e)
             if e % (report_periods * 10) == 0:
                 # print 10 times less frequently than the record frequency.
-                print(
-                    f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
+                if verbose:
+                    print(
+                        f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
             if e in prediction_checkpoints:
                 p_train = pred.eval(feed_dict={X: X_train})
                 p_test = pred.eval(feed_dict={X: X_test})

@@ -38,6 +38,7 @@ train_param = {
         0.1,
         0.03
     ],
+    "clip_grad": None,
     "report_periods": 10,
     "tensorboard_dir": "/home/ec2-user/AnnEconForecast/test_dir/tb/",
     "model_path": "/home/ec2-user/AnnEconForecast/test_dir/saved_models/",
