@@ -18,14 +18,14 @@ sys.path.append(".../")
 
 import constants
 from core.tools.metrics import *
-from core.tools.visualize import *
+import core.tools.visualize as visualize
 from core.tools.time_series import *
 from core.tools.data_import import *
 import core.tools.rnn_prepare as rnn_prepare
 
 import core.models.stacked_lstm as stacked_lstm
 
-import core.training.hps_methods
+import core.training.hps_methods as hps_methods
 
 # data preparation phase.
 pprint(constants.DATA_DIR)
@@ -36,7 +36,7 @@ while choice is None or choice not in constants.DATA_DIR.keys():
     choice = input("Select Dataset >>> ")
 FILE_DIR = constants.DATA_DIR[choice]
 
-print(f"Dataset chosen: \n{FILE_DIR}")
+print(f"Dataset chosen: \n\t{FILE_DIR}")
 
 config_name = input("Name of configuration file to load >>> ")
 
@@ -85,3 +85,6 @@ def individual_train(para):
             para["epochs"] // 10
         )
     )
+
+    fig = visualize.plot_checkpoints(predictions, y_test, "test")
+    plt.savefig(para["fig_path"]+"pred_records.svg")
