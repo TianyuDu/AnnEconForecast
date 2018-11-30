@@ -18,6 +18,8 @@ import sys
 sys.path.append("../")
 sys.path.append(
     "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast")
+core_dir = input("Directory of core files >>> ")
+sys.path.append(core_dir)
 
 import constants
 from core.tools.metrics import *
