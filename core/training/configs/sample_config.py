@@ -2,7 +2,7 @@
 Sample hyper-parameter searching configuration file
 """
 # Name
-EXPERIMENT_NAME = "ec2-stacked-DEXCAUS"
+EXPERIMENT_NAME = "sample-config"
 
 # Data Pre-processing configuration
 dp_config = {
@@ -20,6 +20,7 @@ file_config = {
 }
 
 # Model training parameters
+MAIN_DIRECTORY = "/home/ec2-user/hps_test/"
 train_param = {
     "epochs": 300,
     "num_time_steps": [6, 12, 24],
@@ -40,7 +41,7 @@ train_param = {
     ],
     "clip_grad": None,
     "report_periods": 10,
-    "tensorboard_dir": "/home/ec2-user/hps_test/tensorboard/",
-    "model_path": "/home/ec2-user/hps_test/saved_models/",
-    "fig_path": "/home/ec2-user/hps_test/model_figs/"
+    "tensorboard_dir": MAIN_DIRECTORY + "tensorboard/",
+    "model_path": MAIN_DIRECTORY + "saved_models/",
+    "fig_path": MAIN_DIRECTORY + "model_figs/"
 }

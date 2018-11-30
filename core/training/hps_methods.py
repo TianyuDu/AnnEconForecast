@@ -47,16 +47,10 @@ def gen_hparam_set(
         ],
         "learning_rate": [0.3, 0.1, 0.03],
         "report_periods": 10,
-<<<<<<< HEAD
         "clip_grad": None,
         "tensorboard_dir": "/home/ec2-user/hps_test/tensorboard/",
         "model_path": "/home/ec2-user/hps_test/saved_models/",
         "fig_path": "/home/ec2-user/hps_test/model_figs/"
-=======
-        "tensorboard_dir": None,
-        "model_path": None,
-        "fig_path": None
->>>>>>> 40e77ff02ef87a252a80e466a7eb73dff36c7f26
     }
     # ======== END ========
     # ======== Args Check ========
