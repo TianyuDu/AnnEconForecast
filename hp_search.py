@@ -12,6 +12,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from pprint import pprint
 from typing import Dict, List
+from datetime import datetime
 
 import sys
 sys.path.append(".../")
@@ -93,6 +94,8 @@ def individual_train(para) -> None:
 
 for (i, para) in enumerate(parameter_collection):
     print("================================")
-    print(f"Control: executing [{i}]-th hyper-parameter searching session...")
+    print(f"Executing [{i}/{len(parameter_collection)}] hyper-parameter searching session...")
+    start = datetime.now()
     individual_train(para)
-    print("================================")
+    print(f"Time taken for session [{i}]: {str(datetime.now - start)}.")
+

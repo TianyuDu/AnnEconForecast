@@ -34,7 +34,7 @@ def exec_core(
 ) -> Tuple[
         Dict[str, float],
         Dict[int, Dict[str, np.ndarray]]
-]:  
+]:
     if verbose:
         print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
