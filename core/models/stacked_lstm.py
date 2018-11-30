@@ -148,9 +148,8 @@ def exec_core(
                 val_writer.add_summary(s_val, e)
             if e % (report_periods * 10) == 0:
                 # print 10 times less frequently than the record frequency.
-                if verbose:
-                    print(
-                        f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
+                print(
+                    f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
             if e in prediction_checkpoints:
                 p_train = pred.eval(feed_dict={X: X_train})
                 p_test = pred.eval(feed_dict={X: X_test})

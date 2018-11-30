@@ -98,8 +98,8 @@ def individual_train(para) -> None:
 
 for (i, para) in enumerate(parameter_collection):
     print("================================")
-    print(f"Executing [{i}/{len(parameter_collection)}] hyper-parameter searching session...")
+    print(f"Executing [{i}/{len(parameter_collection) - 1}] hyper-parameter searching session...")
     start = datetime.now()
     individual_train(para)
-    print(f"Time taken for session [{i}]: {str(datetime.now - start)}.")
+    print(f"Time taken for session [{i}]: {str(datetime.now() - start)}.")
 
