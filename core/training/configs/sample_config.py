@@ -20,7 +20,7 @@ file_config = {
 }
 
 # Model training parameters
-MAIN_DIRECTORY = "/home/ec2-user/hps_test/"
+MAIN_DIRECTORY = "~/Desktop"
 train_param = {
     "epochs": 300,
     "num_time_steps": [6, 12, 24],

@@ -23,7 +23,7 @@ from core.tools.time_series import *
 from core.tools.visualize import *
 from core.tools.rnn_prepare import *
 
-sys.path.extend(["../"])
+sys.path.extend(["/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast"])
 
 
 def exec_core(

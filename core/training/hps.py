@@ -15,8 +15,9 @@ from typing import Dict, List
 from datetime import datetime
 
 import sys
-sys.path.append(".../")
 sys.path.append("../")
+sys.path.append(
+    "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast")
 
 import constants
 from core.tools.metrics import *
@@ -28,6 +29,7 @@ import core.tools.rnn_prepare as rnn_prepare
 import core.models.stacked_lstm as stacked_lstm
 
 import core.training.hps_methods as hps_methods
+
 
 # data preparation phase.
 pprint(constants.DATA_DIR)
@@ -58,7 +60,8 @@ def individual_train(para) -> None:
         file_dir=FILE_DIR,
         periods=PERIODS,
         order=ORDER,
-        remove=None
+        remove=None,
+        verbose=False
     )
     (X_train, X_val, X_test,
      y_train, y_val, y_test) = rnn_prepare.generate_splited_dataset(
@@ -82,12 +85,11 @@ def individual_train(para) -> None:
     (metrics_dict, predictions) = stacked_lstm.exec_core(
         parameters=para,
         data_collection=data_collection,
-        clip_grad=None,
         prediction_checkpoints=checkpoints(
             para["epochs"] // 10
         )
     )
-
+    plt.close()
     fig = visualize.plot_checkpoints(predictions, y_test, "test")
     plt.savefig(para["fig_path"]+"pred_records.svg")
 
