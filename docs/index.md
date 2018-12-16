@@ -10,6 +10,8 @@ With recent advances in artificial neural networks, ANNs are are shown to be exc
 
 In this project, we aim to implement a wide range of models, both from structural and non-structural, to forecast various economic indicators, including unemployment and foreign exchange rates.
 
+
+
 ### Methodology
 
 Artificial neural networks, typically recurrent neural networks, are inherently suitable for capturing the inter-temporal dependency of sequential data.
@@ -18,11 +20,14 @@ Also, special types of recurrent units like Long Short Term Memory Unit are desi
 
 We use historical observations as the input feed to our neural nets and use the immediately following observation as the target.
 
+
+
 #### I. Generating Supervised Learning Problem
 
 To train our model, we firstly convert it into a typical supervised learning problem so we can train neural networks with it.
 
-For a typical univariate time series dataset, $\{x_t\}_{t=0}^T$ 
+For a typical univariate time series dataset, $$\{x_i\}_{i=0}^T$$ .
 
-**Definition** ***Lags** is a positive integer representing the number of time periods our model looks back while make prediction.*
+**Definition** * <u>Lag</u> is a positive integer representing the number of time periods our model looks back while make prediction.*
 
+For any $$t \in \{1, \dots, T\}$$, while the model is making prediction of $\hat{x}_t$, it looks $$Lag$$ periods back in time. That's, for the particular prediction, the model is a transformation mapping $$\{x_{t-Lag-1}, \dots, x_{t-1}\}$$  to the predicted value $$\hat{x}_t​$$.
