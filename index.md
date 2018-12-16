@@ -30,4 +30,6 @@ For a typical univariate time series dataset, $$\{x_i\}_{i=0}^T$$ .
 
 **Definition** * <u>Lag</u> is a positive integer representing the number of time periods our model looks back while make prediction.*
 
-For any $$t \in \{1, \dots, T\}$$, while the model is making prediction of $\hat{x}_t$, it looks $$Lag$$ periods back in time. That's, for the particular prediction, the model is a transformation mapping $$\{x_{t-Lag-1}, \dots, x_{t-1}\}$$  to the predicted value $$\hat{x}_t​$$.
+For any $$t \in \{1, \dots, T\}$$, while the model is making prediction of $\hat{x}_t$, it looks $$Lag$$ periods back in time. That's, for the particular prediction, the model is a transformation mapping $$\{x_{t-Lag-1}, \dots, x_{t-1}\}$$  to the predicted value $$\hat{x}_t$$.
+
+By dropping the first $$Lag$$ observations in the time series, we can 
