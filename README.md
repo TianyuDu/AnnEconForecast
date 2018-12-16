@@ -1,14 +1,10 @@
 # Artificial Neural Networks in Economic Forecasting
 
-## What's this
+## About this Project
 
-ANNEF is a project about the intermixing of economics, computer science and statistics.
+ANNEF is a project focusing on the interdisciplinary areas of economics, computer science, and statistics.
 
-The aim of this project is to implement various time-series prediction models in python. And then we apply those models on economic data and compare their efficiency and accuracy on real world data.
+With recent advances in artificial neural networks, ANNs are are shown to be excellent in image recognition and translation tasks. But we found relatively rare work done on examining the power of artificial neural networks on time series tasks.
 
-
-
-## Documentations
-
-A completed version of docs can be found on $$\sqrt{3}$$
+In this project, we aim to implement a wide range of models, both from structural and non-structural, to forecast various economic indicators, including unemployment and foreign exchange rates.
 
