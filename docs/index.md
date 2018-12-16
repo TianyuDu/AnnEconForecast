@@ -4,53 +4,25 @@
 
 ### About this Project
 
-ANNEF is a project about the intermixing of economics, computer science, and statistics.
+ANNEF is a project focusing on the interdisciplinary areas of economics, computer science, and statistics.
 
-This project aims to implement various time-series prediction models in python.
+With recent advances in artificial neural networks, ANNs are are shown to be excellent in image recognition and translation tasks. But we found relatively rare work done on examining the power of artificial neural networks on time series tasks.
 
-And then we apply those models to economic data and compare their efficiency and accuracy on real-world data.
+In this project, we aim to implement a wide range of models, both from structural and non-structural, to forecast various economic indicators, including unemployment and foreign exchange rates.
 
+### Methodology
 
+Artificial neural networks, typically recurrent neural networks, are inherently suitable for capturing the inter-temporal dependency of sequential data.
 
-### How to Run Models in this Project
+Also, special types of recurrent units like Long Short Term Memory Unit are designed to grasp relevant information across various lengths of lagged periods.
 
-All backbones of models are stored in `.py `  files under `/core`  directory.
+We use historical observations as the input feed to our neural nets and use the immediately following observation as the target.
 
-To execute certain model, one can run Jupyter notebooks in `/notebook`  directory and specify parameters within the notebook.
+#### I. Generating Supervised Learning Problem
 
-Detailed explanation, instruction and result visualization for a certain neural net can all be found in the corresponding Jupyter notebook.
+To train our model, we firstly convert it into a typical supervised learning problem so we can train neural networks with it.
 
+For a typical univariate time series dataset, $\{x_t\}_{t=0}^T$ 
 
+**Definition** ***Lags** is a positive integer representing the number of time periods our model looks back while make prediction.*
 
-### Packages Used in this Project
-
-This project is a learn-by-doing project, and we used various libraries to implement our models.
-
-#### Python
-
-* All python codes and Jupyter notebooks are written in python 3.
-
-* Basic python packages including `numpy`,  `scipy` and `pandas` are required.
-* Statistical packages including `sklearn` and `statsmodels` .
-* Machine learning libraries including `tensorflow` and `keras`.
-
-#### Matlab
-
-* Matlab models were developed in `MATLAB_2018a` . Please note that certain machine learning packages might not be supported in earlier versions of Matlab.
-
-
-
-### Repository Layout
-
-#### Main Models
-
-* `/core`  core files
-*  `/data` dataset directory
-* `/notebooks`  Jupyter notebooks
-* `/saved_models`  this is the default directory for TensorFlow to store models after training.
-* `/tensorboard`  this is the default directory for TensorFlow to store tensor board visualization files.
-
-#### Archived Models
-
-* `/keras_based`  models built on `keras`  packages
-* `/matlab_based`  models built on `MatLab` 
