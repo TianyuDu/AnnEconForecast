@@ -10,5 +10,5 @@ The aim of this project is to implement various time-series prediction models in
 
 ## Documentations
 
-A completed version of docs can be found on https://anneconforecast.readthedocs.io
+A completed version of docs can be found on $$\sqrt{3}$$
 
