@@ -3,7 +3,7 @@ This file contains the stacked version LSTM model for time series forecasting.
 """
 import sys
 from pprint import pprint
-from typing import Dict, Union, Iterable
+from typing import Dict, Iterable, Union
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -19,11 +19,11 @@ from core.models.baseline_rnn import *
 from core.models.stat_models import *
 from core.tools.data_import import *
 from core.tools.metrics import *
+from core.tools.rnn_prepare import *
 from core.tools.time_series import *
 from core.tools.visualize import *
-from core.tools.rnn_prepare import *
 
-sys.path.extend(["/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast"])
+# sys.path.extend(["/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast"])
 
 
 def exec_core(
@@ -179,3 +179,15 @@ def exec_core(
         verbose=True
     )
     return (metric_test, predictions)
+
+
+def restore_model(
+    parameters: Dict[str, object],
+    data_collection: Dict[str, np.ndarray],
+    prediction_checkpoints: Iterable[int] = [-1],
+    verbose: bool = False
+) -> Tuple[
+        Dict[str, float],
+        Dict[int, Dict[str, np.ndarray]]
+]:
+    raise NotImplementedError()

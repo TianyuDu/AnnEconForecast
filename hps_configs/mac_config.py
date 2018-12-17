@@ -8,7 +8,7 @@ EXPERIMENT_NAME = "mac_train"
 dp_config = {
     "PERIODS": 1,
     "ORDER": 1,
-    "LAGS": 4,
+    "LAGS": 12,
     "TRAIN_RATIO": 0.8,
     "VAL_RATIO": 0.1
 }
@@ -21,10 +21,11 @@ dp_config = {
 # }
 
 # Model training parameters
-MAIN_DIRECTORY = "/Volumes/Intel/annef_model_data/2018DEC17_MAC_01"
+# MAIN_DIRECTORY = "/Volumes/Intel/annef_model_data/2018DEC17_MAC_01"
+MAIN_DIRECTORY = "/Users/tianyudu/Desktop/sample_model"
 train_param = {
-    "epochs": 50,
-    "num_time_steps": 4,
+    "epochs": 150,
+    "num_time_steps": 12,
     "num_inputs": 1,
     "num_outputs": 1,
     "num_neurons": [
@@ -32,8 +33,7 @@ train_param = {
         (32, 64)
     ],
     "learning_rate": [
-        0.1,
-        0.03
+        0.1
     ],
     "clip_grad": None,
     "report_periods": 10,
