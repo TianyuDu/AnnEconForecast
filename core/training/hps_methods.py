@@ -2,9 +2,16 @@
 This script contains helper functions implemented
 for hyper-parameter searching / grid searching
 """
-import itertools
+import os
 import copy
-from typing import List, Dict, Union
+import itertools
+from typing import Dict, List, Union
+
+import matplotlib
+from matplotlib import pyplot as plt
+
+import core.tools.rnn_prepare as rnn_prepare
+import core.tools.visualize as visualize
 
 
 def gen_hparam_set(
@@ -84,3 +91,52 @@ def gen_hparam_set(
 
     print(f"Total number of parameter sets generated: {len(gen)}")
     return gen
+
+
+def individual_train(
+    model_param: Dict[str, object],
+    data_param: Dict[str, object],
+    exec_core: "function"
+) -> None:
+    prepared_df = rnn_prepare.prepare_dataset(
+        file_dir=data_param["FILE_DIR"],
+        periods=data_param["PERIODS"],
+        order=data_param["ORDER"],
+        remove=None,
+        verbose=False
+    )
+    (X_train, X_val, X_test,
+     y_train, y_val, y_test) = rnn_prepare.generate_splited_dataset(
+        raw=prepared_df,
+        train_ratio=data_param["TRAIN_RATIO"],
+        val_ratio=data_param["VAL_RATIO"],
+        lags=data_param["LAGS"]
+    )
+    data_collection = {
+        "X_train": X_train,
+        "X_val": X_val,
+        "X_test": X_test,
+        "y_train": y_train,
+        "y_val": y_val,
+        "y_test": y_test
+    }
+
+    def checkpoints(z):
+        return [
+            z*x for x in range(1, model_param["epochs"] // z)
+        ] + [-1]
+
+    (metrics_dict, predictions) = exec_core(
+        parameters=model_param,
+        data_collection=data_collection,
+        prediction_checkpoints=checkpoints(
+            model_param["epochs"] // 10
+        ) + [-1]
+    )
+    plt.close()
+    fig = visualize.plot_checkpoints(predictions, y_test, "test")
+
+    if not os.path.exists(model_param["fig_path"]):
+        os.makedirs(model_param["fig_path"])
+    assert not model_param["fig_path"].endswith("/")
+    plt.savefig(model_param["fig_path"] + "/" + "pred_records.svg")
