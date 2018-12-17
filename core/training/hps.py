@@ -19,6 +19,8 @@ sys.path.append("../")
 sys.path.append(
     "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast")
 core_dir = input("Directory of core files >>> ")
+if not core_dir.endswith("/"):
+    core_dir += "/"
 sys.path.append(core_dir)
 
 import constants
