@@ -20,7 +20,7 @@ dp_config = {
 # }
 
 # Model training parameters
-MAIN_DIRECTORY = "/home/ec2-user/ec2_hps/2018DEC06_01"
+MAIN_DIRECTORY = "/home/ec2-user/ec2_hps/2018DEC06_02"
 train_param = {
     "epochs": 100,
     "num_time_steps": [12, 24],
