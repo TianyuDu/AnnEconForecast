@@ -96,10 +96,11 @@ def gen_hparam_set(
 def individual_train(
     model_param: Dict[str, object],
     data_param: Dict[str, object],
-    exec_core: "function"
+    exec_core: "function",
+    file_dir: str
 ) -> None:
     prepared_df = rnn_prepare.prepare_dataset(
-        file_dir=data_param["FILE_DIR"],
+        file_dir=file_dir,
         periods=data_param["PERIODS"],
         order=data_param["ORDER"],
         remove=None,
