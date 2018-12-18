@@ -7,7 +7,7 @@ EXPERIMENT_NAME = "mac_train"
 # MAIN_DIRECTORY = "/Volumes/Intel/annef_model_data/2018DEC17_MAC_01"
 MAIN_DIRECTORY = "/Users/tianyudu/Desktop/sample_model"
 main = {
-    # ======== Data Pre-processing Parameter
+    # ======== Data Pre-processing Parameter ========
     "PERIODS": 1,
     "ORDER": 1,
     "LAGS": 12,
@@ -32,3 +32,5 @@ main = {
     "model_path": MAIN_DIRECTORY + "/saved_models/",
     "fig_path": MAIN_DIRECTORY + "/model_figs/"
 }
+
+assert main["LAGS"] == main["num_time_steps"], "Lags and num_time_steps parameters should have equal length."
