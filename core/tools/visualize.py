@@ -71,12 +71,16 @@ def plot_checkpoint_combined(
 
     for i, e in enumerate(predictions.keys()):
         current_pred = predictions[e]
-        axarr[i].plot(range(len_train), current_pred["train"].reshape(-1, 1), alpha=0.6)
-        axarr[i].plot(range(len_train), actual["train"].reshape(-1, 1), alpha=0.6)
-        axarr[i].plot(range(len_train, len_train + len_val), current_pred["val"].reshape(-1, 1), alpha=0.6)
-        axarr[i].plot(range(len_train, len_train + len_val), actual["val"].reshape(-1, 1), alpha=0.6)
+        axarr[i].plot(
+            range(len_train), current_pred["train"].reshape(-1, 1), alpha=0.6, linewidth=0.7)
+        axarr[i].plot(
+            range(len_train), actual["train"].reshape(-1, 1), alpha=0.6, linewidth=0.7)
+        axarr[i].plot(
+            range(len_train, len_train + len_val), current_pred["val"].reshape(-1, 1), alpha=0.6, linewidth=0.7)
+        axarr[i].plot(
+            range(len_train, len_train + len_val), actual["val"].reshape(-1, 1), alpha=0.6, linewidth=0.7)
 
-        axarr[i].set_title([f"Model Prediction at [{e}] epochs."])
+        axarr[i].set_title(f"Model Prediction at [{e}] epochs.")
         axarr[i].legend([
             "Train Prediction",
             "Train Actual",
