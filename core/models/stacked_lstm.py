@@ -25,20 +25,19 @@ from core.tools.visualize import *
 
 # sys.path.extend(["/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast"])
 
+
 def make_prediction_all(
-    pred: tf.Tensor,
+    predictor: tf.Tensor,
     X: tf.Tensor,
     data: Dict[str, np.ndarray]
 ) -> Dict[str, np.ndarray]:
-    p_train = pred.eval(feed_dict={X: data["X_train"]})
-    p_test = pred.eval(feed_dict={X: data["X_test"]})
-    p_val = pred.eval(feed_dict={X: data["X_val"]})
-    collection = {
+    p_train = predictor.eval(feed_dict={X: data["X_train"]})
+    p_val = predictor.eval(feed_dict={X: data["X_val"]})
+    result = {
         "train": p_train,
-        "test": p_test,
         "val": p_val
     }
-    return collection
+    return result
 
 
 def exec_core(
@@ -235,6 +234,7 @@ def exec_core(
     return (metric_test, predictions)
 
 
+# TODO: consider if to drop this method, it's already implemented in a jupyter notebook.
 def restore_model(
     parameters: Dict[str, object],
     data_collection: Dict[str, np.ndarray],
