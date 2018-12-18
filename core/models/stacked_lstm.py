@@ -57,12 +57,6 @@ def exec_core(
         print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
 
-    # TODO: remove the update method
-    # Ue 
-
-    # globals().update(param)
-    # globals().update(data)
-
     assert all(isinstance(x, int)
                for x in prediction_checkpoints), "Invalid checkpoint of recording."
     assert all(
