@@ -2,33 +2,26 @@
 Default hyper parameter searching configuration working on EC2.
 """
 # Name of configuration
-EXPERIMENT_NAME = "ec2_hps"
-
-# Data Pre-processing configuration
-dp_config = {
-    "PERIODS": 1,
-    "ORDER": 1,
-    "LAGS": 12,
-    "TRAIN_RATIO": 0.8
-}
-
-# File configuration
-# file_config = {
-#     "EXPERIMENT_NAME": EXPERIMENT_NAME,
-#     "TENSORBOARD_DIR": f"../tensorboard/{EXPERIMENT_NAME}",
-#     "MODEL_PATH": f"/home/ec2-user/saved_models/{EXPERIMENT_NAME}"
-# }
+EXPERIMENT_NAME = "ec2_default"
 
 # Model training parameters
-MAIN_DIRECTORY = "/home/ec2-user/ec2_hps/2018DEC06_02"
-train_param = {
-    "epochs": 100,
-    "num_time_steps": [12, 24],
+MAIN_DIRECTORY = "/home/ec2-user/ec2_hps/2018DEC17_EC2_01"
+main = {
+    # ======== Data Pre-processing Parameter ========
+    "PERIODS": 1,
+    "ORDER": 1,
+    "LAGS": [6, 12, 18],
+    "TRAIN_RATIO": 0.8,
+    "VAL_RATIO": 0.1,
+    # ======== Model Training Parameter ========
+    "epochs": [150, 300, 500],
     "num_inputs": 1,
     "num_outputs": 1,
+    "num_time_steps": None,  # num_time_steps is identical to LAGS
     "num_neurons": [
-        (256, 128),
-        (512, 256)
+        (128, 512),
+        (64, 128, 256),
+        (128, 256, 215)
     ],
     "learning_rate": [
         0.1,

@@ -2,7 +2,7 @@
 Sample hyper-parameter searching configuration file
 """
 # Name
-EXPERIMENT_NAME = "untitled_experiment"
+EXPERIMENT_NAME = "mac_default"
 
 # MAIN_DIRECTORY = "/Volumes/Intel/annef_model_data/2018DEC17_MAC_01"
 MAIN_DIRECTORY = "/Volumes/Intel/annef_model_data/2016DEC17_MAC_02"
