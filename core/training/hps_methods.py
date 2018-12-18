@@ -86,8 +86,8 @@ def individual_train(
         pred = dict((e, val[set_name]) for e, val in predictions.items())
         plt.close()
         fig = visualize.plot_checkpoint_individual(
-            pred,
-            model_data_feed["y_" + set_name],
+            predictions=pred,
+            actual=model_data_feed["y_" + set_name],
             name=set_name)
 
         if not os.path.exists(param["fig_path"]):
@@ -97,6 +97,7 @@ def individual_train(
         plt.close()
     
     fig = visualize.plot_checkpoint_combined(
-        pred
+        predictions=predictions,
+        actual={"train": y_train, "val": y_val}
     )
     
