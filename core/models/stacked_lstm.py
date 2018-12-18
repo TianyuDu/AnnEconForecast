@@ -66,7 +66,7 @@ def exec_core(
     assert all(isinstance(x, int)
                for x in prediction_checkpoints), "Invalid checkpoint of recording."
     assert all(
-        -1 <= x <= epochs for x in prediction_checkpoints), "Checkpoint out of range."
+        -1 <= x <= param["epochs"] for x in prediction_checkpoints), "Checkpoint out of range."
 
     with tf.name_scope("DATA_FEED"):
         X = tf.placeholder(
@@ -191,7 +191,7 @@ def exec_core(
 
             sess.run(train, feed_dict={X: data["X_train"], y: data["y_train"]})
 
-            if e % report_periods == 0:
+            if e % param["report_periods"] == 0:
                 # In those periods, training summary is written to tensorboard record.
                 # Summary on training set.
                 train_summary = sess.run(
@@ -207,7 +207,7 @@ def exec_core(
                 train_writer.add_summary(train_summary, e)
                 val_writer.add_summary(val_summary, e)
 
-            if e % (report_periods * 10) == 0 and verbose:
+            if e % (param["report_periods"] * 10) == 0 and verbose:
                 # print out training result 10 times less frequently than the record frequency.
                 train_mse = loss.eval(
                     feed_dict={X: data["X_train"], y: data["y_train"]}
@@ -231,8 +231,8 @@ def exec_core(
     print(f"Time taken for [{param['epochs']}] epochs: ", datetime.now() - start)
     print("Final result:")
     metric_test = metrics.merged_scores(
-        actual=pd.DataFrame(y_test),
-        pred=pd.DataFrame(p_test),
+        actual=pd.DataFrame(data["y_test"]),
+        pred=pd.DataFrame(list(predictions.values())[-1]["test"]),
         verbose=True
     )
     return (metric_test, predictions)

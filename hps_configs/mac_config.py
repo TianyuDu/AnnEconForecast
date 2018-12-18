@@ -30,7 +30,8 @@ train_param = {
     "num_outputs": 1,
     "num_neurons": [
         (16, 32),
-        (32, 64)
+        (32, 64),
+        (64, 64, 128)
     ],
     "learning_rate": [
         0.1

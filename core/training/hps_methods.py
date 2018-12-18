@@ -128,8 +128,8 @@ def individual_train(
         ] + [-1]
 
     (metrics_dict, predictions) = exec_core(
-        parameters=model_param,
-        data_collection=data_collection,
+        param=model_param,
+        data=data_collection,
         prediction_checkpoints=checkpoints(
             model_param["epochs"] // 10
         ) + [-1]
