@@ -121,7 +121,7 @@ def normalize(
     return df
 
 
-def generate_splited_dataset(
+def split_dataset(
     raw: pd.DataFrame,
     train_ratio: float,
     val_ratio: float,
