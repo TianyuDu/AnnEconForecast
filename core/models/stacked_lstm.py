@@ -45,10 +45,7 @@ def exec_core(
     data: Dict[str, np.ndarray],
     prediction_checkpoints: Iterable[int]=[-1],
     verbose: bool=True
-) -> Tuple[
-        Dict[str, float],
-        Dict[int, Dict[str, np.ndarray]]
-]:
+) -> Dict[int, Dict[str, np.ndarray]]:
     """
     # TODO: write the doc string.
     """
@@ -224,14 +221,14 @@ def exec_core(
 
     # Summarize testing set statistics.
     # Fetch the final prediction.
-    p_test_final = list(predictions.values())[-1]["test"]
-    print("Final result (on test set):")
-    metric_test = metrics.merged_scores(
-        actual=pd.DataFrame(data["y_test"]),
-        pred=pd.DataFrame(p_test_final),
-        verbose=True
-    )
-    return (metric_test, predictions)
+    # p_test_final = list(predictions.values())[-1]["test"]
+    # print("Final result (on test set):")
+    # metric_test = metrics.merged_scores(
+    #     actual=pd.DataFrame(data["y_test"]),
+    #     pred=pd.DataFrame(p_test_final),
+    #     verbose=True
+    # )
+    return predictions
 
 
 # TODO: consider if to drop this method, it's already implemented in a jupyter notebook.
