@@ -28,7 +28,7 @@ main = {
     ],
     "clip_grad": None,
     "report_periods": 10,
-    "tensorboard_dir": MAIN_DIRECTORY + "/tensorboard/",
+    "tensorboard_path": MAIN_DIRECTORY + "/tensorboard/",
     "model_path": MAIN_DIRECTORY + "/saved_models/",
     "fig_path": MAIN_DIRECTORY + "/model_figs/"
 }

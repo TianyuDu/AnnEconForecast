@@ -157,7 +157,7 @@ def exec_core(
 
 
     # TODO: remove this
-    tb_dir = param["tensorboard_dir"]
+    tb_dir = param["tensorboard_path"]
 
     start = datetime.now()
     
@@ -170,10 +170,10 @@ def exec_core(
         merged_summary = tf.summary.merge_all()
         
         train_writer = tf.summary.FileWriter(
-            param["tensorboard_dir"] + "/train")
+            param["tensorboard_path"] + "/train")
 
         val_writer = tf.summary.FileWriter(
-            param["tensorboard_dir"] + "/validation")
+            param["tensorboard_path"] + "/validation")
         train_writer.add_graph(sess.graph)
 
         # val_writer.add_graph(sess.graph)
