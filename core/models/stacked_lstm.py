@@ -45,7 +45,7 @@ def exec_core(
     param: Dict[str, object],
     data: Dict[str, np.ndarray],
     prediction_checkpoints: Iterable[int]=[-1],
-    verbose: bool=False
+    verbose: bool=True
 ) -> Tuple[
         Dict[str, float],
         Dict[int, Dict[str, np.ndarray]]
@@ -155,13 +155,9 @@ def exec_core(
             ]
             train = optimizer.apply_gradients(capped_gvs)
 
-
-    # TODO: remove this
-    tb_dir = param["tensorboard_path"]
-
     start = datetime.now()
-    
     predictions = dict()
+
     if verbose:
         print("Running training session...")
 
@@ -224,11 +220,16 @@ def exec_core(
 
         print("Saving the model...")
         saver.save(sess, param["model_path"])
+
     print(f"Time taken for [{param['epochs']}] epochs: ", datetime.now() - start)
-    print("Final result:")
+
+    # Summarize testing set statistics.
+    # Fetch the final prediction.
+    p_test_final = list(predictions.values())[-1]["test"]
+    print("Final result (on test set):")
     metric_test = metrics.merged_scores(
         actual=pd.DataFrame(data["y_test"]),
-        pred=pd.DataFrame(list(predictions.values())[-1]["test"]),
+        pred=pd.DataFrame(p_test_final),
         verbose=True
     )
     return (metric_test, predictions)
