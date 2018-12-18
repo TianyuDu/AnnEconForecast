@@ -28,7 +28,7 @@ def plot_checkpoints(
         len(predictions.keys()),
         sharex=False,
         sharey=False,
-        figsize=(32, 8*len(predictions.keys())))
+        figsize=(16, 4*len(predictions.keys())))
     for i, e in enumerate(predictions.keys()):
         pred = predictions[e]
         axarr[i].plot(pred[key].reshape(-1, 1), alpha=0.6)

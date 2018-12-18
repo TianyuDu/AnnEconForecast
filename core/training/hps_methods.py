@@ -15,24 +15,23 @@ import core.tools.visualize as visualize
 
 
 def individual_train(
-    model_param: Dict[str, object],
-    data_param: Dict[str, object],
+    param: Dict[str, object],
     exec_core: "function",
     file_dir: str
 ) -> None:
-    prepared_df = rnn_prepare.prepare_dataset(
+    df_ready = rnn_prepare.prepare_dataset(
         file_dir=file_dir,
-        periods=data_param["PERIODS"],
-        order=data_param["ORDER"],
+        periods=param["PERIODS"],
+        order=param["ORDER"],
         remove=None,
         verbose=False
     )
     (X_train, X_val, X_test,
      y_train, y_val, y_test) = rnn_prepare.generate_splited_dataset(
-        raw=prepared_df,
-        train_ratio=data_param["TRAIN_RATIO"],
-        val_ratio=data_param["VAL_RATIO"],
-        lags=data_param["LAGS"]
+        raw=df_ready,
+        train_ratio=param["TRAIN_RATIO"],
+        val_ratio=param["VAL_RATIO"],
+        lags=param["LAGS"]
     )
     data_collection = {
         "X_train": X_train,
@@ -45,16 +44,18 @@ def individual_train(
 
     def checkpoints(z):
         return [
-            z*x for x in range(1, model_param["epochs"] // z)
+            z*x for x in range(1, param["epochs"] // z)
         ] + [-1]
 
     (metrics_dict, predictions) = exec_core(
-        param=model_param,
+        param=param,
         data=data_collection,
         prediction_checkpoints=checkpoints(
-            model_param["epochs"] // 10
+            param["epochs"] // 10
         ) + [-1]
     )
+
+    # Visualize
     for s in ["train", "val", "test"]:
         plt.close()
         fig = visualize.plot_checkpoints(
@@ -62,8 +63,8 @@ def individual_train(
             data_collection["y_" + s],
             s)
 
-        if not os.path.exists(model_param["fig_path"]):
-            os.makedirs(model_param["fig_path"])
-        assert not model_param["fig_path"].endswith("/")
-        plt.savefig(model_param["fig_path"] + "/" + f"pred_record_{s}.svg")
+        if not os.path.exists(param["fig_path"]):
+            os.makedirs(param["fig_path"])
+        assert not param["fig_path"].endswith("/")
+        plt.savefig(param["fig_path"] + "/" + f"pred_record_{s}.svg")
         plt.close()

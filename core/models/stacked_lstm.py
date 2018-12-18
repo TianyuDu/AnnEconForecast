@@ -53,6 +53,7 @@ def exec_core(
     """
     # TODO: write the doc string.
     """
+    param["num_time_steps"] = param["LAGS"]
     if verbose:
         print("Resetting Tensorflow defalut graph...")
     tf.reset_default_graph()
@@ -178,6 +179,7 @@ def exec_core(
         # val_writer.add_graph(sess.graph)
 
         sess.run(tf.global_variables_initializer())
+        print("Training model...")
         for e in range(param["epochs"]):
             # Use this if train with batches
             # for X_batch, y_batch in zip(X_batches, y_batches):

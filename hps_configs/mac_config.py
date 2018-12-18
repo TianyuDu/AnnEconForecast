@@ -10,12 +10,11 @@ main = {
     # ======== Data Pre-processing Parameter ========
     "PERIODS": 1,
     "ORDER": 1,
-    "LAGS": 12,
+    "LAGS": [6, 12],
     "TRAIN_RATIO": 0.8,
     "VAL_RATIO": 0.1,
     # ======== Model Training Parameter ========
     "epochs": 150,
-    "num_time_steps": 12,
     "num_inputs": 1,
     "num_outputs": 1,
     "num_neurons": [
