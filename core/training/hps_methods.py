@@ -22,9 +22,10 @@ def checkpoints(period, total):
     to generate checkpoint list with integers 
     for every PERIOD time steps and TOTAL time steps in total.
     """
-    return [
+    ckps = [
         period * x for x in range(1, total // period)
     ]
+    return ckps
 
 
 def individual_train(
@@ -63,7 +64,7 @@ def individual_train(
     }
 
     # The checkpoint list 
-    ckps = checkpoints(param["epochs"] // 10) + [-1]
+    ckps = checkpoints(param["epochs"] // 10, param["epochs"]) + [-1]
 
     predictions = exec_core(
         param=param,
