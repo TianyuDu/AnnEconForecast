@@ -37,29 +37,6 @@ def gen_hparam_set(
         A list (iterable) with all combination of candidates in 
             flexiable (to be searched) parameters.
     """
-
-    # ======== EXAMPLE INPUT ========
-    sample_param = {
-        "epochs": 1500,
-        "num_time_steps": [6, 12, 24],
-        "num_inputs": 1,
-        "num_outputs": 1,
-        "num_neurons": [
-            (256, 128),
-            (256, 128, 64),
-            (512, 256),
-            (512, 256, 128),
-            (1024, 512),
-            (1024, 512, 256)
-        ],
-        "learning_rate": [0.3, 0.1, 0.03],
-        "report_periods": 10,
-        "clip_grad": None,
-        "tensorboard_dir": "/home/ec2-user/hps_test/tensorboard/",
-        "model_path": "/home/ec2-user/hps_test/saved_models/",
-        "fig_path": "/home/ec2-user/hps_test/model_figs/"
-    }
-    # ======== END ========
     # ======== Args Check ========
     assert all(
         k in sample_param.keys()
