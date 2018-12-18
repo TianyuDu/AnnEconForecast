@@ -2,10 +2,10 @@
 Sample hyper-parameter searching configuration file
 """
 # Name
-EXPERIMENT_NAME = "mac_train"
+EXPERIMENT_NAME = "untitled_experiment"
 
 # MAIN_DIRECTORY = "/Volumes/Intel/annef_model_data/2018DEC17_MAC_01"
-MAIN_DIRECTORY = "/Users/tianyudu/Desktop/sample_model"
+MAIN_DIRECTORY = "/Volumes/Intel/annef_model_data/2016DEC17_MAC_02"
 main = {
     # ======== Data Pre-processing Parameter ========
     "PERIODS": 1,
@@ -17,6 +17,7 @@ main = {
     "epochs": 150,
     "num_inputs": 1,
     "num_outputs": 1,
+    "num_time_steps": None,  # num_time_steps is identical to LAGS
     "num_neurons": [
         (16, 32),
         (32, 64),
@@ -31,5 +32,3 @@ main = {
     "model_path": MAIN_DIRECTORY + "/saved_models/",
     "fig_path": MAIN_DIRECTORY + "/model_figs/"
 }
-
-assert main["LAGS"] == main["num_time_steps"], "Lags and num_time_steps parameters should have equal length."
