@@ -134,10 +134,15 @@ def individual_train(
             model_param["epochs"] // 10
         ) + [-1]
     )
-    plt.close()
-    fig = visualize.plot_checkpoints(predictions, y_test, "test")
+    for s in ["train", "val", "test"]:
+        plt.close()
+        fig = visualize.plot_checkpoints(
+            predictions,
+            data_collection["y_" + s],
+            s)
 
-    if not os.path.exists(model_param["fig_path"]):
-        os.makedirs(model_param["fig_path"])
-    assert not model_param["fig_path"].endswith("/")
-    plt.savefig(model_param["fig_path"] + "/" + "pred_records.svg")
+        if not os.path.exists(model_param["fig_path"]):
+            os.makedirs(model_param["fig_path"])
+        assert not model_param["fig_path"].endswith("/")
+        plt.savefig(model_param["fig_path"] + "/" + f"pred_record_{s}.svg")
+        plt.close()
