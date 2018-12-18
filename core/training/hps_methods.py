@@ -107,3 +107,4 @@ def individual_train(
     plt.savefig(param["fig_path"] + "/" + f"pred_record_combined.svg")
     plt.close()
     
+        
