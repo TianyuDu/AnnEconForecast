@@ -94,11 +94,16 @@ def individual_train(
         if not os.path.exists(param["fig_path"]):
             os.makedirs(param["fig_path"])
         assert not param["fig_path"].endswith("/")
-        plt.savefig(param["fig_path"] + "/" + f"pred_record_{s}.svg")
+        plt.savefig(param["fig_path"] + "/" + f"pred_record_{set_name}.svg")
         plt.close()
     
     fig = visualize.plot_checkpoint_combined(
         predictions=predictions,
         actual={"train": y_train, "val": y_val}
     )
+    if not os.path.exists(param["fig_path"]):
+        os.makedirs(param["fig_path"])
+    assert not param["fig_path"].endswith("/")
+    plt.savefig(param["fig_path"] + "/" + f"pred_record_combined.svg")
+    plt.close()
     

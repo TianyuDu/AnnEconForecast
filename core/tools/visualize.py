@@ -59,8 +59,8 @@ def plot_checkpoint_combined(
     the training set in gross.
     """
     # TODO: add time stampe to x-axis.
-    len_train = actual["train"]
-    len_val = actual["val"]
+    len_train = len(actual["train"])
+    len_val = (actual["val"])
 
     f, axarr = plt.subplots(
         len(predictions.keys()),
