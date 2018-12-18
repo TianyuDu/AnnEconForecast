@@ -14,11 +14,26 @@ import core.tools.rnn_prepare as rnn_prepare
 import core.tools.visualize as visualize
 
 
+def checkpoints(period, total):
+    """
+    A helpful function for individual train method.
+    to generate checkpoint list with integers 
+    for every PERIOD time steps and TOTAL time steps in total.
+    """
+    return [
+        period * x for x in range(1, total // period)
+    ]
+
+
 def individual_train(
     param: Dict[str, object],
     exec_core: "function",
     file_dir: str
 ) -> None:
+    """
+    TODO: doc string
+    """
+    # Generate the dataset.
     df_ready = rnn_prepare.prepare_dataset(
         file_dir=file_dir,
         periods=param["PERIODS"],
@@ -26,6 +41,8 @@ def individual_train(
         remove=None,
         verbose=False
     )
+
+    # Split dataset.
     (X_train, X_val, X_test,
      y_train, y_val, y_test) = rnn_prepare.generate_splited_dataset(
         raw=df_ready,
@@ -41,11 +58,6 @@ def individual_train(
         "y_val": y_val,
         "y_test": y_test
     }
-
-    def checkpoints(z):
-        return [
-            z*x for x in range(1, param["epochs"] // z)
-        ] + [-1]
 
     (metrics_dict, predictions) = exec_core(
         param=param,
