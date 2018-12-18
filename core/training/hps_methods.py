@@ -82,12 +82,13 @@ def individual_train(
     )
 
     # Visualize prediction during training.
-    for s in ["train", "val"]:
+    for set_name in ["train", "val"]:
+        pred = dict((e, val[set_name]) for e, val in predictions.items())
         plt.close()
         fig = visualize.plot_checkpoints(
-            predictions,
-            model_data_feed["y_" + s],
-            name=s)
+            pred,
+            model_data_feed["y_" + set_name],
+            name=set_name)
 
         if not os.path.exists(param["fig_path"]):
             os.makedirs(param["fig_path"])
