@@ -134,15 +134,13 @@ def exec_core(
 
         if param["clip_grad"] is None:
             # No Gradient Clipping
-            if verbose:
-                print("Note: no gradient clipping is applied.\
-                \nIf possible gradient exploding detected (e.g. nan loss), try use clip_grad.")
+            print("Note: no gradient clipping is applied.\
+            \nIf possible gradient exploding detected (e.g. nan loss), try use clip_grad.")
             train = optimizer.minimize(loss)
         else:
             # With Gradient Clipping
-            if verbose:
-                print("Applying gradient clipping...")
-                print(f"\tClip by values: {param['clip_grad']}")
+            print("Applying gradient clipping...")
+            print(f"\tClip by values: {param['clip_grad']}")
             gvs = optimizer.compute_gradients(loss)
             capped_gvs = [
                 (tf.clip_by_value(
@@ -154,8 +152,7 @@ def exec_core(
     start = datetime.now()
     predictions = dict()
 
-    if verbose:
-        print("Running training session...")
+    print("Starting training session...")
 
     with tf.Session() as sess:
         saver = tf.train.Saver()
