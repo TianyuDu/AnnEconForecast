@@ -18,7 +18,7 @@ from constants import *
 from core.models.baseline_rnn import *
 from core.models.stat_models import *
 from core.tools.data_import import *
-from core.tools.metrics import *
+import core.tools.metrics as metrics
 from core.tools.rnn_prepare import *
 from core.tools.time_series import *
 from core.tools.visualize import *
@@ -224,16 +224,13 @@ def exec_core(
                 predictions[e] = make_prediction_all(pred, X, data)
 
         if -1 in prediction_checkpoints:
-            predictions[epochs] = {
-                "train": p_train,
-                "test": p_test,
-                "val": p_val
-            }
+            predictions[param["epochs"]] = make_prediction_all(pred, X, data)
 
-        print("Saving the trained model...")
-        saver.save(sess, model_path)
-    print(f"Time taken for [{epochs}] epochs: ", datetime.now()-start)
-    metric_test = merged_scores(
+        print("Saving the model...")
+        saver.save(sess, param["model_path"])
+    print(f"Time taken for [{param['epochs']}] epochs: ", datetime.now() - start)
+    print("Final result:")
+    metric_test = metrics.merged_scores(
         actual=pd.DataFrame(y_test),
         pred=pd.DataFrame(p_test),
         verbose=True
