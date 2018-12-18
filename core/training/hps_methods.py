@@ -85,7 +85,7 @@ def individual_train(
     for set_name in ["train", "val"]:
         pred = dict((e, val[set_name]) for e, val in predictions.items())
         plt.close()
-        fig = visualize.plot_checkpoints(
+        fig = visualize.plot_checkpoint_individual(
             pred,
             model_data_feed["y_" + set_name],
             name=set_name)
@@ -96,4 +96,7 @@ def individual_train(
         plt.savefig(param["fig_path"] + "/" + f"pred_record_{s}.svg")
         plt.close()
     
+    fig = visualize.plot_checkpoint_combined(
+        pred
+    )
     

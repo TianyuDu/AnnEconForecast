@@ -18,7 +18,7 @@ def progbar(curr, total, full_progbar):
         full_progbar-filled_progbar), '[{:>7.2%}]'.format(frac), end='')
 
 
-def plot_checkpoint_sequential(
+def plot_checkpoint_individual(
     predictions: Dict[int, np.ndarray],
     actual: np.ndarray,
     name: str
