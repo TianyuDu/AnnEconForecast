@@ -95,3 +95,5 @@ def individual_train(
         assert not param["fig_path"].endswith("/")
         plt.savefig(param["fig_path"] + "/" + f"pred_record_{s}.svg")
         plt.close()
+    
+    
