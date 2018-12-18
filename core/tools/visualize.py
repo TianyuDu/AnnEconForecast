@@ -60,7 +60,7 @@ def plot_checkpoint_combined(
     """
     # TODO: add time stampe to x-axis.
     len_train = len(actual["train"])
-    len_val = (actual["val"])
+    len_val = len(actual["val"])
 
     f, axarr = plt.subplots(
         len(predictions.keys()),
