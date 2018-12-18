@@ -26,7 +26,7 @@ from core.tools.visualize import *
 # sys.path.extend(["/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast"])
 
 
-def make_prediction_all(
+def make_predictions(
     predictor: tf.Tensor,
     X: tf.Tensor,
     data: Dict[str, np.ndarray]
@@ -209,10 +209,10 @@ def exec_core(
             
 
             if e in prediction_checkpoints:
-                predictions[e] = make_prediction_all(pred, X, data)
+                predictions[e] = make_predictions(pred, X, data)
 
         if -1 in prediction_checkpoints:
-            predictions[param["epochs"]] = make_prediction_all(pred, X, data)
+            predictions[param["epochs"]] = make_predictions(pred, X, data)
 
         print("Saving the model...")
         saver.save(sess, param["model_path"])
