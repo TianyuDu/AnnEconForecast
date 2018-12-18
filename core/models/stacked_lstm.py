@@ -215,16 +215,7 @@ def exec_core(
         saver.save(sess, param["model_path"])
 
     print(f"Time taken for [{param['epochs']}] epochs: ", datetime.now() - start)
-
-    # Summarize testing set statistics.
-    # Fetch the final prediction.
-    # p_test_final = list(predictions.values())[-1]["test"]
-    # print("Final result (on test set):")
-    # metric_test = metrics.merged_scores(
-    #     actual=pd.DataFrame(data["y_test"]),
-    #     pred=pd.DataFrame(p_test_final),
-    #     verbose=True
-    # )
+    
     return predictions
 
 
