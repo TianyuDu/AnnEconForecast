@@ -4,26 +4,16 @@ Sample hyper-parameter searching configuration file
 # Name
 EXPERIMENT_NAME = "mac_train"
 
-# Data Pre-processing configuration
-dp_config = {
+# MAIN_DIRECTORY = "/Volumes/Intel/annef_model_data/2018DEC17_MAC_01"
+MAIN_DIRECTORY = "/Users/tianyudu/Desktop/sample_model"
+main = {
+    # ======== Data Pre-processing Parameter
     "PERIODS": 1,
     "ORDER": 1,
     "LAGS": 12,
     "TRAIN_RATIO": 0.8,
-    "VAL_RATIO": 0.1
-}
-
-# File configuration
-# file_config = {
-#     "EXPERIMENT_NAME": EXPERIMENT_NAME,
-#     "TENSORBOARD_DIR": f"../tensorboard/{EXPERIMENT_NAME}",
-#     "MODEL_PATH": f"/home/ec2-user/saved_models/{EXPERIMENT_NAME}"
-# }
-
-# Model training parameters
-# MAIN_DIRECTORY = "/Volumes/Intel/annef_model_data/2018DEC17_MAC_01"
-MAIN_DIRECTORY = "/Users/tianyudu/Desktop/sample_model"
-train_param = {
+    "VAL_RATIO": 0.1,
+    # ======== Model Training Parameter ========
     "epochs": 150,
     "num_time_steps": 12,
     "num_inputs": 1,
