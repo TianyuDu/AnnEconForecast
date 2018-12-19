@@ -1,3 +1,6 @@
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+
 # ANNEF
 
 > Artificial Neural Networks in Economic Forecasting
@@ -39,6 +42,8 @@ In our baseline neural network,  we use a univariate time series as our main dat
 To train our model, we first convert it into a typical supervised learning problem so we can train neural networks with error minimization oriented algorithms.  With user specified *lag* variable, the supervised learning problem (SLP) generator loops over the entire dataset and for each period, *t*, it marks the series range from *t-lag* to *t-1* as training feature and value at period *t* as the label.
 
 $\{x_i\}_{t \in T}$
+
+$$\int x^2 dx$$
 
 By dropping the first few observations in the time series (since we don't have sufficient historical data to make predictions on them), we can generate roughly as many feature-label pairs, say, sample, as the length of time series.
 
