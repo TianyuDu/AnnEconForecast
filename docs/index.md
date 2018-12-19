@@ -38,11 +38,11 @@ In our baseline neural network,  we use a univariate time series as our main dat
 
 To train our model, we first convert it into a typical supervised learning problem so we can train neural networks with error minimization oriented algorithms.  With user specified *lag* variable, the supervised learning problem (SLP) generator loops over the entire dataset and for each period, *t*, it marks the series range from *t-lag* to *t-1* as training feature and value at period *t* as the label.
 
-<img src="/docs/tex/606adc68e3c3c3e2baf9de6309a0f55d.svg?invert_in_darkmode&sanitize=true" align=middle width=54.66420464999999pt height=24.65753399999998pt/>
+![eq1](http://latex.codecogs.com/svg.latex?3x+1=3)
 
-<p align="center"><img src="/docs/tex/10e1aca8ca553273d3bf0137588f9ff7.svg?invert_in_darkmode&sanitize=true" align=middle width=53.89843964999999pt height=36.53007435pt/></p>
+![eq2](http://latex.codecogs.com/svg.latex?\int 2x^2 dx)
 
-By dropping the first few observations in the time series (since we don't have sufficient historical data to make predictions on them), we can generate roughly as many feature-label pairs, say, sample, as the length of time series.
+By dropping the first few observations in the time series (since we don't have sufficient historical data to make predictions on them), we can generate roughly as many feature-label pairs, say, sample, as the length of time series. ![eq](http://latex.codecogs.com/svg.latex?2x) another sample
 
 #### ii. Splitting SLP
 
@@ -65,9 +65,4 @@ Model structure (graph) and weights are stored after training session finishes.
 After the training session is finished, we evaluate the performance of the model with various performance and compare them with benchmark models from time series analysis.
 
 Also, a copy of TensorBoard source code is stored together with the model structure and weights after training, one can use the `tensorboard` to navigate the structure of model and detailed metrics on performance.
-
-
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script>
-
 
