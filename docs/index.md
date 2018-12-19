@@ -1,6 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script>
-
 # ANNEF
 
 > Artificial Neural Networks in Economic Forecasting
@@ -68,3 +65,9 @@ Model structure (graph) and weights are stored after training session finishes.
 After the training session is finished, we evaluate the performance of the model with various performance and compare them with benchmark models from time series analysis.
 
 Also, a copy of TensorBoard source code is stored together with the model structure and weights after training, one can use the `tensorboard` to navigate the structure of model and detailed metrics on performance.
+
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+
+
