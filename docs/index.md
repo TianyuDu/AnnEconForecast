@@ -41,6 +41,9 @@ To train our model, we first convert it into a typical supervised learning probl
 ![eq1](http://latex.codecogs.com/svg.latex?3x+1=3)
 
 
+<p align="center">
+  <img width="460" height="300" src="http://latex.codecogs.com/svg.latex?\int 2x^2 dx">
+</p>
 <div style="text-align:center" markdown="1">
 	![eq2](http://latex.codecogs.com/svg.latex?\int 2x^2 dx)
 <\div>
