@@ -12,6 +12,22 @@ In this project, we aim to implement a wide range of models, both from structura
 
 
 
+## Packages Involved
+
+In this project, we chose `pandas` ,  `numpy` and `sklearn` packages to handle data pre-processing tasks. 
+
+For neural networks in this project, we implemented them using `tensorflow` package. 
+
+As well,  `tensorboard` library helps network graph and training visualization.
+
+Statistical models from time series analysis are used a benchmarks in this project. 
+
+Comparisons among neural networks and statistical models allow we to evaluate the forecasting performance, in terms accuracy, of those networks we built. 
+
+Those models are implemented using `statsmodels` package.
+
+
+
 ## Methodology
 
 Artificial neural networks, typically recurrent neural networks, are inherently suitable for capturing the inter-temporal dependency of sequential data.
@@ -52,7 +68,7 @@ For each training sample, using sequence notation, the **feature** would be
   <img src="http://latex.codecogs.com/svg.latex?\textbf{X}_t \equiv \{x_{t-L}, x_{t-L+1}, \dots, x_{t-1}\}">
 </p>
 
-And the **label **is 
+And the **label** is
 
 <p align="center">
   <img src="http://latex.codecogs.com/svg.latex?\textbf{y}_t \equiv y_t">
@@ -62,7 +78,7 @@ By dropping the first few observations in the time series (since we don't have s
 
 #### ii. Splitting SLP
 
-After generating the collection of samples, we split them into three subsets for training, testing and validation purposes. Typically, ratios of 0.6:0.2:0.2 and 0.7:0.15:0.15 are chosen, depends on the total number of observations we have in raw dataset.
+After generating the collection of samples, we split them into three subsets for training, testing and validation purposes. Typically, ratios of <u>0.6:0.2:0.2</u> and <u>0.7:0.15:0.15</u> are chosen, depends on the total number of observations we have in raw dataset.
 
 
 
