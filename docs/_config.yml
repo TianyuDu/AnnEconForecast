@@ -1,4 +1,13 @@
 theme: jekyll-theme-cayman
 
 plugins:
-  - jekyll-sitemap
+  - jekyll-relative-links
+
+relative_links:
+  enabled: true
+  collections: true
+
+include:
+  - about.md
+  - index.md
+  - layout.md
