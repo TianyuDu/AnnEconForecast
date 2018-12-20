@@ -50,7 +50,7 @@ We have implemented several baseline neural networks, including multi-layer LSTM
 
 ### I. Data Preprocessing
 
-#### i. Generating a Supervised Learning Problem
+#### Differencing the Raw Dataset
 
 In our baseline neural network,  we use a <u>univariate time series</u> as our main **dataset**.
 
@@ -59,6 +59,21 @@ A typical dataset would look like
 <p align="center">
   <img src="http://latex.codecogs.com/svg.latex?\textbf{X} \equiv \{ x_1, x_2, \dots, x_T\}">
 </p>
+
+We firstly take differencing on dataset to ensure the <u>stationarity</u> of our time series, so that the value at each period in the transformed series is defined as
+
+<p align="center">
+  <img src="http://latex.codecogs.com/svg.latex?x'_t := x_t - x_{t-d}">
+</p>
+
+Where ![](http://latex.codecogs.com/svg.latex?d) is the **degree** of differencing. 
+
+The above process can be applied recursively if the first order differenced time series is still suspicious for non-stationarity.
+
+The total number of iteration of differencing is governed by the **order** parameter in data pre-processing.
+
+#### ii. Generating a Supervised Learning Problem
+
 
 To train our model, we first convert it into a typical supervised learning problem so we can train neural networks with error minimization oriented algorithms.
 
@@ -78,7 +93,7 @@ And the **label** is
 
 By dropping the first few observations in the time series (since we don't have sufficient historical data to make predictions on them), we can generate roughly as many feature-label pairs, say, sample, as the length of time series. ![eq](http://latex.codecogs.com/svg.latex?2x) another sample
 
-#### ii. Splitting SLP
+#### iii. Splitting SLP
 
 After generating the collection of samples, we split them into three subsets for training, testing and validation purposes. Typically, ratios of <u>0.6:0.2:0.2</u> and <u>0.7:0.15:0.15</u> are chosen, depends on the total number of observations we have in raw dataset.
 
