@@ -50,7 +50,7 @@ We have implemented several baseline neural networks, including multi-layer LSTM
 
 ### I. Data Preprocessing
 
-#### Differencing the Raw Dataset
+#### i. Differencing the Raw Dataset
 
 In our baseline neural network,  we use a <u>univariate time series</u> as our main **dataset**.
 
