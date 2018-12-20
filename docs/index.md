@@ -34,16 +34,29 @@ We have implemented several baseline neural networks, including multi-layer LSTM
 
 #### i. Generating a Supervised Learning Problem
 
-In our baseline neural network,  we use a univariate time series as our main dataset.
+In our baseline neural network,  we use a <u>univariate time series</u> as our main **dataset**.
 
-To train our model, we first convert it into a typical supervised learning problem so we can train neural networks with error minimization oriented algorithms.  With user specified *lag* variable, the supervised learning problem (SLP) generator loops over the entire dataset and for each period, *t*, it marks the series range from *t-lag* to *t-1* as training feature and value at period *t* as the label.
-
-![eq1](http://latex.codecogs.com/svg.latex?3x+1=3)
+A typical dataset would look like
 
 <p align="center">
-  <img src="http://latex.codecogs.com/svg.latex?\int 2x^2 dx">
+  <img src="http://latex.codecogs.com/svg.latex?\textbf{X} \equiv \{ x_1, x_2, \dots, x_T\}">
 </p>
 
+To train our model, we first convert it into a typical supervised learning problem so we can train neural networks with error minimization oriented algorithms.
+
+With user specified **lag** variable, ![](http://latex.codecogs.com/svg.latex?L), the supervised learning problem (SLP) generator loops over the entire dataset and for each period, ![](http://latex.codecogs.com/svg.latex?t), it marks the series range from ![](http://latex.codecogs.com/svg.latex?t-L ) to ![](http://latex.codecogs.com/svg.latex?t-1) as training **feature** and value at period ![](http://latex.codecogs.com/svg.latex?t) as the **label**.
+
+For each training sample, using sequence notation, the **feature** would be 
+
+<p align="center">
+  <img src="http://latex.codecogs.com/svg.latex?\textbf{X}_t \equiv \{x_{t-L}, x_{t-L+1}, \dots, x_{t-1}\}">
+</p>
+
+And the **label **is 
+
+<p align="center">
+  <img src="http://latex.codecogs.com/svg.latex?\textbf{y}_t \equiv y_t">
+</p>
 
 By dropping the first few observations in the time series (since we don't have sufficient historical data to make predictions on them), we can generate roughly as many feature-label pairs, say, sample, as the length of time series. ![eq](http://latex.codecogs.com/svg.latex?2x) another sample
 
