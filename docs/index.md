@@ -40,13 +40,10 @@ To train our model, we first convert it into a typical supervised learning probl
 
 ![eq1](http://latex.codecogs.com/svg.latex?3x+1=3)
 
-
 <p align="center">
-  <img width="460" height="300" src="http://latex.codecogs.com/svg.latex?\int 2x^2 dx">
+  <img src="http://latex.codecogs.com/svg.latex?\int 2x^2 dx">
 </p>
-<div style="text-align:center" markdown="1">
-	![eq2](http://latex.codecogs.com/svg.latex?\int 2x^2 dx)
-<\div>
+
 
 By dropping the first few observations in the time series (since we don't have sufficient historical data to make predictions on them), we can generate roughly as many feature-label pairs, say, sample, as the length of time series. ![eq](http://latex.codecogs.com/svg.latex?2x) another sample
 
