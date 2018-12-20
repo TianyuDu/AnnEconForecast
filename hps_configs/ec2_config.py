@@ -2,30 +2,34 @@
 Default hyper parameter searching configuration working on EC2.
 """
 # Name of configuration
-EXPERIMENT_NAME = "ec2_default"
+EXPERIMENT_NAME = "ec2_large"
 
 # Model training parameters
-MAIN_DIRECTORY = "/home/ec2-user/ec2_hps/2018DEC17_EC2_01"
+MAIN_DIRECTORY = "/home/ec2-user/ec2_hps/2018DEC20_01"
 main = {
     # ======== Data Pre-processing Parameter ========
     "PERIODS": 1,
     "ORDER": 1,
-    "LAGS": [6, 12, 18],
+    "LAGS": [6, 12, 18, 24],
     "TRAIN_RATIO": 0.8,
     "VAL_RATIO": 0.1,
     # ======== Model Training Parameter ========
-    "epochs": [150, 300, 500],
+    "epochs": [300, 500, 1000],
     "num_inputs": 1,
     "num_outputs": 1,
     "num_time_steps": None,  # num_time_steps is identical to LAGS
     "num_neurons": [
         (128, 512),
         (64, 128, 256),
-        (128, 256, 215)
+        (128, 256, 215),
+        (512, 1024),
+        (512, 512, 1024)
     ],
     "learning_rate": [
+        0.01,
+        0.03,
         0.1,
-        0.03
+        0.3
     ],
     "clip_grad": None,
     "report_periods": 10,
