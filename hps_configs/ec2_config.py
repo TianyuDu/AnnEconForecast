@@ -10,26 +10,26 @@ main = {
     # ======== Data Pre-processing Parameter ========
     "PERIODS": 1,
     "ORDER": 1,
-    "LAGS": [3, 6, 12, 18, 24],
+    "LAGS": [3, 6, 9, 12],
     "TRAIN_RATIO": 0.8,
     "VAL_RATIO": 0.1,
     # ======== Model Training Parameter ========
-    "epochs": [300, 500, 1000, 2500],
+    "epochs": [150, 300, 500, 800],
     "num_inputs": 1,
     "num_outputs": 1,
     "num_time_steps": None,  # num_time_steps is identical to LAGS
     "num_neurons": [
-        (128, 512),
+        (64, 128),
+        (128, 256),
+        (256, 512),
         (64, 128, 256),
         (128, 256, 512),
-        (512, 1024),
-        (512, 512, 1024)
+        (256, 512, 1024)
     ],
     "learning_rate": [
         0.01,
         0.03,
-        0.1,
-        0.3
+        0.1
     ],
     "clip_grad": None,
     "report_periods": 10,
