@@ -5,16 +5,16 @@ Default hyper parameter searching configuration working on EC2.
 EXPERIMENT_NAME = "ec2_large"
 
 # Model training parameters
-MAIN_DIRECTORY = "/home/ec2-user/ec2_hps/2018DEC20_01"
+MAIN_DIRECTORY = "/home/ec2-user/ec2_hps/2018DEC20_02"
 main = {
     # ======== Data Pre-processing Parameter ========
     "PERIODS": 1,
     "ORDER": 1,
-    "LAGS": [6, 12, 18, 24],
+    "LAGS": [3, 6, 12, 18, 24],
     "TRAIN_RATIO": 0.8,
     "VAL_RATIO": 0.1,
     # ======== Model Training Parameter ========
-    "epochs": [300, 500, 1000],
+    "epochs": [300, 500, 1000, 2500],
     "num_inputs": 1,
     "num_outputs": 1,
     "num_time_steps": None,  # num_time_steps is identical to LAGS
