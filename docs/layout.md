@@ -1,12 +1,4 @@
-### How to Run Models in this Project
-
-All backbones of models are stored in `.py `  files under `/core`  directory.
-
-To execute certain model, one can run Jupyter notebooks in `/notebook`  directory and specify parameters within the notebook.
-
-Detailed explanation, instruction and result visualization for a certain neural net can all be found in the corresponding Jupyter notebook.
-
-### Project Layout
+# Project Layout
 
 #### Main Model
 
@@ -20,3 +12,4 @@ Detailed explanation, instruction and result visualization for a certain neural 
 
 - `/keras_based`  models built on `keras`
 - `/matlab_based`  models built on `MatLab` 
+
