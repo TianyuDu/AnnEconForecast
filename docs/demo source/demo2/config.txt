@@ -1,0 +1,1 @@
+LAGS=6-epochs=800-num_neurons=(256, 512)-learning_rate=0.03
