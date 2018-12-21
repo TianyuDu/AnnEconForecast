@@ -19,10 +19,10 @@ In this project, we aim to implement a wide range of models, both from structura
 * [The Second Demonstration](demo2.md)
 
 * [The Project Road Map](roadmap.md)
-* [How to Train a Model][train.md]
-* [How to Restore a Saved Model][restore.md]
-* [Hyper-Parameter Tuning and Searching][hps.md]
-* [A List of References][ref.md]
+* [How to Train a Model](train.md)
+* [How to Restore a Saved Model](restore.md)
+* [Hyper-Parameter Tuning and Searching](hps.md)
+* [A List of References](ref.md)
 
 
 
