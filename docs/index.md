@@ -82,7 +82,7 @@ Those models are implemented using `statsmodels` package.
 
 ## The First Demonstration
 
-> **A Small Scale Neural Network on an Univariate Time Series **
+> ** A Small Scale Neural Network on an Univariate Time Series **
 >
 > **Civilian Unemployment Rate**
 
