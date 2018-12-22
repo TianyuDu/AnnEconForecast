@@ -73,11 +73,11 @@ It consists of a multi-layer recurrent architecture of three layers of long-shor
 
 We trained this model using Adam Optimizer with a learning rate of 0.03 for 500 epochs. 
 
-![combined figure](final_pred-5442834.svg)
+![combined figure](final_pred.svg)
 
 For validation and testing sets only, the model prediction gives the figure below
 
-![excluding training](final_exclude_train-5442991.svg)
+![excluding training](final_exclude_train.svg)
 
 Also, the model predicts on both the training set and the validation set after every fifty epochs during the training session, and we have plotted them all together with the actual series.
 
