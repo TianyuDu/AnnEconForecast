@@ -33,10 +33,31 @@ In this project, we aim to implement a wide range of models, both from structura
 #### Main Model
 
 - `/core`  core files containing codes
+
+```
+./core/
+├── models
+│   ├── baseline_lstm.py
+│   ├── baseline_rnn.py
+│   ├── stacked_lstm.py
+│   └── stat_models.py
+├── tools
+│   ├── data_import.py
+│   ├── evaluate.py
+│   ├── metrics.py
+│   ├── param_set_generator.py
+│   ├── rnn_prepare.py
+│   ├── time_series.py
+│   └── visualize.py
+└── training
+    ├── hps.py
+    └── hps_methods.py
+```
+
+
+
 - `/data` dataset directory
 - `/notebooks`  Jupyter notebooks
-- `/saved_models`  this is the default directory for TensorFlow to store models after training.
-- `/tensorboard`  this is the default directory for TensorFlow to store tensor board visualization files.
 
 #### Archived Models
 
@@ -61,7 +82,9 @@ Those models are implemented using `statsmodels` package.
 
 ## The First Demonstration
 
-> **A Small Scale Neural Network on an Univariate Time Series**
+> **A Small Scale Neural Network on an Univariate Time Series **
+>
+> **Civilian Unemployment Rate**
 
 > Config: LAGS=3-epochs=500-num_neurons=(64, 128, 256)-learning_rate=0.03
 
