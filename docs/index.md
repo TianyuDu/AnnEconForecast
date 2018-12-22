@@ -65,16 +65,26 @@ Those models are implemented using `statsmodels` package.
 
 > Config: LAGS=3-epochs=500-num_neurons=(64, 128, 256)-learning_rate=0.03
 
-We have run a hyper-parameter searching session with more than 500 configurations and chose one of the best performings regarding their mean-squared-error.
-
 In this first demonstration model, we trained a relatively small-scale neural network. 
 
-The model is trained to forecast one step forward based on observations on the three previous steps (i.e., Lag = 3)
+The model is trained to forecast one step forward based on observations on the three previous steps (i.e., Lag = 3) of **Civilian Unemployment Rate** (UNRATE). (See [reference](ref.md) for more information on this dataset).
 
 It consists of a multi-layer recurrent architecture of three layers of long-short-term-memory (LSTM), with 64, 128 and, 256 neurons in each layer respectively.
 
-We trained this model using Adam Optimizer with a learning rate of 0.03 for 500 epochs. The model predicts on both the training set and the validation set after every fifty epochs and we have plotted them all together with the actual series. (fig below)
+We trained this model using Adam Optimizer with a learning rate of 0.03 for 500 epochs. 
+
+![combined figure](final_pred-5442834.svg)
+
+For validation and testing sets only, the model prediction gives the figure below
+
+![excluding training](final_exclude_train-5442991.svg)
+
+Also, the model predicts on both the training set and the validation set after every fifty epochs during the training session, and we have plotted them all together with the actual series.
+
+As we shall see, this model only captures the correct direction of movement but could not predict the magnitudes of movements well. We believe this is mainly because of the short lags specified and it only takes a univariate time series. In our second demonstration, we will present another multi-layer LSTM model with more lags. 
+
+Also, in future models, we are going to implement recurrent neural networks with multiple input sequences (context series). 
+
+The figure below presents a detailed record on the evolving of the model.
 
 ![combined figure](pred_record_combined.svg)
-
-And the figure below represents a zoomed-in picture on the final prediction (after 500 epochs)
