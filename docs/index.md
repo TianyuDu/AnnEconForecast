@@ -83,6 +83,7 @@ Those models are implemented using `statsmodels` package.
 ## The First Demonstration
 
 > **A Small Scale Neural Network on an Univariate Time Series**
+>
 > **Civilian Unemployment Rate**
 
 > Config: LAGS=3-epochs=500-num_neurons=(64, 128, 256)-learning_rate=0.03
