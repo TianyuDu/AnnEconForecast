@@ -54,7 +54,15 @@ class GenericGeneticOptimizer:
 
         if verbose:
             print("Initial population created.")
-        
+    
+
+    def count_population(self) -> int:
+        """
+        Return the current population size.
+        """
+        return len(self.population)
+
+
     def count_unique(
         self
     ) -> int:
