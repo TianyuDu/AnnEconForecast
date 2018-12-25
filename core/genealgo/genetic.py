@@ -137,6 +137,12 @@ class GenericGeneticOptimizer:
     ) -> None:
         raise NotImplementedError()
 
+    def cross_over(self) -> None:
+        raise NotImplementedError()
+
+    def mutate(self, target) -> Dict[str, object]:
+        raise NotImplementedError()
+
 
 class GeneticHyperParameterTuner(GenericGeneticOptimizer):
     raise NotImplementedError
