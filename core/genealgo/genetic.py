@@ -15,7 +15,8 @@ class GenericGeneticOptimizer:
         self,
         gene_pool: Dict[str, Union[object, List[object]]],
         pop_size: int,
-        fitness_func: Callable[Tuple[object], float],
+        eval_func: Callable[Tuple[object], float],
+        mode: Union["min", "max"],
         verbose: bool=False
     ) -> None:
         """
@@ -43,7 +44,10 @@ class GenericGeneticOptimizer:
             print(f"Unique entity chromosome created: {unique_chromosome}")
 
         # Admit fitness/evaluating function.
-        self.fitness_func = fitness_func
+        self.fitness_func = eval_func
+
+        if verbose:
+            print("Initial population created.")
         
     def count_unique(
         self
@@ -60,6 +64,11 @@ class GenericGeneticOptimizer:
         )
         return len(count)
         
+    def evaluation():
+        """
+        Sort the current in decending order with rank
+        in fitness measure.
+        """
 
 # Test
 src = {
