@@ -44,7 +44,13 @@ class GenericGeneticOptimizer:
             print(f"Unique entity chromosome created: {unique_chromosome}")
 
         # Admit fitness/evaluating function.
-        self.fitness_func = eval_func
+        self.eval_func = eval_func
+
+        # The mode determines the correlation between fitness
+        # and probability of being admitted the next generation
+        # during the selection phase.
+        assert mode in ["max", "min"], "Invalid optimization mode."
+        self.mode = mode
 
         if verbose:
             print("Initial population created.")
@@ -64,11 +70,24 @@ class GenericGeneticOptimizer:
         )
         return len(count)
         
-    def evaluation():
+    def evaluation(
+        self
+    ) -> None:
         """
-        Sort the current in decending order with rank
-        in fitness measure.
+        Sort the current population so that the more competitive
+        entities will be placed at the beginning of the sorted
+        list.
+        See comments below.
         """
+        if self.mode == "min":
+            # If this is a minimization problem, entities with 
+            # lowest SCORE will be placed at the beginning of the
+            # sorted population.
+            self.population.sort(key=self.eval_func)
+        elif self.mode == "max":
+            # If this is a maximization probblem, entities with
+            # highest SCORE will be placed at the beginning.
+            self.population.sort(key=self.eval_func, reverse=True)
 
 # Test
 src = {
