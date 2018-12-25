@@ -112,7 +112,25 @@ class GenericGeneticOptimizer:
             self.population.sort(key=self.eval_func, reverse=True)
     
     def select(
-        self) -> None:
+        self,
+        verbose: bool=False
+    ) -> None:
+        retain_length = int(self.retain * self.count_population())
+        retained = self.population[:retain_length]
+        dropped = self.population[retain_length:]
+
+        # Retain some entity chromosome from the dropped list
+        # with small probability.
+        for entity in dropped:
+            if np.random.random >= self.shot_prob:
+                retained.append(entity)
+        
+        percent_retained = len(retained) / len(self.population)
+        if verbose:
+            print(f"Actual proportion retained: {percent_retained}")
+            print("Assigning retained entities to replace the population.")
+        self.population = retained
+
 
     def evolve(
         self
