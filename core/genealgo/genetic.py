@@ -17,6 +17,9 @@ class GenericGeneticOptimizer:
         pop_size: int,
         eval_func: Callable[Tuple[object], float],
         mode: Union["min", "max"],
+        retain: float,
+        shot_prob: float=0.2,
+        mutate_prob: float=0.2,
         verbose: bool=False
     ) -> None:
         """
@@ -51,6 +54,17 @@ class GenericGeneticOptimizer:
         # during the selection phase.
         assert mode in ["max", "min"], "Invalid optimization mode."
         self.mode = mode
+
+        # The ratio of population to be retained to the next generation
+        # after the selection/elimination phase
+        assert isinstance(retain, float) and 0 <= retain <= 1, "Invalid retain ratio."
+        self.retain = retain
+
+        assert isinstance(shot_prob, float) and 0 <= shot_prob <= 1, "Invalid shot probability."
+        self.shot_prob = shot_prob
+
+        assert isinstance(mutate_prob, float) and 0 <= mutate_prob <= 1, "Invalid mutation probability."
+        self.mutate_prob = mutate_prob
 
         if verbose:
             print("Initial population created.")
@@ -96,16 +110,14 @@ class GenericGeneticOptimizer:
             # If this is a maximization probblem, entities with
             # highest SCORE will be placed at the beginning.
             self.population.sort(key=self.eval_func, reverse=True)
+    
+    def select(
+        self) -> None:
 
-# Test
-src = {
-    "a": [1, 2],
-    "b": [3, 4],
-    "c": [1]
-}
-
-pop1 = GenericGeneticOptimizer(gene_pool=src, pop_size=10, verbose=True)
-
+    def evolve(
+        self
+    ) -> None:
+        raise NotImplementedError()
 
 
 class GeneticHyperParameterTuner(GenericGeneticOptimizer):
