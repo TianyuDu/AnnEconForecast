@@ -194,8 +194,10 @@ class GeneticOptimizer:
         This method updates population.
         """
         assert len(self.population) >= 2, "Insufficient population."
-        [p1, p2] = np.random.choice(self.population, size=2, replace=False)
-        [c1, c2] = self._cross_over()
+        while len(self.population) < self.init_pop_size:
+            [p1, p2] = np.random.choice(self.population, size=2, replace=False)
+            off_springs = self._cross_over(p1=p1, p2=p2)
+            self.population.extend(off_springs)
         
 
     def _cross_over(
