@@ -330,3 +330,13 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# Models that are too big
+model.ckpt.data-00000-of-00001
+model.ckpt.index
+modelFB.ckpt.data-00000-of-00001
+modelFB.ckpt.index
+modelFB_pred.ckpt.data-00000-of-00001
+modelFB_pred.ckpt.index
+model_pred.ckpt.data-00000-of-00001
+model_pred.ckpt.index
