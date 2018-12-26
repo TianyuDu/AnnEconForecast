@@ -15,7 +15,7 @@ class GenericGeneticOptimizer:
         self,
         gene_pool: Dict[str, Union[object, List[object]]],
         pop_size: int,
-        eval_func: Callable[Tuple[object], float],
+        eval_func: Callable[[object], Union[float,int]],
         mode: Union["min", "max"],
         retain: float,
         shot_prob: float=0.2,
@@ -192,7 +192,7 @@ class GenericGeneticOptimizer:
         The evolving step is a wrapper for cross over and mutation process.
         This method updates population.
         """
-        raise NotImplementedError()
+        
 
     def _cross_over(
         p1: Dict[str, Union[str, float]],
