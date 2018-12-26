@@ -122,7 +122,9 @@ class GeneticOptimizer:
                 # If single value (certainity) found as chromosome, convert it into a singleton.
                 val_lst = val if isinstance(val, list) else [val]
                 entity[key] = np.random.choice(val_lst)
-            population.append(entity)
+            # The second term is the 'score' or 'fittness' for entity,
+            # New entity not evaluated yet would be marked with None as score.
+            population.append((entity, None))
 
         if self.verbose:
             print(f"Population created, with size = {pop_size}")
@@ -153,6 +155,7 @@ class GeneticOptimizer:
         self
     ) -> None:
         """
+        # TODO: associate score with population.
         Sort the current population so that the more competitive
         entities will be placed at the beginning of the sorted
         list.
