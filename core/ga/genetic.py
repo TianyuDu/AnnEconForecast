@@ -122,7 +122,7 @@ class GeneticOptimizer:
         # Retain some entity chromosome from the dropped list
         # with small probability.
         for entity in dropped:
-            if np.random.random >= self.shot_prob:
+            if np.random.random <= self.shot_prob:
                 retained.append(entity)
         
         percent_retained = len(retained) / len(self.population)
@@ -192,7 +192,7 @@ class GeneticOptimizer:
         The evolving step is a wrapper for cross over and mutation process.
         This method updates population.
         """
-        
+        pass
 
     def _cross_over(
         p1: Dict[str, Union[str, float]],
