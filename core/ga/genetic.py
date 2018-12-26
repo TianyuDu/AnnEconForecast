@@ -78,16 +78,8 @@ class GeneticOptimizer:
             print(f"Creating initial population: {pop_size} entities.")
 
         # Create initial population.
-        self.population = list()
-        self.init_pop_size = pop_size
-        for _ in range(pop_size):
-            new_entity = dict()
-            # Construct a random new entity from the gene pool.
-            for (key, val) in gene_pool.items():
-                # Suppose each value faces the same probability of being selected.
-                val_lst = val if isinstance(val, list) else [val]
-                new_entity[key] = np.random.choice(val_lst)
-            self.population.append(new_entity)
+        self.population = self.create_population(gene_pool, pop_size)
+
         if verbose:
             print("Done.")
             unique_chromosome = self.count_unique()
@@ -118,6 +110,23 @@ class GeneticOptimizer:
 
         if verbose:
             print("Initial population created.")
+
+    def create_population(
+        self,
+        gene_pool: dict,
+        pop_size: int
+    ) -> List[dict]:
+        population = ()
+        for _ in range(pop_size):
+            entity = dict()
+            # Construct a random new entity from the gene pool.
+            for (key, val) in gene_pool.items():
+                # Suppose each value faces the same probability of being selected.
+                # If single value (certainity) found as chromosome, convert it into a singleton.
+                val_lst = val if isinstance(val, list) else [val]
+                entity[key] = np.random.choice(val_lst)
+            population.append(entity)
+        return population
 
     def count_population(self) -> int:
         """
