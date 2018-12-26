@@ -6,7 +6,7 @@ import numpy as np
 from typing import Dict, List, Union, Callable, Tuple
 
 
-class GenericGeneticOptimizer:
+class GeneticOptimizer:
     """
     The baseline optimizer using genetic algorithm.
     """
@@ -220,8 +220,7 @@ class GenericGeneticOptimizer:
         return (child1, child2)
 
 
-
-class GeneticHPT(GenericGeneticOptimizer):
+class GeneticHPT(GeneticOptimizer):
     """
     Genetic Hyper-Parameter Tuner
     """
