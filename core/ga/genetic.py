@@ -72,7 +72,9 @@ class GeneticOptimizer:
 
         # ======== End ========
 
-        if verbose:
+        # Admit argument.
+        self.verbose = verbose
+        if self.verbose:
             print(f"Creating initial population: {pop_size} entities.")
 
         # Create initial population.
