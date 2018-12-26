@@ -124,7 +124,7 @@ class GeneticOptimizer:
         # Retain some entity chromosome from the dropped list
         # with small probability.
         for entity in dropped:
-            if np.random.random <= self.shot_prob:
+            if np.random.random() <= self.shot_prob:
                 retained.append(entity)
 
         percent_retained = len(retained) / len(self.population)
