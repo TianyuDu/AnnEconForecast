@@ -223,9 +223,9 @@ class GenericGeneticOptimizer:
         raise NotImplementedError()
 
 
-class GeneticHyperParameterTuner(GenericGeneticOptimizer):
+class GeneticHPT(GenericGeneticOptimizer):
     """
-    GHPT
+    Genetic Hyper-Parameter Tuner
     """
     def __init__(self):
         raise NotImplementedError()
