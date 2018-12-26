@@ -90,7 +90,7 @@ class GeneticOptimizer:
         self.retain = retain
         self.shot_prob = shot_prob
         self.mutate_prob = mutate_prob
-        
+
         if self.verbose:
             print("Population initialized.")
 
@@ -99,6 +99,20 @@ class GeneticOptimizer:
         gene_pool: dict,
         pop_size: int
     ) -> List[dict]:
+        """
+        Args:
+            Refer to docstring in __init__ method.
+        Returns:
+            A list of dictionaries.
+
+        This method create a list of entities (dictionaries), in which each entity has the same keys as gene_pool,
+        but it randomly choose a value avaiable in the gene pool for flexiable chromosome(list of objects). For fixed
+        chromosome (single object), the entity takes it for sure.
+
+        Example:
+            gene_pool = {"c1": [1, 2, 3], "c2": 10}
+            then a typical entity generated from above gene_pool would be {"c1": 2, "c2": 10}.
+        """
         population = ()
         for _ in range(pop_size):
             entity = dict()
