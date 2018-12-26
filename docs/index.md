@@ -22,7 +22,7 @@ In this project, we aim to implement a wide range of models, both from structura
 
 * [How to Restore a Saved Model](restore.md)
 
-* [Hyper-Parameter Tuning and Searching](hps.md)
+* [Hyper-Parameter Tuning and Searching](hpt.md)
 
 * [A List of References](ref.md)
 

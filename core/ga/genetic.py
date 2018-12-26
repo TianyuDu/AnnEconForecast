@@ -15,15 +15,46 @@ class GeneticOptimizer:
         self,
         gene_pool: Dict[str, Union[object, List[object]]],
         pop_size: int,
-        eval_func: Callable[[object], Union[float, int]],
+        eval_func: Callable[[Dict[str, object], Union[float, int]]],
         mode: Union["min", "max"],
-        retain: float,
-        shot_prob: float = 0.2,
-        mutate_prob: float = 0.2,
+        retain: float = 0.3,
+        shot_prob: float = 0.05,
+        mutate_prob: float = 0.05,
         verbose: bool = False
     ) -> None:
         """
-        #TODO: Docstring
+        Args:
+            gene_pool:
+                A dictionary contains features as keys and possible chromosome as values.
+                    - For flexiable chromosome, use list object as value.
+                    - For fixed chromosome, use object as value.
+                Each entity of the initial population randomly choose one value from the gene pool for each feature chromosome,
+                    if the value at this position in gene pool is a list.
+                    Otherwise, if the value in gene pool is not a list, the entity takes the value for sure.
+
+            pop_size:
+                The size of population, this size will be maintained via selection and breeding operations in each generation.
+
+            eval_func:
+                A real-valued function takes an entity/individual (a dictionary) in population and use it as the parameter.
+            
+            mode:
+                Mode specifies the type of optimization task to be solved, either maximizing the eval_func or minimizing it.
+            
+            retain:
+                A float specifying the percentage of (best fitted) entities in population to be retained after selection phase.
+            
+            shot_prob:
+                A float specifying the chance of an entity not in the best-fitted group to be selected as a parent to the next generation.
+                This operation reduces the chance that our optimizer stucks in  local extrema.
+            
+            mutate_prob:
+                A float specifying the chance of chromosome (value) to be randomly mutated.
+                Different data type would be mutated in different ways.
+                Mutation process preserves the sign of numerical values.
+            
+            verbose:
+                A bool specifying if the optimizer prints out logs during training session.
         """
         assert isinstance(
             pop_size, int) and pop_size > 0, "Population size should be a positive integer."
