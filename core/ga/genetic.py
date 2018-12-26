@@ -80,8 +80,7 @@ class GeneticOptimizer:
         # Create initial population.
         self.population = self.create_population(gene_pool, pop_size)
 
-        if verbose:
-            print("Done.")
+        if self.verbose:
             unique_chromosome = self.count_unique()
             print(f"Unique entity chromosome created: {unique_chromosome}")
 
@@ -126,6 +125,9 @@ class GeneticOptimizer:
                 val_lst = val if isinstance(val, list) else [val]
                 entity[key] = np.random.choice(val_lst)
             population.append(entity)
+            
+        if self.verbose:
+            print(f"Population created, with size = {pop_size}")
         return population
 
     def count_population(self) -> int:
