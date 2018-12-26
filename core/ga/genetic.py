@@ -31,33 +31,46 @@ class GeneticOptimizer:
                 Each entity of the initial population randomly choose one value from the gene pool for each feature chromosome,
                     if the value at this position in gene pool is a list.
                     Otherwise, if the value in gene pool is not a list, the entity takes the value for sure.
-
             pop_size:
                 The size of population, this size will be maintained via selection and breeding operations in each generation.
-
             eval_func:
                 A real-valued function takes an entity/individual (a dictionary) in population and use it as the parameter.
-            
             mode:
                 Mode specifies the type of optimization task to be solved, either maximizing the eval_func or minimizing it.
-            
             retain:
                 A float specifying the percentage of (best fitted) entities in population to be retained after selection phase.
-            
             shot_prob:
                 A float specifying the chance of an entity not in the best-fitted group to be selected as a parent to the next generation.
                 This operation reduces the chance that our optimizer stucks in  local extrema.
-            
             mutate_prob:
                 A float specifying the chance of chromosome (value) to be randomly mutated.
                 Different data type would be mutated in different ways.
                 Mutation process preserves the sign of numerical values.
-            
             verbose:
                 A bool specifying if the optimizer prints out logs during training session.
         """
+        # ======== Argument Checking Phase ========
         assert isinstance(
             pop_size, int) and pop_size > 0, "Population size should be a positive integer."
+        
+        assert all(
+            isinstance(key, str) for key in gene_pool.keys()
+        ), "All keys in gene pool dictionary must be strings."
+
+        assert mode in ["min", "max"], "Optimization mode must be either MINimization or MAXimization."
+
+        assert isinstance(
+            retian, float) and 0 < retain < 1, "Retain must be a float in range (0, 1)."
+        
+        assert isinstance(
+            shot_prob, float) and 0 <= shot_prob <= 1, "Shot probability must be a float in range [0, 1]."
+
+        assert isinstance(
+            mutate_prob, float) and 0 <= mutate_prob <= 1, "Mutation probability must be a float in range [0, 1]."
+
+        assert isinstance(verbose, bool), "Verbose must be a bool."
+
+        # ======== End ========
 
         if verbose:
             print(f"Creating initial population: {pop_size} entities.")
