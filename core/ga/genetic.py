@@ -195,13 +195,13 @@ class GeneticOptimizer:
         """
         assert len(self.population) >= 2, "Insufficient population."
         [p1, p2] = np.random.choice(self.population, size=2, replace=False)
-        [c1, c2] = 
+        [c1, c2] = self._cross_over()
         
 
     def _cross_over(
+        self,
         p1: Dict[str, Union[str, float]],
-        p2: Dict[str, Union[str, float]],
-        self
+        p2: Dict[str, Union[str, float]]
     ) -> List[dict]:
         """
         The basic cross over method, used for string and float data type only.
