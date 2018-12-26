@@ -193,13 +193,16 @@ class GeneticOptimizer:
         The evolving step is a wrapper for cross over and mutation process.
         This method updates population.
         """
+        assert len(self.population) >= 2, "Insufficient population."
+        [p1, p2] = np.random.choice(self.population, size=2, replace=False)
+        [c1, c2] = 
         
 
     def _cross_over(
         p1: Dict[str, Union[str, float]],
         p2: Dict[str, Union[str, float]],
         self
-    ) -> Tuple[dict]:
+    ) -> List[dict]:
         """
         The basic cross over method, used for string and float data type only.
         """
@@ -218,7 +221,7 @@ class GeneticOptimizer:
             else:
                 raise TypeError("Unsupported data type to cross over.")
             child1[k], child2[k] = new_gene1, new_gene2
-        return (child1, child2)
+        return [child1, child2]
 
 
 class GeneticHPT(GeneticOptimizer):
