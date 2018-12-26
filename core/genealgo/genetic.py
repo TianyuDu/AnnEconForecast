@@ -131,25 +131,76 @@ class GenericGeneticOptimizer:
             print("Assigning retained entities to replace the population.")
         self.population = retained
 
+    def mutate(
+        self,
+        chromosome: Dict[str, object],
+        mutate_rate: float=0.1
+    ) -> None:
+        """
+        Randomly mutate genetic information encoded in dictionary.
+        """
+        def mutate_float(src: float) -> float:
+            # NOTE: change factor formula here to tune the mutation process.
+            factor = np.exp(np.random.randn())
+            assert factor >= 0
+            result = factor * src
+            assert np.sign(src) == np.sign(result)  # we wish to preserve the sign of feature.
+            return result
+        
+        def mutate_int(src: int) -> int:
+            f = mutate_float(src)
+            result = int(np.round(f))
+            assert np.sign(src) == np.sign(result)
+            return result
+        
+        def mutate_numerical(src: Union[float, int]) -> Union[float, int]:
+            if isinstance(src, float):
+                return mutate_float(src)
+            elif isinstance(src, int):
+                return mutate_int(src)
+            else:
+                raise TypeError("Unsupported data type for mutation.")
+
+        mutated = {key: None for key in chromosome.keys()}
+
+        for key in chromosome.keys():
+            if np.random.rand() <= mutate_rate:
+                if isinstance(chromosome[key], int) or isinstance(chromosome[key], float):
+                    new = mutate_numerical(chromosome[key])
+                elif isinstance(chromosome[key], list):
+                    assert all(
+                        type(x) in [float, int]
+                        for x in chromosome[key]
+                    )
+                    new = [
+                        mutate_numerical(x)
+                        for x in chromosome[key]
+                    ]
+                else:
+                    # NOTE: we can either raise a type error here or leave unsupported type unchanged.
+                    new = chromosome[key]
+                # Assign back.
+                mutated[key] = new
+            else:
+                mutated[key] = chromosome[key]
+        return mutated
 
     def evolve(
         self
     ) -> None:
+        """
+        The evolving step is a wrapper for cross over and mutation process.
+        This method updates population.
+        """
         raise NotImplementedError()
 
     def _cross_over(
-        p1: Dict[str, object],
-        p2: Dict[str, object],
+        p1: Dict[str, Union[str, float]],
+        p2: Dict[str, Union[str, float]],
         self
     ) -> Tuple[dict]:
         """
-        Individual cross over method. This method should only be called in
-        evolve phase.
-        If the feature is a string, randomly choose one from the chromosome of 
-        parents.
-        If the method is a float or integer, cross over methods take a weighted
-        average with random weight. For integers, a round with int operation will 
-        be added.
+        The basic cross over method, used for string and float data type only.
         """
         child1 = {key: None for key in p1.keys()}
         child2 = {key: None for key in p1.keys()}
@@ -167,14 +218,15 @@ class GenericGeneticOptimizer:
                 raise ValueError("Invalid data type to cross over.")
             child1[k], child2[k] = new_gene1, new_gene2
         return (child1, child2)
-                
-        
 
     def mutate(self, target) -> Dict[str, object]:
         raise NotImplementedError()
 
 
 class GeneticHyperParameterTuner(GenericGeneticOptimizer):
+    """
+    GHPT
+    """
     def __init__(self):
         raise NotImplementedError()
 
