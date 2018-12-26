@@ -15,12 +15,12 @@ class GeneticOptimizer:
         self,
         gene_pool: Dict[str, Union[object, List[object]]],
         pop_size: int,
-        eval_func: Callable[[object], Union[float,int]],
+        eval_func: Callable[[object], Union[float, int]],
         mode: Union["min", "max"],
         retain: float,
-        shot_prob: float=0.2,
-        mutate_prob: float=0.2,
-        verbose: bool=False
+        shot_prob: float = 0.2,
+        mutate_prob: float = 0.2,
+        verbose: bool = False
     ) -> None:
         """
         #TODO: Docstring
@@ -58,25 +58,26 @@ class GeneticOptimizer:
 
         # The ratio of population to be retained to the next generation
         # after the selection/elimination phase
-        assert isinstance(retain, float) and 0 <= retain <= 1, "Invalid retain ratio."
+        assert isinstance(
+            retain, float) and 0 <= retain <= 1, "Invalid retain ratio."
         self.retain = retain
 
-        assert isinstance(shot_prob, float) and 0 <= shot_prob <= 1, "Invalid shot probability."
+        assert isinstance(
+            shot_prob, float) and 0 <= shot_prob <= 1, "Invalid shot probability."
         self.shot_prob = shot_prob
 
-        assert isinstance(mutate_prob, float) and 0 <= mutate_prob <= 1, "Invalid mutation probability."
+        assert isinstance(
+            mutate_prob, float) and 0 <= mutate_prob <= 1, "Invalid mutation probability."
         self.mutate_prob = mutate_prob
 
         if verbose:
             print("Initial population created.")
-    
 
     def count_population(self) -> int:
         """
         Return the current population size.
         """
         return len(self.population)
-
 
     def count_unique(
         self
@@ -92,7 +93,7 @@ class GeneticOptimizer:
             axis=0
         )
         return len(count)
-        
+
     def evaluation(
         self
     ) -> None:
@@ -103,7 +104,7 @@ class GeneticOptimizer:
         See comments below.
         """
         if self.mode == "min":
-            # If this is a minimization problem, entities with 
+            # If this is a minimization problem, entities with
             # lowest SCORE will be placed at the beginning of the
             # sorted population.
             self.population.sort(key=self.eval_func)
@@ -111,10 +112,10 @@ class GeneticOptimizer:
             # If this is a maximization probblem, entities with
             # highest SCORE will be placed at the beginning.
             self.population.sort(key=self.eval_func, reverse=True)
-    
+
     def select(
         self,
-        verbose: bool=False
+        verbose: bool = False
     ) -> None:
         retain_length = int(self.retain * self.count_population())
         retained = self.population[:retain_length]
@@ -125,7 +126,7 @@ class GeneticOptimizer:
         for entity in dropped:
             if np.random.random <= self.shot_prob:
                 retained.append(entity)
-        
+
         percent_retained = len(retained) / len(self.population)
         if verbose:
             print(f"Actual proportion retained: {percent_retained}")
@@ -135,7 +136,7 @@ class GeneticOptimizer:
     def mutate(
         self,
         chromosome: Dict[str, object],
-        mutate_rate: float=0.1
+        mutate_rate: float = 0.1
     ) -> None:
         """
         Randomly mutate genetic information encoded in dictionary.
@@ -145,15 +146,16 @@ class GeneticOptimizer:
             factor = np.exp(np.random.randn())
             assert factor >= 0
             result = factor * src
-            assert np.sign(src) == np.sign(result)  # we wish to preserve the sign of feature.
+            # we wish to preserve the sign of feature.
+            assert np.sign(src) == np.sign(result)
             return result
-        
+
         def mutate_int(src: int) -> int:
             f = mutate_float(src)
             result = int(np.round(f))
             assert np.sign(src) == np.sign(result)
             return result
-        
+
         def mutate_numerical(src: Union[float, int]) -> Union[float, int]:
             if isinstance(src, float):
                 return mutate_float(src)
@@ -198,7 +200,6 @@ class GeneticOptimizer:
             [p1, p2] = np.random.choice(self.population, size=2, replace=False)
             off_springs = self._cross_over(p1=p1, p2=p2)
             self.population.extend(off_springs)
-        
 
     def _cross_over(
         self,
@@ -210,7 +211,7 @@ class GeneticOptimizer:
         """
         child1 = {key: None for key in p1.keys()}
         child2 = {key: None for key in p1.keys()}
-        
+
         for k in p1.keys():
             if isinstance(p1[k], str):
                 new_gene1 = np.random.choice([p1[k], p2[k]])
@@ -230,6 +231,7 @@ class GeneticHPT(GeneticOptimizer):
     """
     Genetic Hyper-Parameter Tuner
     """
+
     def __init__(self):
         raise NotImplementedError()
 
