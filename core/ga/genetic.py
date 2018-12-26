@@ -86,29 +86,13 @@ class GeneticOptimizer:
 
         # Admit fitness/evaluating function.
         self.eval_func = eval_func
-
-        # The mode determines the correlation between fitness
-        # and probability of being admitted the next generation
-        # during the selection phase.
-        assert mode in ["max", "min"], "Invalid optimization mode."
         self.mode = mode
-
-        # The ratio of population to be retained to the next generation
-        # after the selection/elimination phase
-        assert isinstance(
-            retain, float) and 0 <= retain <= 1, "Invalid retain ratio."
         self.retain = retain
-
-        assert isinstance(
-            shot_prob, float) and 0 <= shot_prob <= 1, "Invalid shot probability."
         self.shot_prob = shot_prob
-
-        assert isinstance(
-            mutate_prob, float) and 0 <= mutate_prob <= 1, "Invalid mutation probability."
         self.mutate_prob = mutate_prob
-
-        if verbose:
-            print("Initial population created.")
+        
+        if self.verbose:
+            print("Population initialized.")
 
     def create_population(
         self,
@@ -125,7 +109,7 @@ class GeneticOptimizer:
                 val_lst = val if isinstance(val, list) else [val]
                 entity[key] = np.random.choice(val_lst)
             population.append(entity)
-            
+
         if self.verbose:
             print(f"Population created, with size = {pop_size}")
         return population
