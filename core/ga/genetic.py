@@ -33,6 +33,7 @@ class GeneticOptimizer:
 
         # Create initial population.
         self.population = list()
+        self.init_pop_size = pop_size
         for _ in range(pop_size):
             new_entity = dict()
             # Construct a random new entity from the gene pool.
@@ -192,7 +193,7 @@ class GeneticOptimizer:
         The evolving step is a wrapper for cross over and mutation process.
         This method updates population.
         """
-        pass
+        
 
     def _cross_over(
         p1: Dict[str, Union[str, float]],
