@@ -215,12 +215,10 @@ class GenericGeneticOptimizer:
                 new_gene1 = z * p1[k] + (1 - z) * p2[k]
                 new_gene2 = (1 - z) * p1[k] + z * p2[k]
             else:
-                raise ValueError("Invalid data type to cross over.")
+                raise TypeError("Unsupported data type to cross over.")
             child1[k], child2[k] = new_gene1, new_gene2
         return (child1, child2)
 
-    def mutate(self, target) -> Dict[str, object]:
-        raise NotImplementedError()
 
 
 class GeneticHPT(GenericGeneticOptimizer):
@@ -270,7 +268,7 @@ class GeneticHPT(GenericGeneticOptimizer):
                 # TODO: add cross over rules for list with possibly different length.
                 raise NotImplementedError()
             else:
-                raise ValueError("Invalid data type to cross over.")
+                raise TypeError("Unsupported data type to cross over.")
             child1[k], child2[k] = new_gene1, new_gene2
 
         return (child1, child2)
