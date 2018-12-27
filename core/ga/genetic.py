@@ -210,8 +210,8 @@ class GeneticOptimizer:
     def mutate(
         self,
         chromosome: Dict[str, object],
-        mutate_rate: float = 0.05
-    ) -> None:
+        mutate_prob: float = 0.05
+    ) -> Dict[str, object]:
         """
         Args:
             chromosome:
@@ -251,7 +251,7 @@ class GeneticOptimizer:
         mutated = {key: None for key in chromosome.keys()}
 
         for key in chromosome.keys():
-            if np.random.rand() <= mutate_rate:
+            if np.random.rand() <= mutate_prob:
                 if isinstance(chromosome[key], int) or isinstance(chromosome[key], float):
                     new = mutate_numerical(chromosome[key])
                 elif isinstance(chromosome[key], list):
@@ -283,16 +283,19 @@ class GeneticOptimizer:
         # Breeding Phase.
         assert len(self.population) >= 2, "Insufficient population."
         while len(self.population) < self.pop_size:
-            (p1_idx, p2_idx) = np.random.choice(
-                range(len(self.population)), size=2, replace=False
+            (p1_idx, p2_idx) = np.random.randint(
+                len(self.population),
+                size=2
             )
-            p1, p2 = self.population[p1_idx], self.population[p2_idx]
-            off_springs = self.cross_over(
-                p1=p1[0],
-                p2=p2[0]
-            )
-            self.population.extend(off_springs)
-        
+            if p1_idx != p2_idx:
+                (p1, p2) = self.population[p1_idx], self.population[p2_idx]
+                assert len(p1) == 2 \
+                and isinstance(p1, tuple), f"Invalid p1: {p1}"
+                assert len(p2) == 2 \
+                and isinstance(p2, tuple), f"Invalid p1: {p2}"
+                off_springs = self.cross_over(p1[0], p2[0])
+                self.population.extend(off_springs)
+            
         # Mutation Phase.
         # For checking purpose only
         init_len = self.count_population()
