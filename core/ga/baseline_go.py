@@ -1,6 +1,6 @@
 """
 Created: Dec. 24 2018
-The base package containing the genetic algorithm packages.
+The baseline genetic optimizer.
 """
 import numpy as np
 from typing import Dict, List, Union, Callable, Tuple
