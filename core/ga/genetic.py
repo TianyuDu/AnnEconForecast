@@ -52,16 +52,17 @@ class GeneticOptimizer:
         # ======== Argument Checking Phase ========
         assert isinstance(
             pop_size, int) and pop_size > 0, "Population size should be a positive integer."
-        
+
         assert all(
             isinstance(key, str) for key in gene_pool.keys()
         ), "All keys in gene pool dictionary must be strings."
 
-        assert mode in ["min", "max"], "Optimization mode must be either MINimization or MAXimization."
+        assert mode in [
+            "min", "max"], "Optimization mode must be either MINimization or MAXimization."
 
         assert isinstance(
             retian, float) and 0 < retain < 1, "Retain must be a float in range (0, 1)."
-        
+
         assert isinstance(
             shot_prob, float) and 0 <= shot_prob <= 1, "Shot probability must be a float in range [0, 1]."
 
@@ -145,7 +146,8 @@ class GeneticOptimizer:
         """
         count = np.unique(
             np.array(
-                [np.array(list(entity[0].values())) for entity in self.population]
+                [np.array(list(entity[0].values()))
+                 for entity in self.population]
             ),
             axis=0
         )
@@ -161,15 +163,19 @@ class GeneticOptimizer:
         list.
         See comments below.
         """
+        for entity in self.population:
+            # NOTE: each entity in format (dictionary, score).
+            entity[1] = self.eval_func(entity[0])
+
         if self.mode == "min":
             # If this is a minimization problem, entities with
             # lowest SCORE will be placed at the beginning of the
             # sorted population.
-            self.population.sort(key=self.eval_func)
+            self.population.sort(key=lambda x: x[1])
         elif self.mode == "max":
             # If this is a maximization probblem, entities with
             # highest SCORE will be placed at the beginning.
-            self.population.sort(key=self.eval_func, reverse=True)
+            self.population.sort(key=lambda x: x[1], reverse=True)
 
     def select(
         self,
