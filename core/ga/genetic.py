@@ -271,6 +271,10 @@ class GeneticOptimizer:
             else:
                 # Leave the genetic value unchanged.
                 mutated[key] = chromosome[key]
+
+        assert isinstance(mutated, dict)
+        assert all(isinstance(key, str) for key in mutated.keys())
+        assert all(not isinstance(val, list) for val in mutated.values())
         return mutated
 
     def evolve(
@@ -292,15 +296,19 @@ class GeneticOptimizer:
                 assert len(p1) == 2 \
                 and isinstance(p1, tuple), f"Invalid p1: {p1}"
                 assert len(p2) == 2 \
-                and isinstance(p2, tuple), f"Invalid p1: {p2}"
-                off_springs = self.cross_over(p1[0], p2[0])
-                self.population.extend(off_springs)
+                and isinstance(p2, tuple), f"Invalid p2: {p2}"
+
+                [child1, child2] = self.cross_over(p1[0], p2[0])
+                self.population.extend(
+                    [(child1, None), (child2, None)]
+                )
             
         # Mutation Phase.
         # For checking purpose only
         init_len = self.count_population()
-        for (idx, (gene, score)) in enumerate(self.population):
+        for idx, entity in enumerate(self.population):
             # Execute mutation process.
+            gene, score = entity
             mutated_gene = self.mutate(gene, mutate_prob=self.mutate_prob)
             # Replace the original entity.
             self.population[idx] = (mutated_gene, score)

@@ -17,8 +17,8 @@ def obj_func(param: Dict[str, object]) -> float:
 # Searching range
 lb = 20
 ub = -20
-init_size = 1000
-epochs = 500
+init_size = 500
+epochs = 100
 
 candidates = (ub - lb) * np.random.random(init_size) + lb
 
@@ -33,16 +33,21 @@ optimizer = GeneticOptimizer(
     eval_func=obj_func,
     mode="min",
     retain=0.5,
+    shot_prob=0.05,
+    mutate_prob=0.05,
     verbose=False
 )
+optimizer.evaluation()
 
 for e in range(epochs):
     print(f"Generation: [{e}/{epochs}]")
-    optimizer.evaluation()
     optimizer.select()
     # print(optimizer.count_population())
     optimizer.evolve()
+    optimizer.evaluation()
 
+optimizer.count_population()
+sum(isinstance(x, tuple) for x in optimizer.population)
 
 print(f"Optimizer x-star found at {optimizer.population[0][0]}")
 print(f"extremal value attained: {obj_func(optimizer.population[0][0]):0.5f}")
