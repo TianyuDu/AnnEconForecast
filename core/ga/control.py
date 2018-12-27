@@ -5,7 +5,7 @@ import sys
 sys.path.append("./")
 import numpy as np
 from typing import Dict
-from core.ga.baseline_go import GeneticOptimizer
+from core.ga.genetic_optimizer import GeneticOptimizer
 from matplotlib import pyplot as plt
 
 def obj_func(param: Dict[str, object]) -> float:
