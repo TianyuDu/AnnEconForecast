@@ -279,11 +279,27 @@ class GeneticOptimizer:
         The evolving step is a wrapper for cross over and mutation process.
         This method updates population.
         """
+        # Breeding Phase.
         assert len(self.population) >= 2, "Insufficient population."
         while len(self.population) < self.init_pop_size:
             [p1, p2] = np.random.choice(self.population, size=2, replace=False)
             off_springs = self._cross_over(p1=p1, p2=p2)
             self.population.extend(off_springs)
+        
+        # Mutation Phase.
+        # For checking purpose only
+        init_len = self.count_population()
+        for (idx, (gene, score)) in enumerate(self.population):
+            # Execute mutation process.
+            mutated_gene = self.mutate(gene, mutate_prob=self.mutate_prob)
+            # Replace the original entity.
+            self.population[idx] = (mutated_gene, score)
+        
+        # For checking purpose only,
+        # assert the population size is unchanged before and after mutation
+        # to ensure there's no duplicate of chromosome.
+        assert init_len == self.count_population()
+            
 
     def _cross_over(
         self,
