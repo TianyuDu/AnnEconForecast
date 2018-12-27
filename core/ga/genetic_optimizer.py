@@ -319,7 +319,6 @@ class GeneticOptimizer:
         # to ensure there's no duplicate of chromosome.
         assert init_len == self.count_population()
             
-
     def cross_over(
         self,
         p1: Dict[str, Union[str, float, int]],
