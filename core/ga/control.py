@@ -8,17 +8,11 @@ from typing import Dict
 from core.ga.genetic import GeneticOptimizer
 from matplotlib import pyplot as plt
 
-def obj_func(
-    param: Dict[str, object]
-) -> float:
-    x = param["x"]
-    f = - (2*x**7 + 923123213*x**12 + 3*x + 21312)
+def obj_func(param: Dict[str, object]) -> float:
+    x, y = param.values()
+    f = (x+3)**2 + (y-2)**2 + 6
     return f
 
-def obj_func2(param):
-    x, y, z = list(param.values())
-    f = (x-3.6)**2 + (3*y)**2 + (z*2)**2 + 6
-    return f
 
 # Searching range
 lb = 20
@@ -30,14 +24,13 @@ candidates = (ub - lb) * np.random.random(init_size) + lb
 
 gene_pool = {
     "x": list(candidates),
-    "y": list(candidates),
-    "z": list(candidates)
+    "y": list(candidates)
     }
 
 optimizer = GeneticOptimizer(
     gene_pool=gene_pool,
     pop_size=init_size,
-    eval_func=obj_func2,
+    eval_func=obj_func,
     mode="min",
     retain=0.5,
     verbose=False
@@ -50,16 +43,9 @@ for e in range(epochs):
     # print(optimizer.count_population())
     optimizer.evolve()
 
-ranked_minimizers = [entity["x"] for entity in optimizer.population]
-ranked_values = [obj_func2(entity) for entity in optimizer.population]
-# plt.plot(ranked_values)
-# plt.show()
 
-# plt.plot(ranked_values)
-# plt.show()
-
-print(f"Optimizer x-star found at {optimizer.population[0]}")
-print(f"extremal value attained: {obj_func2(optimizer.population[0]):0.5f}")
+print(f"Optimizer x-star found at {optimizer.population[0][0]}")
+print(f"extremal value attained: {obj_func(optimizer.population[0][0]):0.5f}")
 
 # print("More attentions are required if the maximizer/minimizer is near boundary.")
 
