@@ -26,6 +26,9 @@ class GeneticHPT(GeneticOptimizer):
         mutate_prob: float = 0.05,
         verbose: bool = False
     ) -> None:
+        """
+        Docstring refer to the parent class GeneticOptimizer.
+        """
         super().__init__(
             gene_pool,
             pop_size,
@@ -36,11 +39,11 @@ class GeneticHPT(GeneticOptimizer):
             mutate_prob,
             verbose
         )
-        
+
     def cross_over(
+        self,
         p1: Dict[str, object],
-        p2: Dict[str, object],
-        self
+        p2: Dict[str, object]
     ) -> Tuple[dict]:
         """
         Individual cross over method. This method should only be called in
@@ -54,28 +57,22 @@ class GeneticHPT(GeneticOptimizer):
         child1 = {key: None for key in p1.keys()}
         child2 = {key: None for key in p1.keys()}
 
+        def mixup_float(f1: float, f2: float) -> (float, float):
+            # Take the random convex combination.
+            z = np.random.random()
+            new_f1 = z * f1 + (1 - z) * f2
+            new_f2 = (1 - z) * f1 + z * f2
+            return new_f1, new_f2
+
         for k in p1.keys():
-            if isinstance(p1[k], str):
+            if isinstance(p1[k], str) or isinstance(p1[k], int):
                 new_gene1 = np.random.choice([p1[k], p2[k]])
                 new_gene2 = np.random.choice([p1[k], p2[k]])
             elif isinstance(p1[k], float):
-                z = np.random.random()
-                # Take the weighted average with random weight.
-                new_gene1 = z * p1[k] + (1 - z) * p2[k]
-                new_gene2 = (1 - z) * p1[k] + z * p2[k]
-            elif isinstance(p1[k], int):
-                z = np.random.random()
-                # Take the weighted average with random weight.
-                # And then round to the nearest integer.
-                new_gene1 = int(np.round(
-                    z * p1[k] + (1 - z) * p2[k]
-                ))
-                new_gene2 = int(np.round(
-                    (1 - z) * p1[k] + z * p2[k]
-                ))
+                new_gene1, new_gene2 = mixup_float(p1[k], p2[k])
             elif isinstance(p1[k], list):
                 # TODO: add cross over rules for list with possibly different length.
-                raise NotImplementedError()
+                
             else:
                 raise TypeError("Unsupported data type to cross over.")
             child1[k], child2[k] = new_gene1, new_gene2

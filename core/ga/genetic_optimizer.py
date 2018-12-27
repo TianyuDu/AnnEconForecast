@@ -337,10 +337,11 @@ class GeneticOptimizer:
         child2 = {key: None for key in p1.keys()}
 
         for k in p1.keys():
-            if isinstance(p1[k], str) or isinstance(p1[k], int):
+            if (isinstance(p1[k], str) and isinstance(p2[k], str))\
+                or (isinstance(p1[k], int) and isinstance(p2[k], int)):
                 new_gene1 = np.random.choice([p1[k], p2[k]])
                 new_gene2 = np.random.choice([p1[k], p2[k]])
-            elif isinstance(p1[k], float):
+            elif isinstance(p1[k], float) and isinstance(p2[k], float):
                 z = np.random.random()
                 # Take the weighted average with random weight.
                 new_gene1 = z * p1[k] + (1 - z) * p2[k]
