@@ -9,6 +9,7 @@ from matplotlib import pyplot as plt
 
 sys.path.append("./")
 from core.ga.genetic_optimizer import GeneticOptimizer
+from core.ga.genetic_hpt import GeneticHPT
 
 def obj_func(param: Dict[str, object]) -> float:
     x, y = param.values()
@@ -29,7 +30,7 @@ gene_pool = {
     "y": list(candidates)
     }
 
-optimizer = GeneticOptimizer(
+optimizer = GeneticHPT(
     gene_pool=gene_pool,
     pop_size=init_size,
     eval_func=obj_func,

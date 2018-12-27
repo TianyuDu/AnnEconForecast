@@ -322,8 +322,8 @@ class GeneticOptimizer:
 
     def cross_over(
         self,
-        p1: Dict[str, Union[str, float]],
-        p2: Dict[str, Union[str, float]]
+        p1: Dict[str, Union[str, float, int]],
+        p2: Dict[str, Union[str, float, int]]
     ) -> [dict, dict]:
         """
         Args:

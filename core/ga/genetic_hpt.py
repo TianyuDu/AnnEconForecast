@@ -1,9 +1,9 @@
 """
 Created: Dec. 26 2018
-The genetic hyper parameter tunner for neural networks.
+The genetic hyper parameter tuner for neural networks.
 """
 import sys
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union, Callable
 
 import numpy as np
 
@@ -12,12 +12,31 @@ from core.ga.genetic_optimizer import GeneticOptimizer
 
 class GeneticHPT(GeneticOptimizer):
     """
-    Genetic Hyper-Parameter Tuner
+    Genetic Hyper-Parameter Tuner for neural networks.
     """
 
-    def __init__(self):
-        raise NotImplementedError()
-
+    def __init__(
+        self,
+        gene_pool: Dict[str, Union[object, List[object]]],
+        pop_size: int,
+        eval_func: Callable[[Dict[str, object]], Union[float, int]],
+        mode: Union["min", "max"],
+        retain: float = 0.3,
+        shot_prob: float = 0.05,
+        mutate_prob: float = 0.05,
+        verbose: bool = False
+    ) -> None:
+        super().__init__(
+            gene_pool,
+            pop_size,
+            eval_func,
+            mode,
+            retain,
+            shot_prob,
+            mutate_prob,
+            verbose
+        )
+        
     def cross_over(
         p1: Dict[str, object],
         p2: Dict[str, object],
