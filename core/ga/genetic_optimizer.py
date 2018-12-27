@@ -21,7 +21,8 @@ class GeneticOptimizer:
         retain: float = 0.3,
         shot_prob: float = 0.05,
         mutate_prob: float = 0.05,
-        verbose: bool = False
+        verbose: bool = False,
+        skip: Tuple[str] = ()
     ) -> None:
         """
         Args:
@@ -49,6 +50,9 @@ class GeneticOptimizer:
                 Mutation process preserves the sign of numerical values.
             verbose:
                 A bool specifying if the optimizer prints out logs during training session.
+            skip:
+                A tuple of strings, which are keys for parameters. Those keys will be skipped
+                in the evolution. (They will be preserved during cross-over and mutate phase)
         """
         # ======== Argument Checking Phase ========
         assert isinstance(
@@ -72,6 +76,9 @@ class GeneticOptimizer:
 
         assert isinstance(verbose, bool), "Verbose must be a bool."
 
+        assert all(key in gene_pool.keys() for key in skip),\
+        "Some key(s) in skip are not valid key for the gene pool."
+
         # ======== End ========
 
         # Admit argument.
@@ -93,6 +100,7 @@ class GeneticOptimizer:
         self.retain = retain
         self.shot_prob = shot_prob
         self.mutate_prob = mutate_prob
+        self.skip = skip
 
         if self.verbose:
             print("Population initialized.")
