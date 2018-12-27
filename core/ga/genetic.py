@@ -176,6 +176,8 @@ class GeneticOptimizer:
             # If this is a maximization probblem, entities with
             # highest SCORE will be placed at the beginning.
             self.population.sort(key=lambda x: x[1], reverse=True)
+        else:
+            raise ValueError("Unsupported optimization task type, must be either MINimization or MAXimization.")
 
     def select(
         self,
