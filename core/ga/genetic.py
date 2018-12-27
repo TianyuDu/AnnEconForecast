@@ -145,7 +145,7 @@ class GeneticOptimizer:
         """
         count = np.unique(
             np.array(
-                [np.array(list(entity.values())) for entity in self.population]
+                [np.array(list(entity[0].values())) for entity in self.population]
             ),
             axis=0
         )
