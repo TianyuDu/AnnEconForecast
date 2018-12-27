@@ -301,19 +301,24 @@ class GeneticOptimizer:
         assert init_len == self.count_population()
             
 
-    def _cross_over(
+    def cross_over(
         self,
         p1: Dict[str, Union[str, float]],
         p2: Dict[str, Union[str, float]]
-    ) -> List[dict]:
+    ) -> [dict, dict]:
         """
-        The basic cross over method, used for string and float data type only.
+        Args:
+            p1, p2:
+            Two typical entity dictionaries as parents.
+        Returns:
+            Two typical entity dictionaries as children.
+        The basic cross over method, used for string and numerical (float and int) data types only.
         """
         child1 = {key: None for key in p1.keys()}
         child2 = {key: None for key in p1.keys()}
 
         for k in p1.keys():
-            if isinstance(p1[k], str):
+            if isinstance(p1[k], str) or isinstance(p1[k], int):
                 new_gene1 = np.random.choice([p1[k], p2[k]])
                 new_gene2 = np.random.choice([p1[k], p2[k]])
             elif isinstance(p1[k], float):
