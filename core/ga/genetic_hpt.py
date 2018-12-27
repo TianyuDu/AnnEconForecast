@@ -26,15 +26,15 @@ class GeneticHPT(GeneticOptimizer):
         shot_prob: float=0.05,
         mutate_prob: float=0.05,
         verbose: bool=False,
-        skip: tuple=()
+        ignore: tuple = ()
     ) -> None:
         """
         Docstring refer to the parent class GeneticOptimizer.
         """
         # ======== Spec ========
-        # Skip the following feature (not considered as hyper parameters) in evolution.
+        # Ignore the following feature (not considered as hyper parameters) in evolution.
         # TODO: consider add reg-ex here.
-        nn_skip = (
+        nn_ignore = (
             "ORDER",  # TODO: order can be supported after fix the recursive differencing method.
             "TRAIN_RATIO",
             "VAL_RATIO",
@@ -52,7 +52,7 @@ class GeneticHPT(GeneticOptimizer):
             shot_prob,
             mutate_prob,
             verbose,
-            skip=nn_skip
+            ignore=nn_ignore
         )
 
     def cross_over(
@@ -178,7 +178,7 @@ class GeneticHPT(GeneticOptimizer):
                     replace=False
                 )
 
-            if k in self.skip:
+            if k in self.ignore:
                 new_gene1, new_gene2 = np.random.choice(
                     [p1[k], p2[k]],
                     size=2,
