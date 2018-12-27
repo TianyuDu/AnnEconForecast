@@ -263,7 +263,7 @@ class GeneticOptimizer:
             if np.random.rand() <= mutate_prob and key not in self.skip:
                 if isinstance(chromosome[key], int) or isinstance(chromosome[key], float):
                     new = mutate_numerical(chromosome[key])
-                elif isinstance(chromosome[key], list):
+                elif type(chromosome[key]) in [list, tuple]:
                     assert all(
                         type(x) in [float, int]
                         for x in chromosome[key]
