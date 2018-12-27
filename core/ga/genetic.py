@@ -283,7 +283,10 @@ class GeneticOptimizer:
         assert len(self.population) >= 2, "Insufficient population."
         while len(self.population) < self.init_pop_size:
             [p1, p2] = np.random.choice(self.population, size=2, replace=False)
-            off_springs = self.cross_over(p1=p1, p2=p2)
+            off_springs = self.cross_over(
+                p1=p1[0],
+                p2=p2[0]
+            )
             self.population.extend(off_springs)
         
         # Mutation Phase.
