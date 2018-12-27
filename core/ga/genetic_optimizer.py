@@ -11,6 +11,7 @@ class GeneticOptimizer:
     """
     The baseline optimizer using genetic algorithm.
     The generic genetic optimizer runs on string, numerical, and iterable of numerical data types.
+    # TODO: optimize code where ignore is encountered.
     """
 
     def __init__(
@@ -23,7 +24,7 @@ class GeneticOptimizer:
         shot_prob: float = 0.05,
         mutate_prob: float = 0.05,
         verbose: bool = False,
-        skip: Iterable[str] = ()
+        ignore: Iterable[str] = ()
     ) -> None:
         """
         Args:
@@ -51,7 +52,7 @@ class GeneticOptimizer:
                 Mutation process preserves the sign of numerical values.
             verbose:
                 A bool specifying if the optimizer prints out logs during training session.
-            skip:
+            ignore:
                 A tuple of strings, which are keys for parameters. Those keys will be skipped
                 in the evolution. (They will be preserved during cross-over and mutate phase)
         """
@@ -77,8 +78,8 @@ class GeneticOptimizer:
 
         assert isinstance(verbose, bool), "Verbose must be a bool."
 
-        assert all(key in gene_pool.keys() for key in skip),\
-        "Some key(s) in skip are not valid key for the gene pool."
+        assert all(key in gene_pool.keys() for key in ignore),\
+        "Some key(s) in ignore are not valid key for the gene pool."
 
         # ======== End ========
 
@@ -101,7 +102,7 @@ class GeneticOptimizer:
         self.retain = retain
         self.shot_prob = shot_prob
         self.mutate_prob = mutate_prob
-        self.skip = skip
+        self.ignore = ignore
 
         if self.verbose:
             print("Population initialized.")
@@ -261,7 +262,7 @@ class GeneticOptimizer:
         mutated = {key: None for key in chromosome.keys()}
 
         for key in chromosome.keys():
-            if np.random.rand() <= mutate_prob and key not in self.skip:
+            if np.random.rand() <= mutate_prob and key not in self.ignore:
                 if isinstance(chromosome[key], int) or isinstance(chromosome[key], float):
                     new = mutate_numerical(chromosome[key])
                 elif type(chromosome[key]) in [list, tuple]:
@@ -347,7 +348,7 @@ class GeneticOptimizer:
         child2 = {key: None for key in p1.keys()}
 
         for key in p1.keys():
-            if key in self.skip:
+            if key in self.ignore:
                 new_gene1, new_gene2 = p1[key], p2[key]
             else:
                 if (isinstance(p1[key], str) and isinstance(p2[key], str))\
