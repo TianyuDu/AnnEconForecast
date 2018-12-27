@@ -39,7 +39,7 @@ optimizer = GeneticOptimizer(
 for e in range(epochs):
     print(f"Generation: [{e}/{epochs}]")
     optimizer.evaluation()
-    optimizer.select(verbose=False)
+    optimizer.select()
     # print(optimizer.count_population())
     optimizer.evolve()
 
