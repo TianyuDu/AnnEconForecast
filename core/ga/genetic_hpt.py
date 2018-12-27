@@ -143,7 +143,7 @@ class GeneticHPT(GeneticOptimizer):
                     assert all(isinstance(x, typical_type_2) for x in p2[k]),\
                     "All elements in p2 should have the same type."
                     assert typical_type_1 == typical_type_2, "Cannot cross over between different data type."
-                    
+
                     # TODO: think about this, how to cross over two list with different lengths. 
                     # e.g. two LSTM spec with different numbers of layers.
                     # (1): [16, 32, 64], (2): [128, 256]

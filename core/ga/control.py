@@ -54,6 +54,8 @@ optimizer = GeneticHPT(
 print(a)
 print(b)
 
+optimizer.mutate(i2, mutate_prob=1.0)
+
 optimizer.evaluation()
 for e in range(epochs):
     print(f"Generation: [{e}/{epochs}]")

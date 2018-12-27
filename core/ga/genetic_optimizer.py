@@ -275,7 +275,6 @@ class GeneticOptimizer:
 
         assert isinstance(mutated, dict)
         assert all(isinstance(key, str) for key in mutated.keys())
-        assert all(not isinstance(val, list) for val in mutated.values())
         return mutated
 
     def evolve(
