@@ -118,11 +118,14 @@ class GeneticHPT(GeneticOptimizer):
                     replace=False
                 )
             elif isinstance(p1[k], str) or isinstance(p1[k], int):
-                new_gene1 = np.random.choice([p1[k], p2[k]])
-                new_gene2 = np.random.choice([p1[k], p2[k]])
+                new_gene1, new_gene2 = np.random.choice(
+                    [p1[k], p2[k]],
+                    size=2,
+                    replace=False
+                )
             elif isinstance(p1[k], float):
                 new_gene1, new_gene2 = mixup_float(p1[k], p2[k])
-            elif isinstance(p1[k], list):
+            elif isinstance(p1[k], list) or isinstance(p1[k], tuple):
                 if len(p1[k]) == len(p2[k]):
                     # Case 1: same length.
                     # e.g. two parameter sets give two multi-layer LSTM with neurons [16, 32, 64] and [32, 64, 128]
@@ -154,7 +157,12 @@ class GeneticHPT(GeneticOptimizer):
                         replace=False
                     )
             else:
-                raise TypeError("Unsupported data type to cross over.")
+                # raise TypeError("Unsupported data type to cross over.")
+                new_gene1, new_gene2 = np.random.choice(
+                    [p1[k], p2[k]],
+                    size=2,
+                    replace=False
+                )
 
             child1[k], child2[k] = new_gene1, new_gene2
 
