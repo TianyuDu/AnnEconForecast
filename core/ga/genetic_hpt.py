@@ -25,7 +25,8 @@ class GeneticHPT(GeneticOptimizer):
         retain: float=0.3,
         shot_prob: float=0.05,
         mutate_prob: float=0.05,
-        verbose: bool=False
+        verbose: bool=False,
+        skip: tuple=()
     ) -> None:
         """
         Docstring refer to the parent class GeneticOptimizer.
@@ -38,7 +39,8 @@ class GeneticHPT(GeneticOptimizer):
             retain,
             shot_prob,
             mutate_prob,
-            verbose
+            verbose,
+            skip
         )
 
     def cross_over(
