@@ -15,10 +15,10 @@ def obj_func(param: Dict[str, object]) -> float:
 
 
 # Searching range
-lb = 20
-ub = -20
+lb = 2e30
+ub = -2e30
 init_size = 500
-epochs = 100
+epochs = 1000
 
 candidates = (ub - lb) * np.random.random(init_size) + lb
 
