@@ -5,7 +5,7 @@ import sys
 from typing import Dict
 
 import numpy as np
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 
 sys.path.append("./")
 from core.ga.genetic_optimizer import GeneticOptimizer

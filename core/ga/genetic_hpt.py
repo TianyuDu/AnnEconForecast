@@ -129,8 +129,19 @@ class GeneticHPT(GeneticOptimizer):
                         mixup_numerical(x1, x2)
                         for x1, x2 in zip(p1[k], p2[k])
                     ]
+                    new_gene1 = [x[0] for x in mixed_gene]
+                    new_gene2 = [x[1] for x in mixed_gene]
                 else:
                     # Case 2: with different length.
+                    # TODO: think about this, how to cross over two list with different lengths. 
+                    # e.g. two LSTM spec with different numbers of layers.
+                    # (1): [16, 32, 64], (2): [128, 256]
+                    # Current solution: randomly distribute.
+                    new_gene1, new_gene2 = np.random.choice(
+                        [p1[k], p2[k]],
+                        size=2,
+                        replace=False
+                    )
             else:
                 raise TypeError("Unsupported data type to cross over.")
 
