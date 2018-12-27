@@ -165,13 +165,13 @@ class GeneticHPT(GeneticOptimizer):
                     size=2,
                     replace=False
                 )
-                
+
             if k in self.skip:
                 new_gene1, new_gene2 = np.random.choice(
                     [p1[k], p2[k]],
                     size=2,
                     replace=False
                 )
+                
             child1[k], child2[k] = new_gene1, new_gene2
-
         return (child1, child2)
