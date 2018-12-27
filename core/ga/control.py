@@ -2,11 +2,13 @@
 The controller and experiment runner for genetic optimizer.
 """
 import sys
-sys.path.append("./")
-import numpy as np
 from typing import Dict
-from core.ga.genetic_optimizer import GeneticOptimizer
+
+import numpy as np
 from matplotlib import pyplot as plt
+
+sys.path.append("./")
+from core.ga.genetic_optimizer import GeneticOptimizer
 
 def obj_func(param: Dict[str, object]) -> float:
     x, y = param.values()
@@ -53,4 +55,3 @@ print(f"Optimizer x-star found at {optimizer.population[0][0]}")
 print(f"extremal value attained: {obj_func(optimizer.population[0][0]):0.5f}")
 
 # print("More attentions are required if the maximizer/minimizer is near boundary.")
-

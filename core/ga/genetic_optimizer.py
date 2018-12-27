@@ -2,8 +2,9 @@
 Created: Dec. 24 2018
 The baseline genetic optimizer.
 """
+from typing import Callable, Dict, List, Tuple, Union
+
 import numpy as np
-from typing import Dict, List, Union, Callable, Tuple
 
 
 class GeneticOptimizer:

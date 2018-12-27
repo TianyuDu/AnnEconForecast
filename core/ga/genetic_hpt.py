@@ -1,7 +1,14 @@
 """
-
+Created: Dec. 26 2018
+The genetic hyper parameter tunner for neural networks.
 """
+import sys
+from typing import Dict, List, Tuple
 
+import numpy as np
+
+sys.path.extend("./")
+from core.ga.genetic_optimizer import GeneticOptimizer
 
 class GeneticHPT(GeneticOptimizer):
     """
