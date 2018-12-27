@@ -86,6 +86,7 @@ class GeneticOptimizer:
             print(f"Unique entity chromosome created: {unique_chromosome}")
 
         # Admit fitness/evaluating function.
+        self.pop_size = pop_size
         self.eval_func = eval_func
         self.mode = mode
         self.retain = retain
@@ -281,7 +282,7 @@ class GeneticOptimizer:
         """
         # Breeding Phase.
         assert len(self.population) >= 2, "Insufficient population."
-        while len(self.population) < self.init_pop_size:
+        while len(self.population) < self.pop_size:
             [p1, p2] = np.random.choice(self.population, size=2, replace=False)
             off_springs = self.cross_over(
                 p1=p1[0],
