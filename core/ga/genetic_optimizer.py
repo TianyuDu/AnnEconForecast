@@ -10,6 +10,7 @@ import numpy as np
 class GeneticOptimizer:
     """
     The baseline optimizer using genetic algorithm.
+    The generic genetic optimizer runs on string, numerical, and iterable of numerical data types.
     """
 
     def __init__(
@@ -268,10 +269,13 @@ class GeneticOptimizer:
                         type(x) in [float, int]
                         for x in chromosome[key]
                     )
-                    new = [
+                    iterable_type = type(chromosome[key])
+                    new = iterable_type(
                         mutate_numerical(x)
                         for x in chromosome[key]
-                    ]
+                    )
+                    assert type(new) == type(chromosome[key]),\
+                    f"Wrong return type, expect: {type(chromosome[key])}, received{type(new)}."
                 else:
                     # NOTE: we can either raise a type error here or leave unsupported type unchanged.
                     new = chromosome[key]
