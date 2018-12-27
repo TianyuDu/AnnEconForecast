@@ -209,11 +209,18 @@ class GeneticOptimizer:
     def mutate(
         self,
         chromosome: Dict[str, object],
-        mutate_rate: float = 0.1
+        mutate_rate: float = 0.05
     ) -> None:
         """
-        Args 
-        Randomly mutate genetic information encoded in dictionary.
+        Args:
+            chromosome:
+                A typical entity in the population to be mutated.
+        Returns:
+            An entity gene that is mutated.
+        
+        Randomly mutate genetic information encoded in dictionary with a minor probability.
+        NOTE: in most cases, the target chromosome will not be altered.
+        
         For the baseline optimizer, only numerical data type (int or float) 
         are supported for mutation.
         """
