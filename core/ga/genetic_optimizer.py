@@ -2,7 +2,7 @@
 Created: Dec. 24 2018
 The baseline genetic optimizer.
 """
-from typing import Callable, Dict, List, Tuple, Union
+from typing import Callable, Dict, List, Tuple, Union, Iterable
 
 import numpy as np
 
@@ -23,7 +23,7 @@ class GeneticOptimizer:
         shot_prob: float = 0.05,
         mutate_prob: float = 0.05,
         verbose: bool = False,
-        skip: Tuple[str] = ()
+        skip: Iterable[str] = ()
     ) -> None:
         """
         Args:
