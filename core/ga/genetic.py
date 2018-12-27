@@ -220,7 +220,7 @@ class GeneticOptimizer:
         
         Randomly mutate genetic information encoded in dictionary with a minor probability.
         NOTE: in most cases, the target chromosome will not be altered.
-        
+
         For the baseline optimizer, only numerical data type (int or float) 
         are supported for mutation.
         """
@@ -268,6 +268,7 @@ class GeneticOptimizer:
                 # Assign back.
                 mutated[key] = new
             else:
+                # Leave the genetic value unchanged.
                 mutated[key] = chromosome[key]
         return mutated
 
