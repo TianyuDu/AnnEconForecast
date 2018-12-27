@@ -30,6 +30,15 @@ gene_pool = {
     "y": list(candidates)
     }
 
+# Sample chromosomes.
+f1 = {"a": [1.0, 2.0, 3.0], "b": [4.0, 5.0, 6.0]}
+f2 = {"a": [7.0, 8.0, 9.0], "b": [10.0, 11.0, 12.0]}
+f3 = {"a": [13.0, 14.0], "b": [15.0, 16.0]}
+
+i1 = {"a": [1, 2, 3], "b": [4, 5, 6]}
+i2 = {"a": [7, 8, 9], "b": [10, 11, 12]}
+i3 = {"a": [13, 14], "b": [15, 16]}
+
 optimizer = GeneticHPT(
     gene_pool=gene_pool,
     pop_size=init_size,
@@ -40,8 +49,12 @@ optimizer = GeneticHPT(
     mutate_prob=0.05,
     verbose=False
 )
-optimizer.evaluation()
 
+(a, b) = optimizer.cross_over(f1, i3)
+print(a)
+print(b)
+
+optimizer.evaluation()
 for e in range(epochs):
     print(f"Generation: [{e}/{epochs}]")
     optimizer.select()

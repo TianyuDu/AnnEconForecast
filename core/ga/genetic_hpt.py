@@ -83,11 +83,13 @@ class GeneticHPT(GeneticOptimizer):
                 # TODO: Consider which method to use.
                 # Randomly distribute.
                 new_i1, new_i2 = np.random.choice([i1, i2], size=2, replace=False)
+                new_i1, new_i2 = int(new_i1), int(new_i2)
             else:
                 f1, f2 = mixup_float(float(i1), float(i2))
-                rd = lambda x: int(np.round(x))
+                rd = lambda x: int(round(x))
                 new_i1, new_i2 = rd(f1), rd(f2)
-            assert all(isinstance(x, int) for x in [new_i1, new_i2]), "Wrong return type(s), both should be int."
+            assert isinstance(new_i1, int) and isinstance(new_i2, int),\
+            f"Wrong return type(s), both should be int. Found: {new_i1} and {new_i2}."
             return new_i1, new_i2
 
         def mixup_numerical(
@@ -133,6 +135,15 @@ class GeneticHPT(GeneticOptimizer):
                     new_gene2 = [x[1] for x in mixed_gene]
                 else:
                     # Case 2: with different length.
+                    # TODO: do we need to consider the mixed case.
+                    # E.g. different length and different data type.
+                    typical_type_1, typical_type_2 = (type(x[0]) for x in [p1[k], p2[k]])
+                    assert all(isinstance(x, typical_type_1) for x in p1[k]),\
+                    "All elements in p1 should have the same type."
+                    assert all(isinstance(x, typical_type_2) for x in p2[k]),\
+                    "All elements in p2 should have the same type."
+                    assert typical_type_1 == typical_type_2, "Cannot cross over between different data type."
+                    
                     # TODO: think about this, how to cross over two list with different lengths. 
                     # e.g. two LSTM spec with different numbers of layers.
                     # (1): [16, 32, 64], (2): [128, 256]
