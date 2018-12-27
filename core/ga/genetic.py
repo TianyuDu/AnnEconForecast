@@ -283,7 +283,10 @@ class GeneticOptimizer:
         # Breeding Phase.
         assert len(self.population) >= 2, "Insufficient population."
         while len(self.population) < self.pop_size:
-            [p1, p2] = np.random.choice(self.population, size=2, replace=False)
+            (p1_idx, p2_idx) = np.random.choice(
+                range(len(self.population)), size=2, replace=False
+            )
+            p1, p2 = self.population[p1_idx], self.population[p2_idx]
             off_springs = self.cross_over(
                 p1=p1[0],
                 p2=p2[0]
