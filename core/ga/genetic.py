@@ -171,35 +171,39 @@ class GeneticOptimizer:
 
         # Rank Phase.
         if self.mode == "min":
-            # If this is a minimization problem, entities with
+            # If this is a minimization problem, the entity with
             # lowest SCORE will be placed at the beginning of the
             # sorted population.
             self.population.sort(key=lambda x: x[1])
         elif self.mode == "max":
-            # If this is a maximization probblem, entities with
+            # If this is a maximization probblem, the entity with
             # highest SCORE will be placed at the beginning.
             self.population.sort(key=lambda x: x[1], reverse=True)
         else:
             raise ValueError("Unsupported optimization task type, must be either MINimization or MAXimization.")
 
     def select(
-        self,
-        verbose: bool = False
+        self
     ) -> None:
+        """
+        Select the top(elite) entity in terms of fitness to be the parents for the next generation.
+        As well, entities NOT in the elite group could also be selected with a minor chance.
+        """
         retain_length = int(self.retain * self.count_population())
+
         retained = self.population[:retain_length]
         dropped = self.population[retain_length:]
 
         # Retain some entity chromosome from the dropped list
-        # with small probability.
+        # with minor probability.
         for entity in dropped:
             if np.random.random() <= self.shot_prob:
                 retained.append(entity)
 
         percent_retained = len(retained) / len(self.population)
-        if verbose:
-            print(f"Actual proportion retained: {percent_retained}")
-            print("Assigning retained entities to replace the population.")
+        if self.verbose:
+            print(f"Actual percentage retained: {percent_retained}")
+            print("Assigning retained entities to replace the population...")
         self.population = retained
 
     def mutate(
@@ -208,7 +212,10 @@ class GeneticOptimizer:
         mutate_rate: float = 0.1
     ) -> None:
         """
+        Args 
         Randomly mutate genetic information encoded in dictionary.
+        For the baseline optimizer, only numerical data type (int or float) 
+        are supported for mutation.
         """
         def mutate_float(src: float) -> float:
             # NOTE: change factor formula here to tune the mutation process.
