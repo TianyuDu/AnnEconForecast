@@ -157,16 +157,19 @@ class GeneticOptimizer:
         self
     ) -> None:
         """
-        # TODO: associate score with population.
+        Assign the evaluated score to each entity.
         Sort the current population so that the more competitive
         entities will be placed at the beginning of the sorted
         list.
+
         See comments below.
         """
+        # Evaluation Phase.
         for entity in self.population:
             # NOTE: each entity in format (dictionary, score).
             entity[1] = self.eval_func(entity[0])
 
+        # Rank Phase.
         if self.mode == "min":
             # If this is a minimization problem, entities with
             # lowest SCORE will be placed at the beginning of the
