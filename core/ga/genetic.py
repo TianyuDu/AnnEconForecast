@@ -283,7 +283,7 @@ class GeneticOptimizer:
         assert len(self.population) >= 2, "Insufficient population."
         while len(self.population) < self.init_pop_size:
             [p1, p2] = np.random.choice(self.population, size=2, replace=False)
-            off_springs = self._cross_over(p1=p1, p2=p2)
+            off_springs = self.cross_over(p1=p1, p2=p2)
             self.population.extend(off_springs)
         
         # Mutation Phase.
@@ -340,7 +340,7 @@ class GeneticHPT(GeneticOptimizer):
     def __init__(self):
         raise NotImplementedError()
 
-    def _cross_over(
+    def cross_over(
         p1: Dict[str, object],
         p2: Dict[str, object],
         self
