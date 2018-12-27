@@ -74,7 +74,7 @@ class GeneticHPT(GeneticOptimizer):
         def mixup_integer(
             i1: int,
             i2: int,
-            choose: bool=True
+            choose: bool=False
         ) -> (int, int):
             """
             Helper function, crossover integer objects.
