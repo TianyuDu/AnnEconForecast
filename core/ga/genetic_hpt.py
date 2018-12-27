@@ -3,7 +3,7 @@ Created: Dec. 26 2018
 The genetic hyper parameter tuner for neural networks.
 """
 import sys
-from typing import Dict, List, Tuple, Union, Callable
+from typing import Dict, List, Tuple, Union, Callable, Iterable
 
 import numpy as np
 
@@ -26,7 +26,7 @@ class GeneticHPT(GeneticOptimizer):
         shot_prob: float=0.05,
         mutate_prob: float=0.05,
         verbose: bool=False,
-        ignore: tuple = ()
+        ignore: Iterable[str]=()
     ) -> None:
         """
         Docstring refer to the parent class GeneticOptimizer.
