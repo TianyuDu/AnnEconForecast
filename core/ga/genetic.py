@@ -15,7 +15,7 @@ class GeneticOptimizer:
         self,
         gene_pool: Dict[str, Union[object, List[object]]],
         pop_size: int,
-        eval_func: Callable[[Dict[str, object], Union[float, int]]],
+        eval_func: Callable[[Dict[str, object]], Union[float, int]],
         mode: Union["min", "max"],
         retain: float = 0.3,
         shot_prob: float = 0.05,
@@ -61,7 +61,7 @@ class GeneticOptimizer:
             "min", "max"], "Optimization mode must be either MINimization or MAXimization."
 
         assert isinstance(
-            retian, float) and 0 < retain < 1, "Retain must be a float in range (0, 1)."
+            retain, float) and 0 < retain < 1, "Retain must be a float in range (0, 1)."
 
         assert isinstance(
             shot_prob, float) and 0 <= shot_prob <= 1, "Shot probability must be a float in range [0, 1]."
@@ -114,7 +114,7 @@ class GeneticOptimizer:
             gene_pool = {"c1": [1, 2, 3], "c2": 10}
             then a typical entity generated from above gene_pool would be {"c1": 2, "c2": 10}.
         """
-        population = ()
+        population = []
         for _ in range(pop_size):
             entity = dict()
             # Construct a random new entity from the gene pool.
@@ -165,9 +165,9 @@ class GeneticOptimizer:
         See comments below.
         """
         # Evaluation Phase.
-        for entity in self.population:
+        for (idx, entity) in enumerate(self.population):
             # NOTE: each entity in format (dictionary, score).
-            entity[1] = self.eval_func(entity[0])
+            self.population[idx] = (entity[0], self.eval_func(entity[0]))
 
         # Rank Phase.
         if self.mode == "min":
