@@ -260,7 +260,7 @@ class GeneticOptimizer:
         mutated = {key: None for key in chromosome.keys()}
 
         for key in chromosome.keys():
-            if np.random.rand() <= mutate_prob:
+            if np.random.rand() <= mutate_prob and key not in self.skip:
                 if isinstance(chromosome[key], int) or isinstance(chromosome[key], float):
                     new = mutate_numerical(chromosome[key])
                 elif isinstance(chromosome[key], list):
@@ -342,17 +342,20 @@ class GeneticOptimizer:
         child1 = {key: None for key in p1.keys()}
         child2 = {key: None for key in p1.keys()}
 
-        for k in p1.keys():
-            if (isinstance(p1[k], str) and isinstance(p2[k], str))\
-                or (isinstance(p1[k], int) and isinstance(p2[k], int)):
-                new_gene1 = np.random.choice([p1[k], p2[k]])
-                new_gene2 = np.random.choice([p1[k], p2[k]])
-            elif isinstance(p1[k], float) and isinstance(p2[k], float):
-                z = np.random.random()
-                # Take the weighted average with random weight.
-                new_gene1 = z * p1[k] + (1 - z) * p2[k]
-                new_gene2 = (1 - z) * p1[k] + z * p2[k]
+        for key in p1.keys():
+            if key in self.skip:
+                new_gene1, new_gene2 = p1[key], p2[key]
             else:
-                raise TypeError("Unsupported data type to cross over.")
-            child1[k], child2[k] = new_gene1, new_gene2
+                if (isinstance(p1[key], str) and isinstance(p2[key], str))\
+                    or (isinstance(p1[key], int) and isinstance(p2[key], int)):
+                    new_gene1 = np.random.choice([p1[key], p2[key]])
+                    new_gene2 = np.random.choice([p1[key], p2[key]])
+                elif isinstance(p1[key], float) and isinstance(p2[key], float):
+                    z = np.random.random()
+                    # Take the weighted average with random weight.
+                    new_gene1 = z * p1[key] + (1 - z) * p2[key]
+                    new_gene2 = (1 - z) * p1[key] + z * p2[key]
+                else:
+                    raise TypeError("Unsupported data type to cross over.")
+            child1[key], child2[key] = new_gene1, new_gene2
         return [child1, child2]
