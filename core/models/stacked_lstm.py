@@ -146,18 +146,12 @@ class StackedLSTM(generic_rnn.GenericRNN):
             if self.verbose:
                 print("\fSummaries on tensors are added to tensorboard.")
 
-    def build(
-        self
-    ) -> None:
+    def _build_metrics(self) -> None:
         """
-        Build the computational graph.
+        A helper func. building the performance metrics.
         """
         if self.verbose:
-            print("Building the computational graph...")
-        self._build_data_io()
-        self._build_recurrent()
-        self._build_output_layer()
-        # Metrics.
+            print("Building model preformance metrics...")
         with tf.name_scope("METRICS"):
             # MSE is the main loss we focus on
             # and it's the metric used for optimization.
@@ -184,7 +178,19 @@ class StackedLSTM(generic_rnn.GenericRNN):
             tf.summary.scalar("MAPE", self.mape)
             if self.verbose:
                 print("\tSummaries on losses are added to tensorbard.")
-            
+
+    def build(
+        self
+    ) -> None:
+        """
+        Build the computational graph.
+        """
+        if self.verbose:
+            print("Building the computational graph...")
+        self._build_data_io()
+        self._build_recurrent()
+        self._build_output_layer()
+        self._build_metrics()
         with tf.name_scope("OPTIMIZER"):
             self.optimizer = tf.train.AdamOptimizer(
                 learning_rate=self.param["learning_rate"],
