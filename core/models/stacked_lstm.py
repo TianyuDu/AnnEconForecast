@@ -242,7 +242,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
     def train(
         self,
         data: Dict[str, np.ndarray],
-        ret: Union[None, List[str]] = None
+        ret: Union[None, List[str], "all"] = None
     ) -> Union[None, Dict[str, float, np.ndarray]]:
         """
         Args:
@@ -263,8 +263,9 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 from this training session.
                 - Also if prediction on training set or validation set is wanted.
                 (even if only one str is passed, use singlton in this case)
-                NOTE: string format: *_set where set in {train, val}
-            # TODO: add a list of avaiable metrics here.
+                NOTE: string format: *_set where set in {train, val, all}
+                - if "all" is passed in, all records will be packed in a dictionary
+                and returned.
         Returns:
             If ret is not None, a dictionary with keys from ret and the corresponding
             numerical(float) values of specified metrics.
@@ -273,12 +274,18 @@ class StackedLSTM(generic_rnn.GenericRNN):
         # TODO: add mute option to this method, avoid writing to disk.
 
         # ======== Argument Checking ========
-        pass
+        raise NotImplementedError()
         # ======== End ========
+        if ret == "full":
+            ret = ["pred_all", "mse_train", "mse_val"]
         
         # Record training cost.
         start = datetime.now()
-        predictions = dict()
+
+        # Return package, as performance measures.
+        pred_all = dict()
+        mse_train = dict()
+        mse_val = dict()
 
         if self.verbose:
             print(f"Starting training session, for {self.param['epochs']} epochs.")
@@ -304,7 +311,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 print("Training model...")
             
             for e in range(self.param["epochs"]):
-                # TODO: Consider using mini batches.
+                # Consider using mini batches.
                 # Use this if train with batches
                 # for X_batch, y_batch in zip(X_batches, y_batches):
                 #     sess.run(train, feed_dict={X: X_batch, y: y_batch})
@@ -332,25 +339,38 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 if e % (self.param["report_periods"] * 10) == 0 and self.verbose:
                     # print out training result 10 times less frequently than the record frequency.
                     train_mse = self.loss.eval(
-                        feed_dict={self.X: data["X_train"], self.y: data["y_train"]}
+                        feed_dict={self.X: data["X_train"],
+                                   self.y: data["y_train"]}
                     )
                     val_mse = self.loss.eval(
-                        feed_dict={self.X: data["X_val"], self.y: data["y_val"]}
+                        feed_dict={self.X: data["X_val"],
+                                   self.y: data["y_val"]}
                     )
+
                     print(
                         f"\nIteration [{e}], Training MSE {train_mse:0.7f}; \
                         Validation MSE {val_mse:0.7f}")
             
                 if e in self.ckpts:
-                    predictions[e] = make_predictions(
+                    pred_all[e] = make_predictions(
                         predictor=self.pred,
                         X=self.X,
                         data=data
                     )
+                    mse_train[e] = self.loss.eval(
+                        feed_dict={self.X: data["X_train"],
+                                   self.y: data["y_train"]}
+                    )
+                    mse_val[e] = self.loss.eval(
+                        feed_dict={self.X: data["X_val"],
+                                   self.y: data["y_val"]}
+                    )
+                    assert isinstance(mse_train[e], float)\
+                        and isinstance(mse_val[e], float)
 
             if -1 in self.ckpts:
                 # If the final prediction is required.
-                predictions[self.param["epochs"]] = make_predictions(
+                pred_all[self.param["epochs"]] = make_predictions(
                     predictor=self.pred,
                     X=self.X,
                     data=data
@@ -363,12 +383,16 @@ class StackedLSTM(generic_rnn.GenericRNN):
         if self.verbose:
             print(f"Time taken for [{param['epochs']}] epochs: ",\
             datetime.now() - start)
-            
-        # TODO: convert to float shape, assert return type.
-        if ret is not None:
-            # return
-            raise NotImplementedError()
 
+        if ret is not None:
+            # Return the pack of records.
+            ret_pack = dict()
+            for var in ret:
+                try:
+                    exec(f"ret_pack['{var}'] = {var}")
+                except NameError:
+                    print(f"{var} is not a valid record variable, ignored.")
+            return ret_pack
 
     def exec_core(self):
         raise NotImplementedError()    
