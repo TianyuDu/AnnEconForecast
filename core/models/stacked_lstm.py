@@ -63,14 +63,14 @@ class StackedLSTM(generic_rnn.GenericRNN):
             if self.verbose:
                 print(
                     f"Label(output) tensor is built, shape={str(self.y.shape)}")
-    
+
     def _build_recurrent(self) -> None:
         """
         A helper func. building the recurrent part of network.
         """
         if self.verbose:
             print("Building the recurrent structure...")
-            
+
         # TODO: add customized activation functions.
         self.multi_cell = tf.nn.rnn_cell.MultiRNNCell(
             [tf.nn.rnn_cell.LSTMCell(
@@ -79,7 +79,8 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 for i, units in enumerate(self.param["num_neurons"])
              ])
         if self.verbose:
-            print("Multi-layer LSTM structure is built: neurons={self.param['num_neurons']}.")
+            print(
+                "Multi-layer LSTM structure is built: neurons={self.param['num_neurons']}.")
 
         # rnn_outputs.shape is (None, num_time_steps, num_neurons[-1])
         self.rnn_outputs, self.states = tf.nn.dynamic_rnn(
@@ -88,9 +89,10 @@ class StackedLSTM(generic_rnn.GenericRNN):
             dtype=tf.float32)
 
         if self.verbose:
-            print(f"(dynamic_rnn) rnn_outputs shape={str(self.rnn_outputs.shape)}.")
+            print(
+                f"(dynamic_rnn) rnn_outputs shape={str(self.rnn_outputs.shape)}.")
             print(f"(dynamic_rnn) states shape={str(self.states)}.")
-        
+
         # Stack everything together.
         self.stacked_output = tf.reshape(
             self.rnn_outputs,
@@ -179,6 +181,48 @@ class StackedLSTM(generic_rnn.GenericRNN):
             if self.verbose:
                 print("\tSummaries on losses are added to tensorbard.")
 
+    def _build_optimizer(self) -> None:
+        """
+        A helper func. building the optimizer in neural network.
+        """
+        if self.verbose:
+            print("Building the optimizer...")
+        with tf.name_scope("OPTIMIZER"):
+            self.optimizer = tf.train.AdamOptimizer(
+                learning_rate=self.param["learning_rate"],
+                name="OPTIMIZER"
+            )
+
+            # Applying Gradient Clipping, if requested.
+            if self.param["clip_grad"] is None:
+                # No G.C.
+                if self.verbose:
+                    print("\tNote: no gradient clipping is applied.\
+                    \n\tIf possible gradient exploding detected (e.g. nan loss), \
+                    try use clip_grad.")
+                self.train = self.optimizer.minimize(self.loss)
+            else:
+                # Apply G.C.
+                assert type(self.param["clip_grad"]) in [float, int]\
+                    and self.parm["clip_grad"] > 0,\
+                    "Gradient Clipping should be either float or integer and greater than zero."
+
+                # NOTE: I didnot write the graident clipping code, use this function carefully.
+                if self.verbose:
+                    print("\tApplying gradient clipping...")
+                    print(f"\tClip by values: {self.param['clip_grad']}")
+                gvs = self.optimizer.compute_gradients(self.loss)
+                capped_gvs = [
+                    (tf.clip_by_value(
+                        grad, - self.param["clip_grad"], self.param["clip_grad"]), var
+                     )
+                    for grad, var in gvs
+                ]
+                self.train = self.optimizer.apply_gradients(capped_gvs)
+
+        if self.verbose:
+            print("\tThe complete computational graph is built.")
+
     def build(
         self
     ) -> None:
@@ -191,41 +235,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         self._build_recurrent()
         self._build_output_layer()
         self._build_metrics()
-        with tf.name_scope("OPTIMIZER"):
-            self.optimizer = tf.train.AdamOptimizer(
-                learning_rate=self.param["learning_rate"],
-                name="OPTIMIZER"
-            )
-        
-            # Applying Gradient Clipping, if requested.
-            if self.param["clip_grad"] is None:
-                # No G.C.
-                if self.verbose:
-                    print("\tNote: no gradient clipping is applied.\
-                    \n\tIf possible gradient exploding detected (e.g. nan loss), \
-                    try use clip_grad.")
-                self.train = self.optimizer.minimize(self.loss)
-            else:
-                # Apply G.C.
-                assert type(self.param["clip_grad"]) in [float, int]\
-                and self.parm["clip_grad"] > 0,\
-                "Gradient Clipping should be either float or integer and greater than zero."
-                
-                # NOTE: I didnot write the graident clipping code, use this function carefully.
-                if self.verbose:
-                    print("\tApplying gradient clipping...")
-                    print(f"\tClip by values: {self.param['clip_grad']}")
-                gvs = self.optimizer.compute_gradients(self.loss)
-                capped_gvs = [
-                    (tf.clip_by_value(
-                        grad, - self.param["clip_grad"], self.param["clip_grad"]), var
-                    )
-                    for grad, var in gvs
-                ]
-                self.train = self.optimizer.apply_gradients(capped_gvs)
-        
-        if self.verbose:
-            print("\tThe complete computational graph is built.") 
+        self._build_optimizer()
 
 
 def make_predictions(
