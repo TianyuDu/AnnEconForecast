@@ -25,10 +25,12 @@ from core.tools.visualize import *
 
 import core.models.generic_rnn as generic_rnn
 
+
 class StackedLSTM(generic_rnn.GenericRNN):
     """
     The stacked (multi-layer) long short term memory object.
     """
+
     def __init__(
         self,
         param: Dict[str, object],
@@ -36,6 +38,153 @@ class StackedLSTM(generic_rnn.GenericRNN):
         verbose: bool = True
     ) -> None:
         super().__init__(param, prediction_checkpoints, verbose)
+        self.build()
+
+    def build(
+        self
+    ) -> None:
+        """
+        Build the computational graph.
+        """
+        if self.verbose:
+            print("Building the computational graph...")
+        # IO nodes handling dataset.
+        with tf.name_scope("DATA_FEED"):
+            self.X = tf.placeholder(
+                tf.float32,
+                [None, self.param["num_time_steps"], self.param["num_inputs"]],
+                name="FEATURE")
+            if self.verbose:
+                print(f"\tFeature(input) tensor is built, shape={str(self.X.shape)}")
+
+            self.y = tf.placeholder(
+                tf.float32,
+                [None, self.param["num_outputs"]],
+                name="LABEL")
+            if self.verbose:
+                print(f"\tLabel(output) tensor is built, shape={str(self.y.shape)}")
+        # TODO: add customized activation functions.
+        self.multi_cell = tf.nn.rnn_cell.MultiRNNCell(
+            [tf.nn.rnn_cell.LSTMCell(
+                num_units=units,
+                name=f"LSTM_LAYER_{i}")
+                for i, units in enumerate(self.param["num_neurons"])
+             ])
+        # rnn_outputs.shape is (None, num_time_steps, num_neurons[-1])
+        self.rnn_outputs, self.states = tf.nn.dynamic_rnn(
+            self.multi_cell,
+            self.X,
+            dtype=tf.float32)
+        
+        # Stack everything together.
+        self.stacked_output = tf.reshape(
+            self.rnn_outputs,
+            [-1, # equivalently, put None as the first element in shape.
+            self.param["num_time_steps"] * self.param["num_neurons"][-1]]
+        )
+        if self.verbose:
+            print(f"\tRecurrent structure is built, the stacked output shape={str(self.stacked_output.shape)}")
+
+        with tf.name_scope("OUTPUT_LAYER"):
+            # Transform each stacked RNN output to a single real value.
+            self.W = tf.Varaible(
+                tf.random_normal(
+                    [self.param["num_time_steps"] * self.param["num_neurons"][-1],
+                    1]
+                ),
+                dtype=tf.float32,
+                name="OUTPUT_WEIGHT"
+            )
+            if self.verbose:
+                print(f"\tOutput weight tensor is built, shape={str(self.W.shape)}")
+
+            self.b = tf.Variable(
+                tf.random_normal([1]),
+                dtype=tf.float32,
+                name="OUTPUT_BIAS"
+            )
+            if self.verbose:
+                print(f"\tOutput bias tensor is built, shape={str(self.b.shape)}")
+
+            self.pred = tf.add(
+                tf.matmul(self.stacked_output),
+                self.b,
+                name="PREDICTION"
+            )
+            if self.verbose:
+                print(f"\tPrediction tensor is built, shape={str(self.pred.shape)}")
+            
+            # Tensorboard summary monitor.
+            tf.summary.histogram("output_weights", self.W)
+            tf.summary.histogram("output_biases", self.b)
+            tf.summary.histogram("predictions", self.pred)
+            if self.verbose:
+                print("\fSummaries on tensors are added to tensorboard.")
+
+        # Metrics.
+        with tf.name_scope("METRICS"):
+            # MSE is the main loss we focus on
+            # and it's the metric used for optimization.
+            # so we just name the MSE using 'loss'
+            self.loss = tf.losses.mean_squared_error(
+                labels=self.y,
+                predictions=self.pred
+            )
+
+            self.rmse = tf.sqrt(
+                tf.reduce_mean(tf.square(self.y - self.pred)),
+                name="RMSE"
+            )
+
+            self.mape = tf.reduce_mean(
+                tf.abs(tf.divide(self.y - self.pred, self.y)),
+                name="MAPE"
+            )
+            if self.verbose:
+                print("\tLoss tensors are built.")
+
+            tf.summary.scalar("MSE", self.loss)
+            tf.summary.scalar("RMSE", self.rmse)
+            tf.summary.scalar("MAPE", self.mape)
+            if self.verbose:
+                print("\tSummaries on losses are added to tensorbard.")
+            
+        with tf.name_scope("OPTIMIZER"):
+            self.optimizer = tf.train.AdamOptimizer(
+                learning_rate=self.param["learning_rate"],
+                name="OPTIMIZER"
+            )
+        
+            # Applying Gradient Clipping, if requested.
+            if self.param["clip_grad"] is None:
+                # No G.C.
+                if self.verbose:
+                    print("\tNote: no gradient clipping is applied.\
+                    \n\tIf possible gradient exploding detected (e.g. nan loss), \
+                    try use clip_grad.")
+                self.train = self.optimizer.minimize(self.loss)
+            else:
+                # Apply G.C.
+                assert type(self.param["clip_grad"]) in [float, int]\
+                and self.parm["clip_grad"] > 0,\
+                "Gradient Clipping should be either float or integer and greater than zero."
+                
+                # NOTE: I didnot write the graident clipping code, use this function carefully.
+                if self.verbose:
+                    print("\tApplying gradient clipping...")
+                    print(f"\tClip by values: {self.param['clip_grad']}")
+                gvs = self.optimizer.compute_gradients(self.loss)
+                capped_gvs = [
+                    (tf.clip_by_value(
+                        grad, - self.param["clip_grad"], self.param["clip_grad"]), var
+                    )
+                    for grad, var in gvs
+                ]
+                self.train = self.optimizer.apply_gradients(capped_gvs)
+        
+        if self.verbose:
+            print("\tThe complete computational graph is built.") 
+
 
 def make_predictions(
     predictor: tf.Tensor,
@@ -54,8 +203,8 @@ def make_predictions(
 def exec_core(
     param: Dict[str, object],
     data: Dict[str, np.ndarray],
-    prediction_checkpoints: Iterable[int]=[-1],
-    verbose: bool=True
+    prediction_checkpoints: Iterable[int] = [-1],
+    verbose: bool = True
 ) -> Dict[int, Dict[str, np.ndarray]]:
     """
     # TODO: write the doc string.
@@ -87,8 +236,8 @@ def exec_core(
         [tf.nn.rnn_cell.LSTMCell(
             num_units=units,
             name=f"LSTM_CELL_{i}"
-            )
-        for i, units in enumerate(param["num_neurons"])
+        )
+            for i, units in enumerate(param["num_neurons"])
         ]
     )
 
@@ -119,7 +268,8 @@ def exec_core(
         )
 
         pred = tf.add(
-            tf.matmul(stacked_output, W), b,
+            tf.matmul(stacked_output, W),
+            b,
             name="PREDICTION"
         )
 
@@ -132,7 +282,7 @@ def exec_core(
     with tf.name_scope("METRICS"):
         # MSE is the main loss we focus on and it's the metric used for optimization.
         loss = tf.reduce_mean(tf.square(y - pred), name="MSE")
-        mape = tf.reduce_mean(tf.abs(tf.divide(y - pred, y)))
+        mape = tf.reduce_mean(tf.abs(tf.divide(y - pred, y)), name="MAPE")
 
         tf.summary.scalar("MSE", loss)
         tf.summary.scalar("MAPE", mape)
@@ -146,7 +296,8 @@ def exec_core(
         if param["clip_grad"] is None:
             # No Gradient Clipping
             print("Note: no gradient clipping is applied.\
-            \nIf possible gradient exploding detected (e.g. nan loss), try use clip_grad.")
+            \nIf possible gradient exploding detected (e.g. nan loss), \
+            try use clip_grad.")
             train = optimizer.minimize(loss)
         else:
             # With Gradient Clipping
@@ -168,7 +319,7 @@ def exec_core(
     with tf.Session() as sess:
         saver = tf.train.Saver()
         merged_summary = tf.summary.merge_all()
-        
+
         train_writer = tf.summary.FileWriter(
             param["tensorboard_path"] + "/train")
 
@@ -214,7 +365,6 @@ def exec_core(
 
                 print(
                     f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
-            
 
             if e in prediction_checkpoints:
                 predictions[e] = make_predictions(pred, X, data)
@@ -225,8 +375,9 @@ def exec_core(
         print("Saving the model...")
         saver.save(sess, param["model_path"])
 
-    print(f"Time taken for [{param['epochs']}] epochs: ", datetime.now() - start)
-    
+    print(f"Time taken for [{param['epochs']}] epochs: ",
+          datetime.now() - start)
+
     return predictions
 
 
