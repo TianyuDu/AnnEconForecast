@@ -36,9 +36,14 @@ In this project, we aim to implement a wide range of models, both from structura
 
 ```
 AnnEconForecast/core/
+├── ga
+│   ├── control.py
+│   ├── genetic_hpt.py
+│   └── genetic_optimizer.py
 ├── models
 │   ├── baseline_lstm.py
 │   ├── baseline_rnn.py
+│   ├── generic_rnn.py
 │   ├── stacked_lstm.py
 │   └── stat_models.py
 ├── tools
@@ -47,6 +52,7 @@ AnnEconForecast/core/
 │   ├── metrics.py
 │   ├── param_set_generator.py
 │   ├── rnn_prepare.py
+│   ├── stacked_lstm_oop.py
 │   ├── time_series.py
 │   └── visualize.py
 └── training
