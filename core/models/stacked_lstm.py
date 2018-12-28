@@ -270,10 +270,100 @@ class StackedLSTM(generic_rnn.GenericRNN):
             numerical(float) values of specified metrics.
             Also if prediction on training set or validation set is wanted. 
         """
+        # TODO: add mute option to this method, avoid writing to disk.
+
+        # ======== Argument Checking ========
+        pass
+        # ======== End ========
+        
         # Record training cost.
         start = datetime.now()
-        predictions
+        predictions = dict()
 
+        if self.verbose:
+            print(f"Starting training session, for {self.param['epochs']} epochs.")
+        
+        with tf.Session() as sess:
+            # FIXME: this might not work in an isolated objects for tf.
+            saver = tf.train.Saver()
+            merged_summary = tf.summary.merge_all()
+
+            if self.verbose:
+                print("Creating tensorboard file writers,\
+                \nwriting to path {self.param['tensorboard_path']}")
+            
+            train_writer = tf.summary.FileWriter(
+                self.param["tensorboard_path"] + "/train")
+            val_writer = tf.summary.FileWriter(
+                self.param["tensorboard_path"] + "/validation")
+            train_writer.add_graph(sess.graph)
+
+            sess.run(tf.global_variables_initializer())
+
+            if self.verbose:
+                print("Training model...")
+            
+            for e in range(self.param["epochs"]):
+                # TODO: Consider using mini batches.
+                # Use this if train with batches
+                # for X_batch, y_batch in zip(X_batches, y_batches):
+                #     sess.run(train, feed_dict={X: X_batch, y: y_batch})
+                sess.run(
+                    self.train,
+                    feed_dict={self.X: data["X_train"], self.y: data["y_train"]}
+                )
+
+                if e % self.param["report_periods"] == 0:
+                    # In those periods, training summary is written to tensorboard record.
+                    # Summary on training set.
+                    train_summary = sess.run(
+                        merged_summary,
+                        feed_dict={self.X: data["X_train"], self.y: data["y_train"]}
+                    )
+                    # Summary on validation set.
+                    val_summary = sess.run(
+                        merged_summary,
+                        feed_dict={self.X: data["X_val"], self.y: data["y_val"]}
+                    )
+
+                    train_writer.add_summary(train_summary, e)
+                    val_writer.add_summary(val_summary, e)
+
+                if e % (self.param["report_periods"] * 10) == 0 and self.verbose:
+                    # print out training result 10 times less frequently than the record frequency.
+                    train_mse = self.loss.eval(
+                        feed_dict={self.X: data["X_train"], self.y: data["y_train"]}
+                    )
+                    val_mse = self.loss.eval(
+                        feed_dict={self.X: data["X_val"], self.y: data["y_val"]}
+                    )
+                    print(
+                        f"\nIteration [{e}], Training MSE {train_mse:0.7f}; \
+                        Validation MSE {val_mse:0.7f}")
+            
+                if e in self.ckpts:
+                    predictions[e] = make_predictions(
+                        predictor=self.pred,
+                        X=self.X,
+                        data=data
+                    )
+
+            if -1 in self.ckpts:
+                # If the final prediction is required.
+                predictions[self.param["epochs"]] = make_predictions(
+                    predictor=self.pred,
+                    X=self.X,
+                    data=data
+                )
+            if self.verbose:
+                print("Saving the model...")
+            
+            saver.save(sess, self.param["model_path"])
+        
+        if self.verbose:
+            print(f"Time taken for [{param['epochs']}] epochs: ",\
+            datetime.now() - start)
+            
         # TODO: convert to float shape, assert return type.
         if ret is not None:
             # return
@@ -472,8 +562,8 @@ def exec_core(
         print("Saving the model...")
         saver.save(sess, param["model_path"])
 
-    print(f"Time taken for [{param['epochs']}] epochs: ",
-          datetime.now() - start)
+    print(f"Time taken for [{param['epochs']}] epochs: ",\
+    datetime.now() - start)
 
     return predictions
 
