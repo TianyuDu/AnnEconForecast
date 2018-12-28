@@ -10,4 +10,4 @@ In this project, we aim to implement a wide range of models, both from structura
 
 In addition to the neural networks, we also deployed various other machine learning techniques, like the genetic algorithm, in hyper-parameter tunning.
 
-For a more completed note on what we do in this project, please refer to our documentation page. [Documentation](https://tianyudu.github.io/AnnEconForecast/)
+For a more completed note on what we do in this project, please refer to our documentation page. ([Documentation Link](https://tianyudu.github.io/AnnEconForecast/))
