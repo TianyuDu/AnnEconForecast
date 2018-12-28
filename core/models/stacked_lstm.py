@@ -45,7 +45,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         A helper func. building the data IO tensors.
         """
         if self.verbose:
-            print("Building data IO tensors")
+            print("Building data IO tensors...")
         # IO nodes handling dataset.
         with tf.name_scope("DATA_IO"):
             self.X = tf.placeholder(
@@ -64,6 +64,43 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 print(
                     f"Label(output) tensor is built, shape={str(self.y.shape)}")
     
+    def _build_recurrent(self) -> None:
+        """
+        A helper func. building the recurrent part of network.
+        """
+        if self.verbose:
+            print("Building the recurrent structure...")
+            
+        # TODO: add customized activation functions.
+        self.multi_cell = tf.nn.rnn_cell.MultiRNNCell(
+            [tf.nn.rnn_cell.LSTMCell(
+                num_units=units,
+                name=f"LSTM_LAYER_{i}")
+                for i, units in enumerate(self.param["num_neurons"])
+             ])
+        if self.verbose:
+            print("Multi-layer LSTM structure is built: neurons={self.param['num_neurons']}.")
+
+        # rnn_outputs.shape is (None, num_time_steps, num_neurons[-1])
+        self.rnn_outputs, self.states = tf.nn.dynamic_rnn(
+            self.multi_cell,
+            self.X,
+            dtype=tf.float32)
+
+        if self.verbose:
+            print(f"(dynamic_rnn) rnn_outputs shape={str(self.rnn_outputs.shape)}.")
+            print(f"(dynamic_rnn) states shape={str(self.states)}.")
+        
+        # Stack everything together.
+        self.stacked_output = tf.reshape(
+            self.rnn_outputs,
+            [-1,  # equivalently, put None as the first element in shape.
+             self.param["num_time_steps"] * self.param["num_neurons"][-1]]
+        )
+        if self.verbose:
+            print(
+                f"Recurrent structure is built, the stacked output shape={str(self.stacked_output.shape)}")
+
     def build(
         self
     ) -> None:
@@ -73,28 +110,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         if self.verbose:
             print("Building the computational graph...")
         self._build_data_io()
-        # TODO: add customized activation functions.
-        self.multi_cell = tf.nn.rnn_cell.MultiRNNCell(
-            [tf.nn.rnn_cell.LSTMCell(
-                num_units=units,
-                name=f"LSTM_LAYER_{i}")
-                for i, units in enumerate(self.param["num_neurons"])
-             ])
-        # rnn_outputs.shape is (None, num_time_steps, num_neurons[-1])
-        self.rnn_outputs, self.states = tf.nn.dynamic_rnn(
-            self.multi_cell,
-            self.X,
-            dtype=tf.float32)
-        
-        # Stack everything together.
-        self.stacked_output = tf.reshape(
-            self.rnn_outputs,
-            [-1, # equivalently, put None as the first element in shape.
-            self.param["num_time_steps"] * self.param["num_neurons"][-1]]
-        )
-        if self.verbose:
-            print(f"\tRecurrent structure is built, the stacked output shape={str(self.stacked_output.shape)}")
-
+        self._build_recurrent()
         with tf.name_scope("OUTPUT_LAYER"):
             # Transform each stacked RNN output to a single real value.
             self.W = tf.Varaible(
