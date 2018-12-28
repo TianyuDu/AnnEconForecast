@@ -239,6 +239,42 @@ class StackedLSTM(generic_rnn.GenericRNN):
         if self.verbose:
             print("\tThe complete computational graph is built.")
 
+    def train(
+        self,
+        data: Dict[str, np.ndarray],
+        ret: Union[None, List[str]] = None
+    ) -> Union[None, Dict[str, float]]:
+        """
+        Args:
+            data:
+                A dictionary of dataset containing the following keys.
+                    - "X_train" = Training set feature matrix.
+                    - "y_train" = Training set label matrix.
+                    - "X_val" = Validation set feature matrix.
+                    - "y_val" = Validation set label matrix.
+                And each value should be a numpy array with following shapes.
+                    - "X_*": shape = [*, num_time_steps, num_inputs]
+                    - "y_*": shape = [*, num_outputs]
+            ret:
+                None if no return is needed.
+                Put a list of strings of metrics that one wish to be returned
+                from this training session.
+                (even if only one str is passed, use singlton in this case)
+
+            # TODO: add a list of avaiable metrics here.
+        Returns:
+            if ret is not None, a dictionary with keys from ret and the corresponding
+            numerical(float) values of specified metrics.
+        """
+        
+        # TODO: convert to float shape, assert return type.
+        if ret is not None:
+            # return
+            raise NotImplementedError()
+
+
+    def exec_core(self):
+        raise NotImplementedError()    
 
 def make_predictions(
     predictor: tf.Tensor,
