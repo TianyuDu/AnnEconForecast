@@ -11,7 +11,7 @@ Here is the layout for files in this projects, it helps one to locate the wanted
 
 This directory contains all scripts handling tasks including data-preprocessing, model building and visualization.
 
-**Note**: generally one does not need to modify files under this directory the only wanted is replicating the results in the demonstration or run existing models on a different dataset (but in the same format).
+**Note**: generally one does not need to modify files under this directory the only wanted is replicating the results in the demonstration or run existing models on a different dataset (but in the same format, for more information on the data used, refer to [data instruction](data.md)).
 
 ### Constants
 
