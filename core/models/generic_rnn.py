@@ -24,14 +24,14 @@ from core.tools.time_series import *
 from core.tools.visualize import *
 
 
-def GenericRNN:
+class GenericRNN:
     """
     The generic recurrent network.
     """
     def __init__(
-        self
+        self,
         param: Dict[str, object],
         prediction_checkpoints: Iterable[int]=[-1],
         verbose: bool=True
     ) -> Nones:
-        pass
+        raise NotImplementedError()
