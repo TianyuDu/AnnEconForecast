@@ -10,21 +10,16 @@ With recent advances in artificial neural networks, ANNs are shown to be excelle
 
 In this project, we aim to implement a wide range of models, both from structural and non-structural, to forecast various economic indicators, including unemployment and foreign exchange rates.
 
-#### Documentation Sitemap
+#### Documentation Site-map
 
 * [The Project Methodology and Workflow](method.md)
-
 * [The Second Demonstration](demo2.md)
-
-* [The Project Road Map](roadmap.md)
-
 * [How to Train a Model](train.md)
-
 * [How to Restore a Saved Model](restore.md)
-
-* [Hyper-Parameter Tuning and Searching](hpt.md)
-
-* [A List of References](ref.md)
+* [Hyper-Parameter Tuning](hpt.md)
+* [The Project Road Map](roadmap.md)
+* [Notes on Datasets](data.md)
+* [References](ref.md)
 
 
 
