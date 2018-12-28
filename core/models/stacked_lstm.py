@@ -40,6 +40,30 @@ class StackedLSTM(generic_rnn.GenericRNN):
         super().__init__(param, prediction_checkpoints, verbose)
         self.build()
 
+    def _build_data_io(self) -> None:
+        """
+        A helper func. building the data IO tensors.
+        """
+        if self.verbose:
+            print("Building data IO tensors")
+        # IO nodes handling dataset.
+        with tf.name_scope("DATA_IO"):
+            self.X = tf.placeholder(
+                tf.float32,
+                [None, self.param["num_time_steps"], self.param["num_inputs"]],
+                name="FEATURE")
+            if self.verbose:
+                print(
+                    f"Feature(input) tensor is built, shape={str(self.X.shape)}")
+
+            self.y = tf.placeholder(
+                tf.float32,
+                [None, self.param["num_outputs"]],
+                name="LABEL")
+            if self.verbose:
+                print(
+                    f"Label(output) tensor is built, shape={str(self.y.shape)}")
+    
     def build(
         self
     ) -> None:
@@ -48,21 +72,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         """
         if self.verbose:
             print("Building the computational graph...")
-        # IO nodes handling dataset.
-        with tf.name_scope("DATA_FEED"):
-            self.X = tf.placeholder(
-                tf.float32,
-                [None, self.param["num_time_steps"], self.param["num_inputs"]],
-                name="FEATURE")
-            if self.verbose:
-                print(f"\tFeature(input) tensor is built, shape={str(self.X.shape)}")
-
-            self.y = tf.placeholder(
-                tf.float32,
-                [None, self.param["num_outputs"]],
-                name="LABEL")
-            if self.verbose:
-                print(f"\tLabel(output) tensor is built, shape={str(self.y.shape)}")
+        self._build_data_io()
         # TODO: add customized activation functions.
         self.multi_cell = tf.nn.rnn_cell.MultiRNNCell(
             [tf.nn.rnn_cell.LSTMCell(
