@@ -35,7 +35,7 @@ In this project, we aim to implement a wide range of models, both from structura
 - `/core`  core files containing codes
 
 ```
-./core/
+AnnEconForecast/core/
 ├── models
 │   ├── baseline_lstm.py
 │   ├── baseline_rnn.py
@@ -54,15 +54,7 @@ In this project, we aim to implement a wide range of models, both from structura
     └── hps_methods.py
 ```
 
-
-
-- `/data` dataset directory
-- `/notebooks`  Jupyter notebooks
-
-#### Archived Models
-
-- `/keras_based`  models built on `keras`
-- `/matlab_based`  models built on `MatLab` 
+**Note** for descriptions on other directories other than `core`, please refer to [layout description](layout.md).
 
 ## Packages
 
