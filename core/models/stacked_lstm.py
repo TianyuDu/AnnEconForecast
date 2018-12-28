@@ -40,6 +40,22 @@ class StackedLSTM(generic_rnn.GenericRNN):
         super().__init__(param, prediction_checkpoints, verbose)
         self.build()
 
+    def build(
+        self
+    ) -> None:
+        """
+        Build the computational graph.
+        """
+        if self.verbose:
+            print("Building the computational graph...")
+        self._build_data_io()
+        self._build_recurrent()
+        self._build_output_layer()
+        self._build_metrics()
+        self._build_optimizer()
+        if self.verbose:
+            print("The graph is built.")
+
     def _build_data_io(self) -> None:
         """
         A helper func. building the data IO tensors.
@@ -222,20 +238,6 @@ class StackedLSTM(generic_rnn.GenericRNN):
 
         if self.verbose:
             print("\tThe complete computational graph is built.")
-
-    def build(
-        self
-    ) -> None:
-        """
-        Build the computational graph.
-        """
-        if self.verbose:
-            print("Building the computational graph...")
-        self._build_data_io()
-        self._build_recurrent()
-        self._build_output_layer()
-        self._build_metrics()
-        self._build_optimizer()
 
 
 def make_predictions(
