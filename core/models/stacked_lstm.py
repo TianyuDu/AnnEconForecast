@@ -23,8 +23,19 @@ from core.tools.rnn_prepare import *
 from core.tools.time_series import *
 from core.tools.visualize import *
 
-# sys.path.extend(["/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast"])
+import core.models.generic_rnn as generic_rnn
 
+class StackedLSTM(generic_rnn.GenericRNN):
+    """
+    The stacked (multi-layer) long short term memory object.
+    """
+    def __init__(
+        self,
+        param: Dict[str, object],
+        prediction_checkpoints: Iterable[int] = [-1],
+        verbose: bool = True
+    ) -> None:
+        super().__init__(param, prediction_checkpoints, verbose)
 
 def make_predictions(
     predictor: tf.Tensor,
