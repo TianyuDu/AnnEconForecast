@@ -101,6 +101,51 @@ class StackedLSTM(generic_rnn.GenericRNN):
             print(
                 f"Recurrent structure is built, the stacked output shape={str(self.stacked_output.shape)}")
 
+    def _build_output_layer(self) -> None:
+        """
+        A helper func. building the output part of the network.
+        """
+        if self.verbose:
+            print("Building the output layer...")
+        with tf.name_scope("OUTPUT_LAYER"):
+            # Transform each stacked RNN output to a single real value.
+            self.W = tf.Varaible(
+                tf.random_normal(
+                    [self.param["num_time_steps"] * self.param["num_neurons"][-1],
+                     1]
+                ),
+                dtype=tf.float32,
+                name="OUTPUT_WEIGHT"
+            )
+            if self.verbose:
+                print(
+                    f"Output weight tensor is built, shape={str(self.W.shape)}")
+
+            self.b = tf.Variable(
+                tf.random_normal([1]),
+                dtype=tf.float32,
+                name="OUTPUT_BIAS"
+            )
+            if self.verbose:
+                print(
+                    f"Output bias tensor is built, shape={str(self.b.shape)}")
+
+            self.pred = tf.add(
+                tf.matmul(self.stacked_output),
+                self.b,
+                name="PREDICTION"
+            )
+            if self.verbose:
+                print(
+                    f"Prediction tensor is built, shape={str(self.pred.shape)}")
+
+            # Tensorboard summary monitor.
+            tf.summary.histogram("output_weights", self.W)
+            tf.summary.histogram("output_biases", self.b)
+            tf.summary.histogram("predictions", self.pred)
+            if self.verbose:
+                print("\fSummaries on tensors are added to tensorboard.")
+
     def build(
         self
     ) -> None:
@@ -111,42 +156,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
             print("Building the computational graph...")
         self._build_data_io()
         self._build_recurrent()
-        with tf.name_scope("OUTPUT_LAYER"):
-            # Transform each stacked RNN output to a single real value.
-            self.W = tf.Varaible(
-                tf.random_normal(
-                    [self.param["num_time_steps"] * self.param["num_neurons"][-1],
-                    1]
-                ),
-                dtype=tf.float32,
-                name="OUTPUT_WEIGHT"
-            )
-            if self.verbose:
-                print(f"\tOutput weight tensor is built, shape={str(self.W.shape)}")
-
-            self.b = tf.Variable(
-                tf.random_normal([1]),
-                dtype=tf.float32,
-                name="OUTPUT_BIAS"
-            )
-            if self.verbose:
-                print(f"\tOutput bias tensor is built, shape={str(self.b.shape)}")
-
-            self.pred = tf.add(
-                tf.matmul(self.stacked_output),
-                self.b,
-                name="PREDICTION"
-            )
-            if self.verbose:
-                print(f"\tPrediction tensor is built, shape={str(self.pred.shape)}")
-            
-            # Tensorboard summary monitor.
-            tf.summary.histogram("output_weights", self.W)
-            tf.summary.histogram("output_biases", self.b)
-            tf.summary.histogram("predictions", self.pred)
-            if self.verbose:
-                print("\fSummaries on tensors are added to tensorboard.")
-
+        self._build_output_layer()
         # Metrics.
         with tf.name_scope("METRICS"):
             # MSE is the main loss we focus on
