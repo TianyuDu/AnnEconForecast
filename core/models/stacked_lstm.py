@@ -243,7 +243,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         self,
         data: Dict[str, np.ndarray],
         ret: Union[None, List[str]] = None
-    ) -> Union[None, Dict[str, float]]:
+    ) -> Union[None, Dict[str, float, np.ndarray]]:
         """
         Args:
             data:
@@ -255,18 +255,25 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 And each value should be a numpy array with following shapes.
                     - "X_*": shape = [*, num_time_steps, num_inputs]
                     - "y_*": shape = [*, num_outputs]
+                NOTE: to guarantee the isolation of testing set, it must not
+                be included in data dictionary.
             ret:
-                None if no return is needed.
-                Put a list of strings of metrics that one wish to be returned
+                - None if no return is needed.
+                - Put a list of strings of metrics that one wish to be returned
                 from this training session.
+                - Also if prediction on training set or validation set is wanted.
                 (even if only one str is passed, use singlton in this case)
-
+                NOTE: string format: *_set where set in {train, val}
             # TODO: add a list of avaiable metrics here.
         Returns:
-            if ret is not None, a dictionary with keys from ret and the corresponding
+            If ret is not None, a dictionary with keys from ret and the corresponding
             numerical(float) values of specified metrics.
+            Also if prediction on training set or validation set is wanted. 
         """
-        
+        # Record training cost.
+        start = datetime.now()
+        predictions
+
         # TODO: convert to float shape, assert return type.
         if ret is not None:
             # return
