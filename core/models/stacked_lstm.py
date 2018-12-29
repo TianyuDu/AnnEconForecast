@@ -297,7 +297,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         if not save_to_disk and self.verbose:
             print("Please note that this model will not be saved to disk after the training is completed (probably by default setting).")
 
-        if ret == "full":
+        if ret == "all":
             ret = ["pred_all", "mse_train", "mse_val"]
         
         # Record training cost.
