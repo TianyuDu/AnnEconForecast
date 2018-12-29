@@ -153,7 +153,7 @@ def split_dataset(
     and 0 < train_ratio <= 1,\
     f"train_ratio should be a float within range (0,1], received: {train_ratio}"
 
-    assert type(val_ratio) in [float, np.flaot_]\
+    assert type(val_ratio) in [float, np.float_]\
     and 0 < val_ratio <= 1,\
     f"val_ratio should be a float within range (0,1], received: {val_ratio}"
 
