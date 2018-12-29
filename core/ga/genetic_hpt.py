@@ -122,7 +122,7 @@ class GeneticHPT(GeneticOptimizer):
                 raise TypeError("Unsupported data type.")
 
         for k in p1.keys():
-            if type(p1[k]) != type(p2[k]):
+            if type(p1[k]) != type(p2[k]) or isinstance(p1[k], str) or isinstance(p1[k], int):
                 # For different types to cross over,
                 # E.g. p1 has grad clipping activated (10.0) and p2 has no gradient clipping (None)
                 # Randomly distribute.
@@ -130,12 +130,13 @@ class GeneticHPT(GeneticOptimizer):
                     new_gene1, new_gene2 = p1[k], p2[k]
                 else:
                     new_gene1, new_gene2 = p2[k], p1[k]
-                    
-            elif isinstance(p1[k], str) or isinstance(p1[k], int):
-                if np.random.random() >= 0.5:
-                    new_gene1, new_gene2 = p1[k], p2[k]
-                else:
-                    new_gene1, new_gene2 = p2[k], p1[k]
+
+            # NOTE: Dec. 29 2018, merged to above case.     
+            # elif isinstance(p1[k], str) or isinstance(p1[k], int):
+            #     if np.random.random() >= 0.5:
+            #         new_gene1, new_gene2 = p1[k], p2[k]
+            #     else:
+            #         new_gene1, new_gene2 = p2[k], p1[k]
 
             elif isinstance(p1[k], float):
                 new_gene1, new_gene2 = mixup_float(p1[k], p2[k])
