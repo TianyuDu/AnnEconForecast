@@ -100,7 +100,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
              ])
         if self.verbose:
             print(
-                "Multi-layer LSTM structure is built: neurons={self.param['num_neurons']}.")
+                f"Multi-layer LSTM structure is built: neurons={self.param['num_neurons']}.")
 
         # rnn_outputs.shape is (None, num_time_steps, num_neurons[-1])
         self.rnn_outputs, self.states = tf.nn.dynamic_rnn(
