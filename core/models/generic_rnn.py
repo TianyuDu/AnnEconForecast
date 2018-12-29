@@ -13,7 +13,6 @@ class GenericRNN:
     This is the abstract class used as the base of any recurrent 
     neural network.
     """
-
     def __init__(
         self,
         param: Dict[str, object],
