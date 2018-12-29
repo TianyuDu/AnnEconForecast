@@ -98,7 +98,8 @@ def prepare_dataset(
 
 def normalize(
     raw: pd.DataFrame,
-    train_ratio: float
+    train_ratio: float,
+    verbose: bool = False
 ) -> pd.DataFrame:
     """
     Normalize the dataset based on a training subset and apply the scaler to the whole set.
@@ -122,9 +123,10 @@ def normalize(
     scaler = StandardScaler().fit(
         df[:int(train_ratio*len(df))].values
     )
-    print(
-        f"StandardScaler applied, scaling based on the first {int(train_ratio*len(df))} observations.")
-    df.iloc[:, 0] = scaler.transform(df.values)
+    if verbose:
+        print(
+            f"StandardScaler applied, scaling based on the first {int(train_ratio*len(df))} observations.")
+        df.iloc[:, 0] = scaler.transform(df.values)
     return df
 
 
