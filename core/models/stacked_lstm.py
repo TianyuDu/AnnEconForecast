@@ -316,11 +316,10 @@ class StackedLSTM(generic_rnn.GenericRNN):
             saver = tf.train.Saver()
             merged_summary = tf.summary.merge_all()
 
-            if self.verbose:
-                print("Creating tensorboard file writers,\
-                \nwriting to path {self.param['tensorboard_path']}")
-            
             if save_to_disk:
+                if self.verbose:
+                    print("Creating tensorboard file writers,\
+                    \nwriting to path {self.param['tensorboard_path']}")
                 # Only initialize FileWriter if required.
                 train_writer = tf.summary.FileWriter(
                     self.param["tensorboard_path"] + "/train")
