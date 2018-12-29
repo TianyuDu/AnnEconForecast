@@ -166,7 +166,8 @@ class GeneticOptimizer:
         return len(count)
 
     def evaluate(
-        self
+        self,
+        verbose: bool = False
     ) -> None:
         """
         Assign the evaluated score to each entity.
