@@ -387,8 +387,11 @@ class StackedLSTM(generic_rnn.GenericRNN):
                         feed_dict={self.X: data["X_val"],
                                    self.y: data["y_val"]}
                     )
-                    assert isinstance(mse_train[e], float)\
-                        and isinstance(mse_val[e], float)
+                    assert isinstance(mse_train[e], Union[float, int]),\
+                    f"Expect numerical loss, received: {type(mse_train[e])}"
+                    assert isinstance(mes_val[e], Union[float, int]),\
+                    f"Expect numerical loss, received: {type(mse_val[e])}"
+                    
 
             if -1 in self.ckpts:
                 # If the final prediction is required.
