@@ -228,7 +228,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
             else:
                 # Apply G.C.
                 assert type(self.param["clip_grad"]) in [float, int]\
-                    and self.parm["clip_grad"] > 0,\
+                    and self.param["clip_grad"] > 0,\
                     "Gradient Clipping should be either float or integer and greater than zero."
 
                 # NOTE: I didnot write the graident clipping code, use this function carefully.
