@@ -370,8 +370,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
                     )
 
                     print(
-                        f"\nIteration [{e}], Training MSE {train_mse:0.7f}; \
-                        Validation MSE {val_mse:0.7f}")
+                        f"\nIteration [{e}], Training MSE {train_mse:0.7f}; Validation MSE {val_mse:0.7f}")
             
                 if e in self.ckpts:
                     pred_all[e] = make_predictions(
@@ -387,9 +386,9 @@ class StackedLSTM(generic_rnn.GenericRNN):
                         feed_dict={self.X: data["X_val"],
                                    self.y: data["y_val"]}
                     )
-                    assert isinstance(mse_train[e], Union[float, int]),\
+                    assert type(mse_train[e]) in [float, np.float32, int],\
                     f"Expect numerical loss, received: {type(mse_train[e])}"
-                    assert isinstance(mes_val[e], Union[float, int]),\
+                    assert type(mse_val[e]) in [float, np.float32, int],\
                     f"Expect numerical loss, received: {type(mse_val[e])}"
                     
 
@@ -407,7 +406,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 saver.save(sess, self.param["model_path"])
         
         if self.verbose:
-            print(f"Time taken for [{param['epochs']}] epochs: ",\
+            print(f"Time taken for [{self.param['epochs']}] epochs: ",\
             datetime.now() - start)
 
         if ret is not None:
