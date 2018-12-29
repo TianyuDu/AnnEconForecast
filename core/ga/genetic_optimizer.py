@@ -134,7 +134,8 @@ class GeneticOptimizer:
                 # Suppose each value faces the same probability of being selected.
                 # If single value (certainity) found as chromosome, convert it into a singleton.
                 val_lst = val if isinstance(val, list) else [val]
-                entity[key] = np.random.choice(val_lst)
+                chosen = np.random.randint(len(val))
+                entity[key] = val_lst[chosen]
             # The second term is the 'score' or 'fittness' for entity,
             # New entity not evaluated yet would be marked with None as score.
             population.append((entity, None))
