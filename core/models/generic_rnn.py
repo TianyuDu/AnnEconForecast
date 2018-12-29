@@ -31,10 +31,14 @@ class GenericRNN:
         assert all(-1 <= x <= param["epochs"] for x in prediction_checkpoints),\
         "Some element(s) in checkpoint are out of range."
 
+        assert isinstance(verbose, bool),\
+        "Verbose should be a bool."
+
         # Admit arguments.
         self.param = param
         self.param["num_time_steps"] = param["LAGS"]
         self.ckpts = prediction_checkpoints
+        self.verbose=verbose
     
     def build(self) -> None:
         """
