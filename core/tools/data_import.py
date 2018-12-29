@@ -15,7 +15,8 @@ from constants import *
 
 def load_dataset(
     dir: str,
-    remove: object=None
+    remove: object = None,
+    verbose: bool = False
 ) -> pd.DataFrame:
     def parser(x):
 	    return datetime.strptime(x, "%Y-%m-%d")
@@ -28,9 +29,11 @@ def load_dataset(
         date_parser=parser,
         index_col=0,
         engine="python")
-    print(f"Dataset loaded.\
-    \n\tIndex type: {str(df.index.dtype)}\
-    \n\tData type: {str(df.values.dtype)}")
+    
+    if verbose:
+        print(f"Dataset loaded.\
+        \n\tIndex type: {str(df.index.dtype)}\
+        \n\tData type: {str(df.values.dtype)}")
     col_name = df.columns[0]
     if remove is not None:
         df = df[df[col_name] != remove]
