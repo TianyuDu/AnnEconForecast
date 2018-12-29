@@ -188,7 +188,7 @@ class GeneticOptimizer:
         #     print('\r', '#'*filled_progbar + '-'*(
         #         full_progbar-filled_progbar), '[{:>7.2%}]'.format(frac), end='')
             print('\r', '#'*filled_progbar + '-'*(
-                full_progbar-filled_progbar), f"Evaluating Population[{curr}/{total}, {frac:>7.2%}]", end='')
+                full_progbar-filled_progbar), f"Evaluating population[{curr}/{total}, {frac:>7.2%}]", end='')
         # Evaluation Phase.
         for (idx, entity) in enumerate(self.population):
             # NOTE: each entity in format (dictionary, score).
@@ -256,14 +256,14 @@ class GeneticOptimizer:
             # NOTE: change factor formula here to tune the mutation process.
             factor = np.exp(np.random.randn())
             assert factor >= 0
-            result = factor * src
+            result = factor * src + 1
             # we wish to preserve the sign of feature.
             assert np.sign(src) == np.sign(result)
             return result
 
         def mutate_int(src: int) -> int:
             f = mutate_float(src)
-            result = int(np.round(f))
+            result = int(np.round(f) + 1)
             assert np.sign(src) == np.sign(result)
             return result
 
