@@ -39,7 +39,7 @@ i1 = {"a": [1, 2, 3], "b": [4, 5, 6]}
 i2 = {"a": [7, 8, 9], "b": [10, 11, 12]}
 i3 = {"a": [13, 14], "b": [15, 16]}
 
-optimizer = GeneticHPT(
+optimizer = GeneticOptimizer(
     gene_pool=gene_pool,
     pop_size=init_size,
     eval_func=obj_func,
@@ -50,9 +50,9 @@ optimizer = GeneticHPT(
     verbose=False
 )
 
-(a, b) = optimizer.cross_over(f1, i3)
-print(a)
-print(b)
+# (a, b) = optimizer.cross_over(f1, i3)
+# print(a)
+# print(b)
 
 optimizer.mutate(i2, mutate_prob=1.0)
 
