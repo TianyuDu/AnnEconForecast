@@ -290,6 +290,9 @@ class StackedLSTM(generic_rnn.GenericRNN):
         or all(isinstance(x, str) for x in ret),\
         "ret should be one of None, 'all', or a list of strings."
         # ======== End ========
+        if not save_to_disk and self.verbose:
+            print("Please note that this model will not be saved to disk after the training is completed (probably by default setting).")
+
         if ret == "full":
             ret = ["pred_all", "mse_train", "mse_val"]
         
@@ -305,7 +308,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
             print(f"Starting training session, for {self.param['epochs']} epochs.")
         
         with tf.Session() as sess:
-            # FIXME: this might not work in an isolated objects for tf.
+            # (pending) FIXME this might not work in an isolated objects for tf.
             saver = tf.train.Saver()
             merged_summary = tf.summary.merge_all()
 
@@ -313,11 +316,13 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 print("Creating tensorboard file writers,\
                 \nwriting to path {self.param['tensorboard_path']}")
             
-            train_writer = tf.summary.FileWriter(
-                self.param["tensorboard_path"] + "/train")
-            val_writer = tf.summary.FileWriter(
-                self.param["tensorboard_path"] + "/validation")
-            train_writer.add_graph(sess.graph)
+            if save_to_disk:
+                # Only initialize FileWriter if required.
+                train_writer = tf.summary.FileWriter(
+                    self.param["tensorboard_path"] + "/train")
+                val_writer = tf.summary.FileWriter(
+                    self.param["tensorboard_path"] + "/validation")
+                train_writer.add_graph(sess.graph)
 
             sess.run(tf.global_variables_initializer())
 
@@ -334,7 +339,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
                     feed_dict={self.X: data["X_train"], self.y: data["y_train"]}
                 )
 
-                if e % self.param["report_periods"] == 0:
+                if e % self.param["report_periods"] == 0 and save_to_disk:
                     # In those periods, training summary is written to tensorboard record.
                     # Summary on training set.
                     train_summary = sess.run(
@@ -389,10 +394,11 @@ class StackedLSTM(generic_rnn.GenericRNN):
                     X=self.X,
                     data=data
                 )
-            if self.verbose:
-                print("Saving the model...")
             
-            saver.save(sess, self.param["model_path"])
+            if save_to_disk:
+                if self.verbose:
+                    print("Saving the model...")
+                saver.save(sess, self.param["model_path"])
         
         if self.verbose:
             print(f"Time taken for [{param['epochs']}] epochs: ",\
@@ -423,7 +429,6 @@ def make_predictions(
         "val": p_val
     }
     return result
-
 
 def exec_core(
     param: Dict[str, object],
