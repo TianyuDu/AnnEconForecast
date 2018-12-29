@@ -37,7 +37,11 @@ class StackedLSTM(generic_rnn.GenericRNN):
         prediction_checkpoints: Iterable[int] = [-1],
         verbose: bool = True
     ) -> None:
-        super().__init__(param, prediction_checkpoints, verbose)
+        super().__init__(
+            param,
+            prediction_checkpoints,
+            verbose
+        )
         self.build()
 
     def build(
@@ -107,7 +111,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         if self.verbose:
             print(
                 f"(dynamic_rnn) rnn_outputs shape={str(self.rnn_outputs.shape)}.")
-            print(f"(dynamic_rnn) states shape={str(self.states)}.")
+            print(f"(dynamic_rnn) state shape={str(self.states.shape)}.")
 
         # Stack everything together.
         self.stacked_output = tf.reshape(
@@ -127,7 +131,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
             print("Building the output layer...")
         with tf.name_scope("OUTPUT_LAYER"):
             # Transform each stacked RNN output to a single real value.
-            self.W = tf.Varaible(
+            self.W = tf.Variable(
                 tf.random_normal(
                     [self.param["num_time_steps"] * self.param["num_neurons"][-1],
                     1]
@@ -149,7 +153,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
                     f"Output bias tensor is built, shape={str(self.b.shape)}")
 
             self.pred = tf.add(
-                tf.matmul(self.stacked_output),
+                tf.matmul(self.stacked_output, self.W),
                 self.b,
                 name="PREDICTION"
             )
