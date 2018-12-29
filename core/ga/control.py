@@ -56,13 +56,13 @@ print(b)
 
 optimizer.mutate(i2, mutate_prob=1.0)
 
-optimizer.evaluation()
+optimizer.evaluate()
 for e in range(epochs):
     print(f"Generation: [{e}/{epochs}]")
     optimizer.select()
     # print(optimizer.count_population())
     optimizer.evolve()
-    optimizer.evaluation()
+    optimizer.evaluate()
 
 optimizer.count_population()
 sum(isinstance(x, tuple) for x in optimizer.population)
