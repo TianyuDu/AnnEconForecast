@@ -195,7 +195,7 @@ class GeneticOptimizer:
             self.population[idx] = (entity[0], self.eval_func(entity[0]))
 
             if verbose:
-                progbar(idx, len(self.population), 20)
+                progbar(idx+1, len(self.population), 20)
 
         # Rank Phase.
         if self.mode == "min":
