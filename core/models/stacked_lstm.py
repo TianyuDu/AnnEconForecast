@@ -178,9 +178,13 @@ class StackedLSTM(generic_rnn.GenericRNN):
             # MSE is the main loss we focus on
             # and it's the metric used for optimization.
             # so we just name the MSE using 'loss'
-            self.loss = tf.losses.mean_squared_error(
-                labels=self.y,
-                predictions=self.pred
+            # self.loss = tf.losses.mean_squared_error(
+            #     labels=self.y,
+            #     predictions=self.pred
+            # )
+            self.loss = tf.reduce_mean(
+                tf.square(self.y - self.pred),
+                name="MSE"
             )
 
             self.rmse = tf.sqrt(
