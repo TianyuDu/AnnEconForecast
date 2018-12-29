@@ -111,7 +111,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         if self.verbose:
             print(
                 f"(dynamic_rnn) rnn_outputs shape={str(self.rnn_outputs.shape)}.")
-            print(f"(dynamic_rnn) state shape={str(self.states.shape)}.")
+            # print(f"(dynamic_rnn) state shape={str(self.states)}.")
 
         # Stack everything together.
         self.stacked_output = tf.reshape(
@@ -193,13 +193,13 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 name="MAPE"
             )
             if self.verbose:
-                print("\tLoss tensors are built.")
+                print("Loss tensors are built.")
 
             tf.summary.scalar("MSE", self.loss)
             tf.summary.scalar("RMSE", self.rmse)
             tf.summary.scalar("MAPE", self.mape)
             if self.verbose:
-                print("\tSummaries on losses are added to tensorbard.")
+                print("Summaries on losses are added to tensorbard.")
 
     def _build_optimizer(self) -> None:
         """
