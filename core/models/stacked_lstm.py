@@ -244,7 +244,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         data: Dict[str, np.ndarray],
         ret: Union[None, List[str], "all"] = None,
         save_to_disk: bool = False
-    ) -> Union[None, Dict[str, float, np.ndarray]]:
+    ) -> Union[None, Dict[str, Union[float, np.ndarray]]]:
         """
         Args:
             data:
