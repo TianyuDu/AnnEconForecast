@@ -58,13 +58,13 @@ def prepare_dataset(
     # ======== Args Check ========
     assert os.path.exists(file_dir), f"File {file_dir} cannot be found."
 
-    assert isinstance(periods, int), "Periods arg should be an integer."
-    assert periods >= 1, "Periods arg should be at least 1."
+    assert isinstance(periods, int), f"Periods arg should be an integer, received: {periods}"
+    assert periods >= 1, f"Periods arg should be at least 1, received: {periods}"
 
-    assert isinstance(order, int), "Order arg should be an integer."
-    assert order >= 1, "Order arg should be at least 1."
+    assert isinstance(order, int), f"Order arg should be an integer, received: {order}"
+    assert order >= 1, f"Order arg should be at least 1, received: {order}"
 
-    assert isinstance(verbose, bool), "Verbose arg should be a bool."
+    assert isinstance(verbose, bool), f"Verbose arg should be a bool, received: {verbose}"
 
     # ======== Core ========
     if verbose:
