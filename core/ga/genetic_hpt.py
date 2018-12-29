@@ -34,15 +34,15 @@ class GeneticHPT(GeneticOptimizer):
         # ======== Spec ========
         # Ignore the following feature (not considered as hyper parameters) in evolution.
         # TODO: consider add reg-ex here.
-        nn_ignore = (
-            "ORDER",  # TODO: order can be supported after fix the recursive differencing method.
-            "TRAIN_RATIO",
-            "VAL_RATIO",
-            "tensorboard_path",
-            "model_path",
-            "fig_path"
-        )
-        # ======== End ========
+        # nn_ignore = (
+        #     "ORDER",  # TODO: order can be supported after fix the recursive differencing method.
+        #     "TRAIN_RATIO",
+        #     "VAL_RATIO",
+        #     "tensorboard_path",
+        #     "model_path",
+        #     "fig_path"
+        # )
+        # # ======== End ========
         super().__init__(
             gene_pool,
             pop_size,
@@ -52,7 +52,7 @@ class GeneticHPT(GeneticOptimizer):
             shot_prob,
             mutate_prob,
             verbose,
-            ignore=nn_ignore
+            ignore
         )
 
     def cross_over(
