@@ -132,7 +132,8 @@ def split_dataset(
     raw: pd.DataFrame,
     train_ratio: float,
     val_ratio: float,
-    lags: int
+    lags: int,
+    verbose: bool = False
 ) -> Tuple[np.ndarray]:
     """
     Generate and split the prepared dataset for RNN training into training, testing and validation sets.
@@ -190,20 +191,22 @@ def split_dataset(
         shuffle=False
     )
 
-    def trans(x): return x.reshape(-1, 1)
+    def trans(x):
+        return x.reshape(-1, 1)
 
     y_train = trans(y_train)
     y_test = trans(y_test)
     y_val = trans(y_val)
 
-    print(
-        f"Training and testing set generated,\
-        \nX_train shape: {X_train.shape}\
-        \ny_train shape: {y_train.shape}\
-        \nX_test shape: {X_test.shape}\
-        \ny_test shape: {y_test.shape}\
-        \nX_validation shape: {X_val.shape}\
-        \ny_validation shape: {y_val.shape}")
+    if verbose:
+        print(
+            f"Training and testing set generated,\
+            \nX_train shape: {X_train.shape}\
+            \ny_train shape: {y_train.shape}\
+            \nX_test shape: {X_test.shape}\
+            \ny_test shape: {y_test.shape}\
+            \nX_validation shape: {X_val.shape}\
+            \ny_validation shape: {y_val.shape}")
 
     return (
         X_train, X_val, X_test,
