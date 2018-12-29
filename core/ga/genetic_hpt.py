@@ -126,17 +126,17 @@ class GeneticHPT(GeneticOptimizer):
                 # For different types to cross over,
                 # E.g. p1 has grad clipping activated (10.0) and p2 has no gradient clipping (None)
                 # Randomly distribute.
-                new_gene1, new_gene2 = np.random.choice(
-                    [p1[k], p2[k]],
-                    size=2,
-                    replace=False
-                )
+                if np.random.random() >= 0.5:
+                    new_gene1, new_gene2 = p1[k], p2[k]
+                else:
+                    new_gene1, new_gene2 = p2[k], p1[k]
+                    
             elif isinstance(p1[k], str) or isinstance(p1[k], int):
-                new_gene1, new_gene2 = np.random.choice(
-                    [p1[k], p2[k]],
-                    size=2,
-                    replace=False
-                )
+                if np.random.random() >= 0.5:
+                    new_gene1, new_gene2 = p1[k], p2[k]
+                else:
+                    new_gene1, new_gene2 = p2[k], p1[k]
+
             elif isinstance(p1[k], float):
                 new_gene1, new_gene2 = mixup_float(p1[k], p2[k])
             elif isinstance(p1[k], list) or isinstance(p1[k], tuple):
