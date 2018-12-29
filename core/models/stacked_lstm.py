@@ -130,7 +130,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
             self.W = tf.Varaible(
                 tf.random_normal(
                     [self.param["num_time_steps"] * self.param["num_neurons"][-1],
-                     1]
+                    1]
                 ),
                 dtype=tf.float32,
                 name="OUTPUT_WEIGHT"
@@ -272,9 +272,20 @@ class StackedLSTM(generic_rnn.GenericRNN):
             Also if prediction on training set or validation set is wanted. 
         """
         # TODO: add mute option to this method, avoid writing to disk.
-
         # ======== Argument Checking ========
-        raise NotImplementedError()
+        assert all(
+            isinstance(key, str) and isinstance(value, np.ndarray)
+            for (key, value) in data.items()
+        ), "All keys in data dictionary should be string, and all values should be np.ndarray."
+
+        assert sorted(list(data.keys())) \
+        == sorted(["X_train", "y_train", "X_val", "y_val"]),\
+        "Data dictionary must have and only has the following keys: X_train, y_train, X_val and y_val."
+        
+        assert ret is None\
+        or ret == "all"\
+        or all(isinstance(x, str) for x in ret),\
+        "ret should be one of None, 'all', or a list of strings."
         # ======== End ========
         if ret == "full":
             ret = ["pred_all", "mse_train", "mse_val"]
@@ -395,7 +406,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
             return ret_pack
 
     def exec_core(self):
-        raise NotImplementedError()    
+        raise NotImplementedError()
 
 def make_predictions(
     predictor: tf.Tensor,
