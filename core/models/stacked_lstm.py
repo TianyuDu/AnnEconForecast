@@ -414,8 +414,31 @@ class StackedLSTM(generic_rnn.GenericRNN):
                     print(f"{var} is not a valid record variable, ignored.")
             return ret_pack
 
-    def exec_core(self):
-        raise NotImplementedError()
+    def exec_core(
+        self,
+        data: Dict[str, np.ndarray],
+        param: Union[Dict[str, object], None] = None,
+        prediction_checkpoints: Union[Iterable[int], None] = None,
+        verbose: Union[bool, None] = None
+    ) -> Dict[int, Dict[str, np.ndarray]]:
+        """
+        Call the eariler method to directly execute the all in one training session.
+        
+        Args:
+            Refer to docstring of exec_core for more detailed.
+            For any argument specified as None, this method used the corresponding value stored
+            in the StackedLSTM instance instead.
+        
+        Returns:
+            Refer to docstring of exec_core for more detailed.
+        """
+        return exec_core(
+            param=self.param if (param is None) else param,
+            data=data,
+            prediction_checkpoints=self.ckpts if (prediction_checkpoints is None) else prediction_checkpoints,
+            verbose=self.verbose if (verbose is None) else verbose
+        )
+
 
 def make_predictions(
     predictor: tf.Tensor,
