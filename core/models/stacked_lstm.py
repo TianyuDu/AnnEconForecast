@@ -243,7 +243,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         if self.verbose:
             print("\tThe complete computational graph is built.")
 
-    def train(
+    def fit(
         self,
         data: Dict[str, np.ndarray],
         ret: Union[None, List[str], "all"] = None,
