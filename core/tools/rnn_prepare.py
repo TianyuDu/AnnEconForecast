@@ -27,10 +27,10 @@ sys.path.extend(["../"])
 
 def prepare_dataset(
     file_dir: str,
-    periods: int=1,
-    order: int=1,
-    verbose: bool=True,
-    remove: object=None
+    periods: int = 1,
+    order: int = 1,
+    verbose: bool = False,
+    remove: object = None
 ) -> pd.DataFrame:
     """
     Prepare the dataset for RNN Training.
@@ -58,13 +58,16 @@ def prepare_dataset(
     # ======== Args Check ========
     assert os.path.exists(file_dir), f"File {file_dir} cannot be found."
 
-    assert type(periods) in [int, np.int_], f"Periods arg should be an integer, received: {periods}"
+    assert type(periods) in [
+        int, np.int_], f"Periods arg should be an integer, received: {periods}"
     assert periods >= 1, f"Periods arg should be at least 1, received: {periods}"
 
-    assert type(order) in [int, np.int_], f"Order arg should be an integer, received: {order}"
+    assert type(order) in [
+        int, np.int_], f"Order arg should be an integer, received: {order}"
     assert order >= 1, f"Order arg should be at least 1, received: {order}"
 
-    assert isinstance(verbose, bool), f"Verbose arg should be a bool, received: {verbose}"
+    assert isinstance(
+        verbose, bool), f"Verbose arg should be a bool, received: {verbose}"
 
     # ======== Core ========
     if verbose:
@@ -75,7 +78,8 @@ def prepare_dataset(
         remove=remove
     )
     if verbose:
-        print(f"Processing data, taking (periods, order)=({periods}, {order})...")
+        print(
+            f"Processing data, taking (periods, order)=({periods}, {order})...")
     prepared_df = time_series.differencing(
         df,
         periods=periods,
@@ -108,15 +112,18 @@ def normalize(
         A normalized dataframe with the same shape as raw dataframe.
     """
     # ======== Args Check ========
-    assert isinstance(raw, pd.DataFrame), f"Raw dataset should be a pandas DataFrame, received type: {type(raw)}"
-    assert type(train_ratio) in [float, np.float_], f"Training set ratio should be a float, received: {train_ratio}"
+    assert isinstance(
+        raw, pd.DataFrame), f"Raw dataset should be a pandas DataFrame, received type: {type(raw)}"
+    assert type(train_ratio) in [
+        float, np.float_], f"Training set ratio should be a float, received: {train_ratio}"
     assert 0 < train_ratio <= 1, f"Training set ratio should be positive and at most 1, received: {train_ratio}"
     # ======== Core ========
     df = raw.copy()
     scaler = StandardScaler().fit(
         df[:int(train_ratio*len(df))].values
     )
-    print(f"StandardScaler applied, scaling based on the first {int(train_ratio*len(df))} observations.")
+    print(
+        f"StandardScaler applied, scaling based on the first {int(train_ratio*len(df))} observations.")
     df.iloc[:, 0] = scaler.transform(df.values)
     return df
 
@@ -148,18 +155,19 @@ def split_dataset(
             (X_train, X_val, X_test, y_train, y_test, y_val)
     """
     # ======== Args Check ========
-    assert isinstance(raw, pd.DataFrame), "Raw dataset should be a pandas dataframe."
+    assert isinstance(
+        raw, pd.DataFrame), "Raw dataset should be a pandas dataframe."
     assert type(train_ratio) in [float, np.float_]\
-    and 0 < train_ratio <= 1,\
-    f"train_ratio should be a float within range (0,1], received: {train_ratio}"
+        and 0 < train_ratio <= 1,\
+        f"train_ratio should be a float within range (0,1], received: {train_ratio}"
 
     assert type(val_ratio) in [float, np.float_]\
-    and 0 < val_ratio <= 1,\
-    f"val_ratio should be a float within range (0,1], received: {val_ratio}"
+        and 0 < val_ratio <= 1,\
+        f"val_ratio should be a float within range (0,1], received: {val_ratio}"
 
     assert type(lags) in [int, np.int_]\
-    and lags >= 1,\
-    f"lags should be an integer at least 1, received: {lags}"
+        and lags >= 1,\
+        f"lags should be an integer at least 1, received: {lags}"
 
     # ======== Core ========
     test_ratio = 1 - train_ratio - val_ratio
