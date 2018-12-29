@@ -165,7 +165,7 @@ class GeneticOptimizer:
         )
         return len(count)
 
-    def evaluation(
+    def evaluate(
         self
     ) -> None:
         """
