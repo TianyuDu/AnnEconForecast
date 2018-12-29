@@ -177,10 +177,24 @@ class GeneticOptimizer:
 
         See comments below.
         """
+        def progbar(curr, total, full_progbar):
+            """
+            Progress bar used in training process.
+            Modified version, the original one is located in core.tools.visualize
+            """
+            frac = curr/total
+            filled_progbar = round(frac*full_progbar)
+        #     print('\r', '#'*filled_progbar + '-'*(
+        #         full_progbar-filled_progbar), '[{:>7.2%}]'.format(frac), end='')
+            print('\r', '#'*filled_progbar + '-'*(
+                full_progbar-filled_progbar), f"Evaluating Population[{curr}/{total}, {frac:>7.2%}]", end='')
         # Evaluation Phase.
         for (idx, entity) in enumerate(self.population):
             # NOTE: each entity in format (dictionary, score).
             self.population[idx] = (entity[0], self.eval_func(entity[0]))
+
+            if verbose:
+                progbar(idx, len(self.population), 20)
 
         # Rank Phase.
         if self.mode == "min":
