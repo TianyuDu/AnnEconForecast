@@ -58,10 +58,10 @@ def prepare_dataset(
     # ======== Args Check ========
     assert os.path.exists(file_dir), f"File {file_dir} cannot be found."
 
-    assert isinstance(periods, int), f"Periods arg should be an integer, received: {periods}"
+    assert type(periods) in [int, np.int_], f"Periods arg should be an integer, received: {periods}"
     assert periods >= 1, f"Periods arg should be at least 1, received: {periods}"
 
-    assert isinstance(order, int), f"Order arg should be an integer, received: {order}"
+    assert type(order) in [int, np.int_], f"Order arg should be an integer, received: {order}"
     assert order >= 1, f"Order arg should be at least 1, received: {order}"
 
     assert isinstance(verbose, bool), f"Verbose arg should be a bool, received: {verbose}"
@@ -108,9 +108,9 @@ def normalize(
         A normalized dataframe with the same shape as raw dataframe.
     """
     # ======== Args Check ========
-    assert isinstance(raw, pd.DataFrame), "Raw dataset should be a pandas DataFrame."
-    assert isinstance(train_ratio, float), "Training set ratio should be a float."
-    assert 0 < train_ratio <= 1, "Training set ratio should be positive and at most 1."
+    assert isinstance(raw, pd.DataFrame), f"Raw dataset should be a pandas DataFrame, received type: {type(raw)}"
+    assert type(train_ratio) in [float, np.float_], f"Training set ratio should be a float, received: {train_ratio}"
+    assert 0 < train_ratio <= 1, f"Training set ratio should be positive and at most 1, received: {train_ratio}"
     # ======== Core ========
     df = raw.copy()
     scaler = StandardScaler().fit(
@@ -149,13 +149,18 @@ def split_dataset(
     """
     # ======== Args Check ========
     assert isinstance(raw, pd.DataFrame), "Raw dataset should be a pandas dataframe."
-    assert isinstance(
-        train_ratio, float) and 0 < train_ratio <= 1, f"train_ratio should be a float within range (0,1], received: {train_ratio}"
-    assert isinstance(
-        val_ratio, float) and 0 < val_ratio <= 1, f"val_ratio should be a float within range (0,1], received: {val_ratio}"
-    assert isinstance(
-        lags, int
-    ) and lags >= 1, f"lags should be an integer at least 1, received: {lags}"
+    assert type(train_ratio) in [float, np.float_]\
+    and 0 < train_ratio <= 1,\
+    f"train_ratio should be a float within range (0,1], received: {train_ratio}"
+
+    assert type(val_ratio) in [float, np.flaot_]\
+    and 0 < val_ratio <= 1,\
+    f"val_ratio should be a float within range (0,1], received: {val_ratio}"
+
+    assert type(lags) in [int, np.int_]\
+    and lags >= 1,\
+    f"lags should be an integer at least 1, received: {lags}"
+
     # ======== Core ========
     test_ratio = 1 - train_ratio - val_ratio
     df = normalize(
