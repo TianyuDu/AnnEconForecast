@@ -437,7 +437,33 @@ def exec_core(
     verbose: bool = True
 ) -> Dict[int, Dict[str, np.ndarray]]:
     """
-    # TODO: write the doc string.
+    This is a deprecated (not actually) method, this method run
+    and save model by given parameter set and dataset.
+    NOTE This method could be called directly from a StackedLSTM instance.
+    
+    Args:
+        param:
+            A dict with string keys specifying settings of the neural net.
+        data:
+            A dict with string keys and np.array values, the following dataset
+            must be included.
+            - 'X_train': training set feature, shape=[*, num_time_steps, num_inputs]
+            - 'y_train': training set label, shape=[*, num_outputs]
+            - 'X_val': validation set feature, shape=[*, num_time_steps, num_inputs]
+            - 'y_val': validation set label, shape=[*, num_outputs]
+        prediction_checkpoints:
+            An iterable of integers denoting the checkpoints through training process.
+            At those specified epochs, the prediction on both training and validation sets
+            will be plotted, altogether with the actual values, and saved in svg format.
+        verbose:
+            A bool denoting whether to print logs during training.
+    Returns:
+        A dictionary with integer checkpoints as keys and another dictionary as values.
+        At each ckpt, the correpsonding dictionary takes the following format
+        {
+            "train": array of prediction on training set at this epoch,
+            "val": array of prediction on validation set at the epoch
+        }
     """
     param["num_time_steps"] = param["LAGS"]
     if verbose:
