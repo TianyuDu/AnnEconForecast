@@ -81,7 +81,7 @@ class GeneticHPT(GeneticOptimizer):
             new_f1 = z * f1 + (1 - z) * f2
             new_f2 = (1 - z) * f1 + z * f2
             assert all(isinstance(x, float) for x in [new_f1, new_f2]), "Wrong return type(s), both should be float."
-            return new_f1, new_f2
+            return float(new_f1), float(new_f2)
 
         def mixup_integer(
             i1: int,
