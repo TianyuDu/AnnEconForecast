@@ -150,12 +150,12 @@ def split_dataset(
     # ======== Args Check ========
     assert isinstance(raw, pd.DataFrame), "Raw dataset should be a pandas dataframe."
     assert isinstance(
-        train_ratio, float) and 0 < train_ratio <= 1, "train_ratio should be a float within range (0,1]."
+        train_ratio, float) and 0 < train_ratio <= 1, f"train_ratio should be a float within range (0,1], received: {train_ratio}"
     assert isinstance(
-        val_ratio, float) and 0 < val_ratio <= 1, "val_ratio should be a float within range (0,1]"
+        val_ratio, float) and 0 < val_ratio <= 1, f"val_ratio should be a float within range (0,1], received: {val_ratio}"
     assert isinstance(
         lags, int
-    ) and lags >= 1, "lags should be an integer at least 1."
+    ) and lags >= 1, f"lags should be an integer at least 1, received: {lags}"
     # ======== Core ========
     test_ratio = 1 - train_ratio - val_ratio
     df = normalize(
