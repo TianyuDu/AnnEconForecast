@@ -242,7 +242,8 @@ class StackedLSTM(generic_rnn.GenericRNN):
     def train(
         self,
         data: Dict[str, np.ndarray],
-        ret: Union[None, List[str], "all"] = None
+        ret: Union[None, List[str], "all"] = None,
+        save_to_disk: bool = False
     ) -> Union[None, Dict[str, float, np.ndarray]]:
         """
         Args:
@@ -266,12 +267,14 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 NOTE: string format: *_set where set in {train, val, all}
                 - if "all" is passed in, all records will be packed in a dictionary
                 and returned.
+            save_to_disk:
+                A bool denotes if the model file (tensorboard, saved model etc)
+                will be written to local disk after training is completed.
         Returns:
             If ret is not None, a dictionary with keys from ret and the corresponding
             numerical(float) values of specified metrics.
             Also if prediction on training set or validation set is wanted. 
         """
-        # TODO: add mute option to this method, avoid writing to disk.
         # ======== Argument Checking ========
         assert all(
             isinstance(key, str) and isinstance(value, np.ndarray)
