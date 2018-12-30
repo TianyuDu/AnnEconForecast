@@ -93,5 +93,9 @@ def eval_net(
         prediction_checkpoints=ckpts,
         verbose=False
     )
-    ret_pack = net.fit(data=data_feed, ret=["mse_val"])
+    ret_pack = net.fit(
+        data=data_feed,
+        ret=["mse_val"]
+    )
     return float(np.mean(list(ret_pack["mse_val"].values())))
+
