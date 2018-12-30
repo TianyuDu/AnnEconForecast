@@ -52,6 +52,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         """
         if self.verbose:
             print("Building the computational graph...")
+        tf.reset_default_graph()  # NOTE this might not be necessary.
         self._build_data_io()
         self._build_recurrent()
         self._build_output_layer()
