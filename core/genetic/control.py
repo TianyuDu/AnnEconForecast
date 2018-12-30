@@ -97,7 +97,7 @@ def eval_net(
     )
     ret_pack = net.fit(
         data=data_feed,
-        ret=["mse_val"]
+        ret=[metric]
     )
     return float(np.mean(list(ret_pack["mse_val"].values())))
 
