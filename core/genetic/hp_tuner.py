@@ -11,7 +11,7 @@ sys.path.extend("./")
 from core.ga.genetic_optimizer import GeneticOptimizer
 
 
-class GeneticHPT(GeneticOptimizer):
+class GeneticHPTuner(GeneticOptimizer):
     """
     Genetic Hyper-Parameter Tuner for neural networks.
     """
