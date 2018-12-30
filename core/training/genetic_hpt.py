@@ -101,7 +101,7 @@ def eval_net(
 
 
 def train_op(
-    optimizer: "GeneticOptimizer",
+    optimizer,
     total_gen: int,
     elite: Union[int, float] = 1
 ) -> Dict[int, List[object]]:
