@@ -8,7 +8,7 @@ from typing import Dict, List, Tuple, Union, Callable, Iterable
 import numpy as np
 
 sys.path.extend("./")
-from core.ga.genetic_optimizer import GeneticOptimizer
+from core.genetic.optimizer import GeneticOptimizer
 
 
 class GeneticHPTuner(GeneticOptimizer):
