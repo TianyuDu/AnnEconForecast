@@ -94,6 +94,19 @@ class GeneticTuner(GeneticOptimizer):
                         lr=entity[0]["learning_rate"]
                        )
 
+        # Rank Phase.
+        if self.mode == "min":
+            # If this is a minimization problem, the entity with
+            # lowest SCORE will be placed at the beginning of the
+            # sorted population.
+            self.population.sort(key=lambda x: x[1])
+        elif self.mode == "max":
+            # If this is a maximization probblem, the entity with
+            # highest SCORE will be placed at the beginning.
+            self.population.sort(key=lambda x: x[1], reverse=True)
+        else:
+            raise ValueError("Unsupported optimization task type, must be either MINimization or MAXimization.")
+
     def cross_over(
         self,
         p1: Dict[str, object],
