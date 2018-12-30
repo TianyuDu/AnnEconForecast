@@ -9,7 +9,7 @@ import numpy as np
 
 sys.path.append("./")
 from core.genetic.optimizer import GeneticOptimizer
-from core.genetic.hp_tuner import GeneticHPTuner
+from core.genetic.tuner import GeneticTuner
 
 
 def obj_func(param: Dict[str, object]) -> float:
