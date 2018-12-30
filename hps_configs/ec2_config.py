@@ -14,7 +14,7 @@ main = {
     "TRAIN_RATIO": 0.8,
     "VAL_RATIO": 0.1,
     # ======== Model Training Parameter ========
-    "epochs": [150, 300, 500, 1000],
+    "epochs": [150, 300, 500],
     "num_inputs": 1,
     "num_outputs": 1,
     "num_time_steps": None,  # num_time_steps is identical to LAGS
