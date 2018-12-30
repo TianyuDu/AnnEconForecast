@@ -268,8 +268,14 @@ class GeneticOptimizer:
                 elif factor > ub:
                     factor = ub
 
-            result = factor * src + 1
-            # we wish to preserve the sign of feature.
+            result = factor * src
+            if src < 0:
+                result -= 1.0
+            elif src > 0:
+                result += 1.0
+            else:
+                result = 0.0
+            # we wish to preserve the sign of feature during mutation process on float numbers.
             assert np.sign(src) == np.sign(result)
             return result
 
