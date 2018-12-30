@@ -133,6 +133,8 @@ def train_op(
         A dictionary in which keys are the generation index
         and the corresponding value is a list of the elite 
         group in that generation.
+        Each element is a tuple where the first element is the chromosome and
+        the second element is the fittness.
     """
     # ======== Argument Checking ========
     assert isinstance(total_gen, int),\
@@ -170,7 +172,7 @@ def train_op(
             ]
         elif isinstance(elite, float):
             elite_chromosome[gen] = [
-                entity[0]
+                entity
                 for entity in optimizer.population[
                     :int(elite * len(optimizer.population))
                 ]
