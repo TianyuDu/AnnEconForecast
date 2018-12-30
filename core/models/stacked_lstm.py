@@ -52,6 +52,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
         """
         if self.verbose:
             print("Building the computational graph...")
+        tf.reset_default_graph()  # NOTE this might not be necessary.
         self._build_data_io()
         self._build_recurrent()
         self._build_output_layer()
@@ -669,14 +670,14 @@ def exec_core(
     return predictions
 
 
-# TODO: consider if to drop this method, it's already implemented in a jupyter notebook.
-def restore_model(
-    parameters: Dict[str, object],
-    data_collection: Dict[str, np.ndarray],
-    prediction_checkpoints: Iterable[int] = [-1],
-    verbose: bool = False
-) -> Tuple[
-        Dict[str, float],
-        Dict[int, Dict[str, np.ndarray]]
-]:
-    raise NotImplementedError()
+# TODO: Move this method to a seperate package.
+# def restore_model(
+#     parameters: Dict[str, object],
+#     data_collection: Dict[str, np.ndarray],
+#     prediction_checkpoints: Iterable[int] = [-1],
+#     verbose: bool = False
+# ) -> Tuple[
+#         Dict[str, float],
+#         Dict[int, Dict[str, np.ndarray]]
+# ]:
+#     raise NotImplementedError()
