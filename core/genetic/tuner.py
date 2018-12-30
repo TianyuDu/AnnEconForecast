@@ -67,7 +67,7 @@ class GeneticTuner(GeneticOptimizer):
         NOTE: the only difference between this method and the one in generic optimizer
         is the progress bar visualization.
         """
-        def progbar(curr, total, full_progbar):
+        def progbar(curr, total, full_progbar, net_size, max_ep, lr):
             """
             Progress bar used in training process.
             Modified version, the original one is located in core.tools.visualize
@@ -78,14 +78,21 @@ class GeneticTuner(GeneticOptimizer):
         #         full_progbar-filled_progbar), '[{:>7.2%}]'.format(frac), end='')
             print('\r', '#'*filled_progbar + '-'*(
                 full_progbar-filled_progbar),\
-                f"Eval. net: {self.param['num_neurons']}, max_ep = {self.param['epochs']} [{curr}/{total}, {frac:>7.2%}]", end='')
+                f"Evaluating... [{curr}/{total}, {frac:>7.2%}]\
+                \nCurrent Net: size={net_size}, ep={max_ep}, lr={lr: 0.4f}", end='')
         # Evaluation Phase.
         for (idx, entity) in enumerate(self.population):
             # NOTE: each entity in format (dictionary, score).
             self.population[idx] = (entity[0], self.eval_func(entity[0]))
 
             if verbose:
-                progbar(idx+1, len(self.population), 20)
+                progbar(idx+1,
+                        len(self.population),
+                        min(100, len(self.population)),
+                        net_size=entity[0]["num_neurons"],
+                        max_ep=entity[0]["epochs"],
+                        lr=entity[0]["learning_rate"]
+                       )
 
     def cross_over(
         self,
