@@ -223,8 +223,7 @@ class StackedLSTM(generic_rnn.GenericRNN):
                 # No G.C.
                 if self.verbose:
                     print("\tNote: no gradient clipping is applied.\
-                    \n\tIf possible gradient exploding detected (e.g. nan loss), \
-                    try use clip_grad.")
+                    \n\tIf possible gradient exploding detected (e.g. nan loss), try use clip_grad.")
                 self.train = self.optimizer.minimize(self.loss)
             else:
                 # Apply G.C.
