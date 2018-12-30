@@ -101,7 +101,7 @@ def eval_net(
 
 
 def train_op(
-    optimizer,
+    optimizer: "GeneticOptimizer",
     total_gen: int,
     elite: Union[int, float] = 1
 ) -> Dict[int, List[object]]:
@@ -134,14 +134,13 @@ def train_op(
     """
     # ======== Argument Checking ========
     assert isinstance(total_gen, int),\
-    f"Total generation should be an integer, received: \
-    {total_gen} with type {type(total_gen)}"
+    f"Total generation should be an integer, received: {total_gen} with type {type(total_gen)}"
 
     assert (isinstance(elite, int) and elite >= 1)\
-    or (isinstance(elite, float) and 0.0 < elite <= 1.0,\
-    f"Elite class should be an integer >= 1 or a float in (0, 1], \
-    received: {elite} with type {type(elite)}."
+    or (isinstance(elite, float) and 0.0 < elite <= 1.0),\
+    f"Elite class should be an integer >= 1 or a float in (0, 1], received: {elite} with type {type(elite)}."
     # ======== End ========
+
     def report(optimizer) -> None:
         print(f"Best fitted entity validatiton MSE: {optimizer.population[0][1]: 0.7f}\
         \nWorst fitted entity validation MSE: {optimizer.population[-1][1]: 0.7f}")
