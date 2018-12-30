@@ -55,6 +55,38 @@ class GeneticTuner(GeneticOptimizer):
             ignore
         )
 
+    def evaluate(
+        self,
+        verbose: bool = False
+    ) -> None:
+        """
+        Assign the evaluated score to each entity.
+        Sort the current population so that the more competitive
+        entities will be placed at the beginning of the sorted
+        list.
+        NOTE: the only difference between this method and the one in generic optimizer
+        is the progress bar visualization.
+        """
+        def progbar(curr, total, full_progbar):
+            """
+            Progress bar used in training process.
+            Modified version, the original one is located in core.tools.visualize
+            """
+            frac = curr/total
+            filled_progbar = round(frac*full_progbar)
+        #     print('\r', '#'*filled_progbar + '-'*(
+        #         full_progbar-filled_progbar), '[{:>7.2%}]'.format(frac), end='')
+            print('\r', '#'*filled_progbar + '-'*(
+                full_progbar-filled_progbar),\
+                f"Eval. net: {self.param['num_neurons']}, max_ep = {self.param['epochs']} [{curr}/{total}, {frac:>7.2%}]", end='')
+        # Evaluation Phase.
+        for (idx, entity) in enumerate(self.population):
+            # NOTE: each entity in format (dictionary, score).
+            self.population[idx] = (entity[0], self.eval_func(entity[0]))
+
+            if verbose:
+                progbar(idx+1, len(self.population), 20)
+
     def cross_over(
         self,
         p1: Dict[str, object],
