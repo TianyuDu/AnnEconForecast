@@ -670,7 +670,7 @@ def exec_core(
     return predictions
 
 
-# TODO: consider if to drop this method, it's already implemented in a jupyter notebook.
+# TODO: Move this method to a seperate package.
 # def restore_model(
 #     parameters: Dict[str, object],
 #     data_collection: Dict[str, np.ndarray],
