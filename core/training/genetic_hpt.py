@@ -101,7 +101,7 @@ def eval_net(
 
 
 def train_op(
-    optimizer: 'GeneticOptimizer',
+    optimizer,
     total_gen: int,
     elite: Union[int, float] = 1
 ) -> Dict[int, List[object]]:
@@ -142,9 +142,8 @@ def train_op(
     f"Elite class should be an integer >= 1 or a float in (0, 1], \
     received: {elite} with type {type(elite)}."
     # ======== End ========
-    
     def report(optimizer) -> None:
-        print(f"\nBest fitted entity validatiton MSE: {optimizer.population[0][1]: 0.7f}\
+        print(f"Best fitted entity validatiton MSE: {optimizer.population[0][1]: 0.7f}\
         \nWorst fitted entity validation MSE: {optimizer.population[-1][1]: 0.7f}")
 
     best_rec = list()
