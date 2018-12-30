@@ -4,7 +4,7 @@ This script contains methods used in genetic algorithm
 powered hyper parameter searching.
 """
 import sys
-from typing import Dict, Union
+from typing import Dict, Union, List
 import numpy as np
 
 sys.path.append("../")
@@ -99,3 +99,37 @@ def eval_net(
     )
     return float(np.mean(list(ret_pack["mse_val"].values())))
 
+
+def train_op(
+    optimizer: 'GeneticOptimizer',
+    total_gen: int,
+    elite: Union[int, float] = 1
+) -> Dict[int, List[object]]:
+    """
+    Run the genetic optimizer and returns chromosomes
+    of best performing entities (the elite group)
+    Args:
+        optimizer:
+            A genetic optimizer.
+        
+        total_gen:
+            An integer denoting the total number of
+            generation to evolve.
+
+        elite:
+            i) If an integer is given:
+            An integer defining the elite class.
+            All entities in the top ${elite} will be 
+            considered as the elite group in their generation
+            and their chromosomes will be stored.
+
+            ii) If a float between (0, 1] is given, it will be 
+            interpreted as:
+            'The top ${elite}*100 PERCENT is defined as the elite group'
+        
+    Returns:
+        A dictionary in which keys are the generation index
+        and the corresponding value is a list of the elite 
+        group in that generation.
+    """
+    pass
