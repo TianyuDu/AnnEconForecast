@@ -132,4 +132,40 @@ def train_op(
         and the corresponding value is a list of the elite 
         group in that generation.
     """
-    pass
+    def report(optimizer) -> None:
+        print(f"\nBest fitted entity validatiton MSE: {optimizer.population[0][1]: 0.7f}\
+        \nWorst fitted entity validation MSE: {optimizer.population[-1][1]: 0.7f}")
+
+    best_rec = list()
+    elite_chromosome = dict()
+    
+    print(f"Generation: [0/{total_gen}]\nEvaluating the initial population.")
+    optimizer.evaluate(verbose=True)
+    report(optimizer)
+
+    for gen in range(total_gen):
+        print(f"Generation: [{gen + 1}/{total_gen}]")
+        optimizer.select()
+        optimizer.evolve()
+        optimizer.evaluate(verbose=True)
+        report(optimizer)
+        best_rec.append(optimizer.population[0][1])
+        
+        # Store the elite chromosome.
+        if isinstance(elite, int):
+            elite_chromosome[gen] = [
+                entity[0]
+                for entity in optimizer.population[:elite]
+            ]
+        elif isinstance(elite, float):
+            elite_chromosome[gen] = [
+                entity[0]
+                for entity in optimizer.population[
+                    :int(elite * len(optimizer.population))
+                ]
+            ]
+    
+    print("Final:")
+    report(optimizer)
+    return elite_chromosome
+
