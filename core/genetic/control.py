@@ -144,7 +144,7 @@ def train_op(
     # ======== End ========
 
     def report(optimizer) -> None:
-        print(f"Best fitted entity validatiton MSE: {optimizer.population[0][1]: 0.7f}\
+        print(f"\nBest fitted entity validatiton MSE: {optimizer.population[0][1]: 0.7f}\
         \nWorst fitted entity validation MSE: {optimizer.population[-1][1]: 0.7f}")
 
     best_rec = list()
