@@ -192,6 +192,7 @@ class GeneticTuner(GeneticOptimizer):
             elif isinstance(p1[k], float):
                 new_gene1, new_gene2 = mixup_float(p1[k], p2[k])
             elif isinstance(p1[k], list) or isinstance(p1[k], tuple):
+                tp = type(p1[k])
                 if len(p1[k]) == len(p2[k]):
                     # Case 1: same length.
                     # e.g. two parameter sets give two multi-layer LSTM with neurons [16, 32, 64] and [32, 64, 128]
@@ -200,8 +201,8 @@ class GeneticTuner(GeneticOptimizer):
                         mixup_numerical(x1, x2)
                         for x1, x2 in zip(p1[k], p2[k])
                     ]
-                    new_gene1 = [x[0] for x in mixed_gene]
-                    new_gene2 = [x[1] for x in mixed_gene]
+                    new_gene1 = tp(x[0] for x in mixed_gene)
+                    new_gene2 = tp(x[1] for x in mixed_gene)
                 else:
                     # Case 2: with different length.
                     # TODO: do we need to consider the mixed case.
