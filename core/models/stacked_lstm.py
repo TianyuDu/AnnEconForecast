@@ -671,13 +671,13 @@ def exec_core(
 
 
 # TODO: consider if to drop this method, it's already implemented in a jupyter notebook.
-def restore_model(
-    parameters: Dict[str, object],
-    data_collection: Dict[str, np.ndarray],
-    prediction_checkpoints: Iterable[int] = [-1],
-    verbose: bool = False
-) -> Tuple[
-        Dict[str, float],
-        Dict[int, Dict[str, np.ndarray]]
-]:
-    raise NotImplementedError()
+# def restore_model(
+#     parameters: Dict[str, object],
+#     data_collection: Dict[str, np.ndarray],
+#     prediction_checkpoints: Iterable[int] = [-1],
+#     verbose: bool = False
+# ) -> Tuple[
+#         Dict[str, float],
+#         Dict[int, Dict[str, np.ndarray]]
+# ]:
+#     raise NotImplementedError()
