@@ -78,8 +78,7 @@ class GeneticTuner(GeneticOptimizer):
         #         full_progbar-filled_progbar), '[{:>7.2%}]'.format(frac), end='')
             print('\r', '#'*filled_progbar + '-'*(
                 full_progbar-filled_progbar),\
-                f"Evaluating... [{curr}/{total}, {frac:>7.2%}]\
-                \nCurrent Net: size={net_size}, ep={max_ep}, lr={lr: 0.4f}", end='')
+                f"Evaluating... [{curr}/{total}, {frac:>7.2%}] Current Net: size={net_size}, ep={max_ep}, lr={lr: 0.4f}", end='')
         # Evaluation Phase.
         for (idx, entity) in enumerate(self.population):
             # NOTE: each entity in format (dictionary, score).
