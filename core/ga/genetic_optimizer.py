@@ -237,12 +237,16 @@ class GeneticOptimizer:
     def mutate(
         self,
         chromosome: Dict[str, object],
-        mutate_prob: float = 0.05
+        mutate_prob: float = 0.05,
+        factor_cap: Union[List[Union[float, int]], None] = [0.50, 2.0]
     ) -> Dict[str, object]:
         """
         Args:
             chromosome:
                 A typical entity in the population to be mutated.
+            factor_cap:
+                The lower and upper bounds for the mutation factor.
+                Use None if no clipping is wanted.
         Returns:
             An entity gene that is mutated.
         
@@ -256,6 +260,14 @@ class GeneticOptimizer:
             # NOTE: change factor formula here to tune the mutation process.
             factor = np.exp(np.random.randn())
             assert factor >= 0
+            if factor_cap is not None:
+                # Reset if exceed the lower or upper bound.
+                [lb, ub] = factor_cap
+                if factor < lb:
+                    factor = lb
+                elif factor > ub:
+                    factor = ub
+                    
             result = factor * src + 1
             # we wish to preserve the sign of feature.
             assert np.sign(src) == np.sign(result)
