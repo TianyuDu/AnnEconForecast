@@ -141,8 +141,8 @@ def train_op(
     or (isinstance(elite, float) and 0.0 < elite <= 1.0,\
     f"Elite class should be an integer >= 1 or a float in (0, 1], \
     received: {elite} with type {type(elite)}."
-
     # ======== End ========
+    
     def report(optimizer) -> None:
         print(f"\nBest fitted entity validatiton MSE: {optimizer.population[0][1]: 0.7f}\
         \nWorst fitted entity validation MSE: {optimizer.population[-1][1]: 0.7f}")

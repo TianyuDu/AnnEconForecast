@@ -267,7 +267,7 @@ class GeneticOptimizer:
                     factor = lb
                 elif factor > ub:
                     factor = ub
-                    
+
             result = factor * src + 1
             # we wish to preserve the sign of feature.
             assert np.sign(src) == np.sign(result)
