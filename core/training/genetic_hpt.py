@@ -132,6 +132,17 @@ def train_op(
         and the corresponding value is a list of the elite 
         group in that generation.
     """
+    # ======== Argument Checking ========
+    assert isinstance(total_gen, int),\
+    f"Total generation should be an integer, received: \
+    {total_gen} with type {type(total_gen)}"
+
+    assert (isinstance(elite, int) and elite >= 1)\
+    or (isinstance(elite, float) and 0.0 < elite <= 1.0,\
+    f"Elite class should be an integer >= 1 or a float in (0, 1], \
+    received: {elite} with type {type(elite)}."
+
+    # ======== End ========
     def report(optimizer) -> None:
         print(f"\nBest fitted entity validatiton MSE: {optimizer.population[0][1]: 0.7f}\
         \nWorst fitted entity validation MSE: {optimizer.population[-1][1]: 0.7f}")
