@@ -10,21 +10,16 @@ With recent advances in artificial neural networks, ANNs are shown to be excelle
 
 In this project, we aim to implement a wide range of models, both from structural and non-structural, to forecast various economic indicators, including unemployment and foreign exchange rates.
 
-#### Documentation Sitemap
+#### Documentation Site-map
 
 * [The Project Methodology and Workflow](method.md)
-
 * [The Second Demonstration](demo2.md)
-
-* [The Project Road Map](roadmap.md)
-
 * [How to Train a Model](train.md)
-
 * [How to Restore a Saved Model](restore.md)
-
-* [Hyper-Parameter Tuning and Searching](hps.md)
-
-* [A List of References](ref.md)
+* [Hyper-Parameter Tuning](hpt.md)
+* [The Project Road Map](roadmap.md)
+* [Notes on Datasets](data.md)
+* [References](ref.md)
 
 
 
@@ -35,10 +30,15 @@ In this project, we aim to implement a wide range of models, both from structura
 - `/core`  core files containing codes
 
 ```
-./core/
+AnnEconForecast/core/
+├── ga
+│   ├── control.py
+│   ├── genetic_hpt.py
+│   └── genetic_optimizer.py
 ├── models
 │   ├── baseline_lstm.py
 │   ├── baseline_rnn.py
+│   ├── generic_rnn.py
 │   ├── stacked_lstm.py
 │   └── stat_models.py
 ├── tools
@@ -47,6 +47,7 @@ In this project, we aim to implement a wide range of models, both from structura
 │   ├── metrics.py
 │   ├── param_set_generator.py
 │   ├── rnn_prepare.py
+│   ├── stacked_lstm_oop.py
 │   ├── time_series.py
 │   └── visualize.py
 └── training
@@ -54,15 +55,7 @@ In this project, we aim to implement a wide range of models, both from structura
     └── hps_methods.py
 ```
 
-
-
-- `/data` dataset directory
-- `/notebooks`  Jupyter notebooks
-
-#### Archived Models
-
-- `/keras_based`  models built on `keras`
-- `/matlab_based`  models built on `MatLab` 
+**Note** for descriptions on other directories other than `core`, please refer to [layout description](layout.md).
 
 ## Packages
 

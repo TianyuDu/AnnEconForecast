@@ -123,7 +123,8 @@ def gen_supervised_sequence(
     src_df: pd.DataFrame,
     lags: int,
     target_column: str,
-    sequential_label: bool=False,
+    sequential_label: bool = False,
+    verbose: bool = False
 ) -> Tuple[np.ndarray]:
     """
     CURRENT VERSION: SINGLE OUTPUT SERIES, SO NUM_OUTPUTS = 1.
@@ -166,7 +167,8 @@ def gen_supervised_sequence(
 
     observations = np.array(observations)
     num_obs = len(observations)
-    print(f"Total {num_obs} observations generated.")
+    if verbose:
+        print(f"Total {num_obs} observations generated.")
 
     if sequential_label:
         X, y = (observations[:, :, :-1],
@@ -175,8 +177,9 @@ def gen_supervised_sequence(
         X, y = (observations[:, :, :-1],
                 observations[:, -1, -1].reshape(num_obs, 1, 1))
 
-    print("Note: shape format: (num_obs, time_steps, num_inputs/outputs)")
-    print(f"X shape = {X.shape}, y shape = {y.shape}")
+    if verbose:
+        print("Note: shape format: (num_obs, time_steps, num_inputs/outputs)")
+        print(f"X shape = {X.shape}, y shape = {y.shape}")
     return X, y
 
 
