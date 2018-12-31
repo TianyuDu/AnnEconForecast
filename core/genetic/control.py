@@ -123,8 +123,13 @@ def save_generation(
     """
     assert os.path.isdir(file_dir), f"{file_dir} is not a valid path."
     
-    os.mkdir("gen" + str(generation))
     cur_gen_dir = file_dir + "gen" + str(generation) + "/"
+
+    try:
+        os.mkdir(cur_gen_dir)
+    except FileExistsError:
+        print(f"Folder {cur_gen_dir}occupied, directly write to it.")
+
     if verbose:
         print(f"Gene container folder created: {cur_gen_dir}")
 
