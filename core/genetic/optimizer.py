@@ -277,12 +277,18 @@ class GeneticOptimizer:
                 result = 0.0
             # we wish to preserve the sign of feature during mutation process on float numbers.
             assert np.sign(src) == np.sign(result)
+
+            result = float(result)
+            assert isinstance(result, float)
             return result
 
         def mutate_int(src: int) -> int:
             f = mutate_float(src)
             result = int(np.round(f) + 1)
             assert np.sign(src) == np.sign(result)
+            
+            result = int(result)
+            assert isinstance(result, int)
             return result
 
         def mutate_numerical(src: Union[float, int]) -> Union[float, int]:
