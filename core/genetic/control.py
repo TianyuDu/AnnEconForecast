@@ -7,6 +7,7 @@ import sys
 import os
 from typing import Dict, Union, List
 import numpy as np
+import datetime
 
 sys.path.append("../")
 import core.tools.rnn_prepare as rnn_prepare
@@ -206,6 +207,7 @@ def train_op(
     report(optimizer)
 
     for gen in range(total_gen):
+        start_time = datetime.datetime.now()
         print(f"Generation: [{gen + 1}/{total_gen}]")
         optimizer.select()
         optimizer.evolve()
@@ -232,6 +234,9 @@ def train_op(
                 generation=gen,
                 file_dir=write_to_disk
             )
+        
+        end_time = datetime.datetime.now()
+        print(f"Time taken: {str(end_time - start_time)}")
     
     print("Final:")
     report(optimizer)
