@@ -108,7 +108,7 @@ def save_generation(
     population: List[dict],
     generation: int,
     file_dir: str,
-    verbose: bool = False
+    verbose: bool = True
 ) -> None:
     """
     Save the population genetic information.
@@ -215,17 +215,23 @@ def train_op(
         
         # Store the elite chromosome.
         if isinstance(elite, int):
-            elite_chromosome[gen] = [
-                entity[0]
-                for entity in optimizer.population[:elite]
-            ]
+            # If elite group cutoff is defined by group SIZE.
+            cutoff = elite
         elif isinstance(elite, float):
-            elite_chromosome[gen] = [
-                entity
-                for entity in optimizer.population[
-                    :int(elite * len(optimizer.population))
-                ]
-            ]
+            # If elite group cutoff is defined by population PERCENTILE.
+            cutoff = int(elite * len(optimizer.population))
+        
+        elite_group = optimizer.population[:elite]
+        elite_chromosome[gen] = elite_group
+        
+        # NOTE: entity format: (gene, fittness_Score)
+        # Write current generation elite 
+        if write_to_disk is not None:
+            save_generation(
+                population=[p[0] for p in elite_group],
+                generation=gen,
+                file_dir=write_to_disk
+            )
     
     print("Final:")
     report(optimizer)
