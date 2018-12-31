@@ -109,6 +109,7 @@ def eval_net(
 
 def save_generation(
     population: List[dict],
+    scores: list,
     generation: int,
     file_dir: str,
     verbose: bool = False
@@ -135,12 +136,13 @@ def save_generation(
     if verbose:
         print(f"Gene container folder created: {cur_gen_dir}")
 
-    for (rank, chromosome) in enumerate(population):
-        js_file = f"{cur_gen_dir}rank{str(rank)}.json"
+    for (rank, (chromosome, score)) in enumerate(zip(population, scores)):
+        js_file = f"{cur_gen_dir}rank{str(rank)}_{score:0.5f}.json"
         if verbose:
             print(f"Save to {js_file}")
         writer = json_rec.ParamWriter(
-            file_dir=js_file
+            file_dir=js_file,
+            verbose=verbose
         )
         cleaned = dtype_cleaner.clean(chromosome)
         writer.write(cleaned)
@@ -240,6 +242,7 @@ def train_op(
         if write_to_disk is not None:
             save_generation(
                 population=[p[0] for p in elite_group],
+                scores=[p[1] for p in elite_group],
                 generation=gen,
                 file_dir=write_to_disk
             )

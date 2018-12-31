@@ -16,7 +16,8 @@ class ParamWriter():
 
     def __init__(
         self,
-        file_dir: Union[str, None] = None
+        file_dir: Union[str, None] = None,
+        verbose: bool = False
     ) -> None:
         """
         Initialization method.
@@ -28,6 +29,7 @@ class ParamWriter():
 
         # Admit argument.
         self.file_dir = file_dir
+        self.verbose = verbose
 
     def write(
             self,
@@ -53,7 +55,8 @@ class ParamWriter():
         if file_dir is None:
             # Write to the stored file path.
             file_dir = self.file_dir
-            print(f"No file dir given, write to {self.file_dir}")
+            if self.verbose:
+                print(f"No file dir given, write to {self.file_dir}")
 
         # try:
         #     encoded = json.dumps(param)
@@ -79,7 +82,8 @@ class ParamWriter():
         if file_dir is None:
             # Read from the stored file path.
             file_dir = self.file_dir
-            print(f"No file dir given, read from {self.file_dir}")
+            if self.verbose:
+                print(f"No file dir given, read from {self.file_dir}")
 
         try:
             with open(file_dir, "r") as f:
