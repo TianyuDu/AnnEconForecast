@@ -13,6 +13,7 @@ class ParamWriter():
     """
     This is a file writer for neural net configuration
     """
+
     def __init__(
         self,
         file_dir: Union[str, None] = None
@@ -38,29 +39,29 @@ class ParamWriter():
         """
         # ==== Checking Arugment ====
         assert isinstance(param, dict),\
-        "Param argument should be a dictionary."
-        
+            "Param argument should be a dictionary."
+
         assert all(
-                   isinstance(key, str)
-                   for key in param.keys()
+            isinstance(key, str)
+            for key in param.keys()
         ), "All keys of param argument should be string."
 
         assert not (self.file_dir is None and file_dir is None),\
-                "The default file directory is unspecified, you must specify a directory while calling WRITE metohod."
+            "The default file directory is unspecified, you must specify a directory while calling WRITE metohod."
 
         # ==== End ====
         if file_dir is None:
             # Write to the stored file path.
             file_dir = self.file_dir
             print(f"No file dir given, write to {self.file_dir}")
-        
+
         # try:
         #     encoded = json.dumps(param)
         # except TypeError:
         #     print(param)
         #     raise Warning()
         encoded = json.dumps(param)
-            
+
         with open(file_dir, "a") as f:
             f.write(encoded)
 
@@ -72,7 +73,7 @@ class ParamWriter():
         Read config parameters from json file.
         """
         # ==== Checking Argument ====
-        assert not(self,file_dir is None and file_dir is None),\
+        assert not(self, file_dir is None and file_dir is None),\
             "The default file directory is unspecified, you must specify a directory while calling READ method."
         # ==== End ====
         if file_dir is None:

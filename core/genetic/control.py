@@ -10,9 +10,10 @@ import numpy as np
 import datetime
 
 sys.path.append("../")
-import core.tools.rnn_prepare as rnn_prepare
+
+import core.tools.dtype_cleaner as dtype_cleaner
 import core.tools.json_rec as json_rec
-import core.tools.dtype_cleaner as dtype_cleaner 
+import core.tools.rnn_prepare as rnn_prepare
 
 
 def eval_net(
@@ -31,7 +32,7 @@ def eval_net(
     It will be passed as an argument to the genetic optimizer
     directly, so it returns a single float number, as required by the
     optimizer.
-    
+
     Args:
         model:
             The model object to be built.
@@ -77,7 +78,7 @@ def eval_net(
     # Split dataset.
     (X_train, X_val, X_test,
      y_train, y_val, y_test)\
-    = rnn_prepare.split_dataset(
+        = rnn_prepare.split_dataset(
         raw=df_ready,
         train_ratio=param["TRAIN_RATIO"],
         val_ratio=param["VAL_RATIO"],
@@ -123,7 +124,7 @@ def save_generation(
             folder to save.
     """
     assert os.path.isdir(file_dir), f"{file_dir} is not a valid path."
-    
+
     cur_gen_dir = file_dir + "gen" + str(generation) + "/"
 
     try:
@@ -146,6 +147,7 @@ def save_generation(
     if verbose:
         print(f"Generation {str(generation)} saved.")
 
+
 def train_op(
     optimizer,
     total_gen: int,
@@ -158,7 +160,7 @@ def train_op(
     Args:
         optimizer:
             A genetic optimizer.
-        
+
         total_gen:
             An integer denoting the total number of
             generation to evolve.
@@ -173,13 +175,13 @@ def train_op(
             ii) If a float between (0, 1] is given, it will be 
             interpreted as:
             'The top ${elite}*100 PERCENT is defined as the elite group'
-        
+
         write_to_disk:
             If save the chromosome of the elite group in each generation to
             json files.
             If wish to save chromosome, pass in a file directory. 
             NOTE: This should be a folder/dir, not a json files.
-        
+
     Returns:
         A dictionary in which keys are the generation index
         and the corresponding value is a list of the elite 
@@ -189,15 +191,15 @@ def train_op(
     """
     # ======== Argument Checking ========
     assert isinstance(total_gen, int),\
-    f"Total generation should be an integer, received: {total_gen} with type {type(total_gen)}"
+        f"Total generation should be an integer, received: {total_gen} with type {type(total_gen)}"
 
     assert (isinstance(elite, int) and elite >= 1)\
-    or (isinstance(elite, float) and 0.0 < elite <= 1.0),\
-    f"Elite class should be an integer >= 1 or a float in (0, 1], received: {elite} with type {type(elite)}."
+        or (isinstance(elite, float) and 0.0 < elite <= 1.0),\
+        f"Elite class should be an integer >= 1 or a float in (0, 1], received: {elite} with type {type(elite)}."
 
     if write_to_disk is not None:
         assert os.path.isdir(write_to_disk),\
-        "write_to_disk arg should either be None or a valid directory."
+            "write_to_disk arg should either be None or a valid directory."
         if not write_to_disk.endswith("/"):
             write_to_disk += "/"
     # ======== End ========
@@ -208,7 +210,7 @@ def train_op(
 
     best_rec = list()
     elite_chromosome = dict()
-    
+
     print(f"Generation: [0/{total_gen}]\nEvaluating the initial population.")
     optimizer.evaluate(verbose=True)
     report(optimizer)
@@ -221,7 +223,7 @@ def train_op(
         optimizer.evaluate(verbose=True)
         report(optimizer)
         best_rec.append(optimizer.population[0][1])
-        
+
         # Store the elite chromosome.
         if isinstance(elite, int):
             # If elite group cutoff is defined by group SIZE.
@@ -229,23 +231,22 @@ def train_op(
         elif isinstance(elite, float):
             # If elite group cutoff is defined by population PERCENTILE.
             cutoff = int(elite * len(optimizer.population))
-        
+
         elite_group = optimizer.population[:cutoff]
         elite_chromosome[gen] = elite_group
-        
+
         # NOTE: entity format: (gene, fittness_Score)
-        # Write current generation elite 
+        # Write current generation elite
         if write_to_disk is not None:
             save_generation(
                 population=[p[0] for p in elite_group],
                 generation=gen,
                 file_dir=write_to_disk
             )
-        
+
         end_time = datetime.datetime.now()
         print(f"Time taken: {str(end_time - start_time)}")
-    
+
     print("Final:")
     report(optimizer)
     return elite_chromosome
-
