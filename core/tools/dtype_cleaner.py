@@ -21,9 +21,6 @@ def clean(d) -> dict:
         ]
 
     for (key, val) in d.items():
-        if isinstance(key, str):
-            new[key] = val
-            continue
         new[key] = clean_item(val)
 
     return new
