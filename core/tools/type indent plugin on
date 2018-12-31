@@ -1,0 +1,20 @@
+
+"""
+Created: Dec. 30 2018
+This is a file writter writting model parameter to json file.
+"""
+
+import json
+
+class ParamWriter():
+	"""
+	This is a file writer for neural net configuration
+	"""
+	def __init__(
+		self,
+		file_dir: str
+	) -> None:
+	"""
+	Initialization method.
+	"""
+		
