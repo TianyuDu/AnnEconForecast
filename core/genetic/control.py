@@ -223,7 +223,7 @@ def train_op(
             # If elite group cutoff is defined by population PERCENTILE.
             cutoff = int(elite * len(optimizer.population))
         
-        elite_group = optimizer.population[:elite]
+        elite_group = optimizer.population[:cutoff]
         elite_chromosome[gen] = elite_group
         
         # NOTE: entity format: (gene, fittness_Score)
