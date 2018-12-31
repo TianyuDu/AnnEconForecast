@@ -19,17 +19,17 @@ main = {
     "num_outputs": 1,
     "num_time_steps": None,  # num_time_steps is identical to LAGS
     "num_neurons": [
-        (16, 32),
-        (32, 64),
-        (16, 16, 32),
-        (16, 16, 32, 32)
+        [16, 32],
+        [32, 64],
+        [16, 16, 32],
+        [16, 16, 32, 32]
     ],
     "learning_rate": [
         0.1,
         0.03,
         0.01
     ],
-    "clip_grad": [None, 10.0, 20.0, 30.0, 50.0],
+    "clip_grad": None,
     "report_periods": 10,
     "tensorboard_path": MAIN_DIRECTORY + "/tensorboard/",
     "model_path": MAIN_DIRECTORY + "/saved_models/",
