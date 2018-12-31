@@ -12,6 +12,7 @@ from typing import Union, Dict
 class ParamWriter():
     """
     This is a file writer for neural net configuration
+    This writer saves given model parameter file to disk.
     """
 
     def __init__(
