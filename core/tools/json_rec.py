@@ -24,7 +24,8 @@ class ParamWriter():
         """
         if file_dir is not None:
             if not os.path.exists(file_dir):
-                print("File directory specified not found. trying to create a new one.")
+                if verbose:
+                    print("File directory specified not found. trying to create a new one.")
                 os.system(f"touch {file_dir}")
 
         # Admit argument.
