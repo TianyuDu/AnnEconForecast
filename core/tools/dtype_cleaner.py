@@ -22,7 +22,7 @@ def clean(d) -> dict:
 
     for (key, val) in d.items():
         if isinstance(key, str):
-            new[val] = key
+            new[key] = val
             continue
         new[key] = clean_item(val)
 
