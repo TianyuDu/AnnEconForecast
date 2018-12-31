@@ -129,7 +129,7 @@ def save_generation(
         print(f"Gene container folder created: {cur_gen_dir}")
 
     for (rank, chromosome) in enumerate(population):
-        js_file = cur_gen_dir + "rank" + str(rank) + ".json"
+        js_file = f"{cur_gen_dir}rank{str(rank)}.json"
         if verbose:
             print(f"Save to {js_file}")
         writer = json_rec.ParamWriter(
