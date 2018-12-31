@@ -14,17 +14,22 @@ main = {
     "TRAIN_RATIO": 0.8,
     "VAL_RATIO": 0.1,
     # ======== Model Training Parameter ========
-        "epochs": [150, 300, 500],
+    "epochs": [150, 300, 500, 1000],
     "num_inputs": 1,
     "num_outputs": 1,
     "num_time_steps": None,  # num_time_steps is identical to LAGS
     "num_neurons": [
+        (64, 64),
+        (128, 128),
         (128, 256),
         (256, 512),
         (512, 1024),
         (128, 256, 512),
         (256, 512, 1024),
-        (512, 1024, 2048)
+        (512, 1024, 2048),
+        (64, 64, 128, 128),
+        (128, 128, 256, 256),
+        (256, 256, 512, 512)
     ],
     "learning_rate": [
         0.003,
