@@ -12,6 +12,7 @@ import datetime
 sys.path.append("../")
 import core.tools.rnn_prepare as rnn_prepare
 import core.tools.json_rec as json_rec
+import core.tools.dtype_cleaner as dtype_cleaner 
 
 
 def eval_net(
@@ -140,7 +141,8 @@ def save_generation(
         writer = json_rec.ParamWriter(
             file_dir=js_file
         )
-        writer.write(chromosome)
+        cleaned = dtype_cleaner.clean(chromosome)
+        writer.write(cleaned)
     if verbose:
         print(f"Generation {str(generation)} saved.")
 
