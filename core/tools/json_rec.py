@@ -53,8 +53,14 @@ class ParamWriter():
             # Write to the stored file path.
             file_dir = self.file_dir
             print(f"No file dir given, write to {self.file_dir}")
-
+        
+        # try:
+        #     encoded = json.dumps(param)
+        # except TypeError:
+        #     print(param)
+        #     raise Warning()
         encoded = json.dumps(param)
+            
         with open(file_dir, "a") as f:
             f.write(encoded)
 
