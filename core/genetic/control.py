@@ -4,11 +4,13 @@ This script contains methods used in genetic algorithm
 powered hyper parameter searching.
 """
 import sys
+import os
 from typing import Dict, Union, List
 import numpy as np
 
 sys.path.append("../")
 import core.tools.rnn_prepare as rnn_prepare
+import core.tools.json_rec as json_rec
 
 
 def eval_net(
@@ -102,10 +104,45 @@ def eval_net(
     return float(np.mean(list(ret_pack["mse_val"].values())))
 
 
+def save_generation(
+    population: List[dict],
+    generation: int,
+    file_dir: str,
+    verbose: bool = False
+) -> None:
+    """
+    Save the population genetic information.
+    Args:
+        population:
+            A list of chromosome/gene to be stored.
+        generation:
+            The index of current generation.
+        file_dir:
+            folder to save.
+    """
+    assert os.path.isdir(file_dir), f"{file_dir} is not a valid path."
+    
+    os.mkdir("gen" + str(generation))
+    cur_gen_dir = file_dir + "gen" + str(generation) + "/"
+    if verbose:
+        print(f"Gene container folder created: {cur_gen_dir}")
+
+    for (rank, chromosome) in enumerate(population):
+        js_file = cur_gen_dir + "rank" + str({rank}) + ".json"
+        if verbose:
+            print(f"Save to {js_file}")
+        writer = json_rec.ParamWriter(
+            file_dir=js_file
+        )
+        writer.write(chromosome)
+    if verbose:
+        print(f"Generation {str(generation)} saved.")
+
 def train_op(
     optimizer,
     total_gen: int,
-    elite: Union[int, float] = 1
+    elite: Union[int, float] = 1,
+    write_to_disk: Union[None, str] = None
 ) -> Dict[int, List[object]]:
     """
     Run the genetic optimizer and returns chromosomes
@@ -129,6 +166,12 @@ def train_op(
             interpreted as:
             'The top ${elite}*100 PERCENT is defined as the elite group'
         
+        write_to_disk:
+            If save the chromosome of the elite group in each generation to
+            json files.
+            If wish to save chromosome, pass in a file directory. 
+            NOTE: This should be a folder/dir, not a json files.
+        
     Returns:
         A dictionary in which keys are the generation index
         and the corresponding value is a list of the elite 
@@ -143,6 +186,12 @@ def train_op(
     assert (isinstance(elite, int) and elite >= 1)\
     or (isinstance(elite, float) and 0.0 < elite <= 1.0),\
     f"Elite class should be an integer >= 1 or a float in (0, 1], received: {elite} with type {type(elite)}."
+
+    if write_to_disk is not None:
+        assert os.path.isdir(write_to_disk),\
+        "write_to_disk arg should either be None or a valid directory."
+        if not write_to_disk.endswith("/"):
+            write_to_disk += "/"
     # ======== End ========
 
     def report(optimizer) -> None:
