@@ -15,10 +15,10 @@ from core.tools.data_import import *
 from core.tools.time_series import *
 
 parameters = {
-    "num_time_steps": 24,
+    "num_time_steps": 36,
     "num_inputs": 1,
     "num_outputs": 1,
-    "num_neurons": 2048,
+    "num_neurons": 64,
     "learning_rate": 0.1
 }
 
@@ -34,7 +34,6 @@ class Model:
         print("Model: loading parameters")
         for para_name, value in zip(para.keys(), para.values()):
             exec(f"self.{para_name} = {value}")
-
 
 class BaselineRnn(Model):
     def __init__(
@@ -64,7 +63,7 @@ class BaselineRnn(Model):
             
         self.y = tf.placeholder(
             tf.float32,
-            [None, TS, self.num_outputs],
+            [None, 1, self.num_outputs],
             name="Output_placeholder")
 
     def build_rnn(self) -> None:
@@ -73,6 +72,7 @@ class BaselineRnn(Model):
             num_units=self.num_neurons,
             activation=tf.nn.relu
         )
+        
         self.rnn_output, self.states = tf.nn.dynamic_rnn(
             self.cell, self.X, dtype=tf.float32)
         if self.SL:

@@ -1,0 +1,2 @@
+model_checkpoint_path: "modelFB_pred.ckpt"
+all_model_checkpoint_paths: "modelFB_pred.ckpt"
