@@ -110,7 +110,7 @@ def save_generation(
     population: List[dict],
     generation: int,
     file_dir: str,
-    verbose: bool = True
+    verbose: bool = False
 ) -> None:
     """
     Save the population genetic information.
