@@ -173,7 +173,7 @@ class GeneticTuner(GeneticOptimizer):
                 raise TypeError("Unsupported data type.")
 
         for k in p1.keys():
-            if type(p1[k]) != type(p2[k]) or isinstance(p1[k], str) or isinstance(p1[k], int):
+            if type(p1[k]) != type(p2[k]) or (type(p1[k]) in [str, int]):
                 # For different types to cross over,
                 # E.g. p1 has grad clipping activated (10.0) and p2 has no gradient clipping (None)
                 # Randomly distribute.
@@ -181,18 +181,9 @@ class GeneticTuner(GeneticOptimizer):
                     new_gene1, new_gene2 = p1[k], p2[k]
                 else:
                     new_gene1, new_gene2 = p2[k], p1[k]
-
-            # NOTE: Dec. 29 2018, merged to above case.     
-            # elif isinstance(p1[k], str) or isinstance(p1[k], int):
-            #     if np.random.random() >= 0.5:
-            #         new_gene1, new_gene2 = p1[k], p2[k]
-            #     else:
-            #         new_gene1, new_gene2 = p2[k], p1[k]
-
             elif isinstance(p1[k], float):
                 new_gene1, new_gene2 = mixup_float(p1[k], p2[k])
-            elif isinstance(p1[k], list) or isinstance(p1[k], tuple):
-                tp = type(p1[k])
+            elif isinstance(p1[k], list):
                 if len(p1[k]) == len(p2[k]):
                     # Case 1: same length.
                     # e.g. two parameter sets give two multi-layer LSTM with neurons [16, 32, 64] and [32, 64, 128]
@@ -201,8 +192,8 @@ class GeneticTuner(GeneticOptimizer):
                         mixup_numerical(x1, x2)
                         for x1, x2 in zip(p1[k], p2[k])
                     ]
-                    new_gene1 = tp(x[0] for x in mixed_gene)
-                    new_gene2 = tp(x[1] for x in mixed_gene)
+                    new_gene1 = [x[0] for x in mixed_gene]
+                    new_gene2 = [x[1] for x in mixed_gene]
                 else:
                     # Case 2: with different length.
                     # TODO: do we need to consider the mixed case.
