@@ -30,13 +30,17 @@ def merged_scores(
     act_val = actual.values.reshape(-1,)
     pred_val = pred.values.reshape(-1,)
 
-    def MAE(x, y): return np.mean(np.abs(x - y))
+    def MAE(x, y):
+        return np.mean(np.abs(x - y))
 
-    def MSE(x, y): return np.mean((x - y)**2)
+    def MSE(x, y):
+        return np.mean((x - y)**2)
 
-    def RMSE(x, y): return np.sqrt(MSE(x, y))
+    def RMSE(x, y):
+        return np.sqrt(MSE(x, y))
 
-    def MAPE(x, y): return np.mean(np.abs((x - y) / y))
+    def MAPE(x, y):
+        return np.mean(np.abs((x - y) / y))
 
     # mean absolute error
     metric_dict["mae"] = MAE(pred_val, act_val)
