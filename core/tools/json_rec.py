@@ -78,7 +78,7 @@ class ParamWriter():
         Read config parameters from json file.
         """
         # ==== Checking Argument ====
-        assert not(self, file_dir is None and file_dir is None),\
+        assert not(self.file_dir is None and file_dir is None),\
             "The default file directory is unspecified, you must specify a directory while calling READ method."
         # ==== End ====
         if file_dir is None:
