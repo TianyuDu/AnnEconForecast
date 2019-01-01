@@ -137,7 +137,7 @@ class GeneticTuner(GeneticOptimizer):
         def mixup_integer(
             i1: int,
             i2: int,
-            choose: bool=False
+            choose: bool=True
         ) -> (int, int):
             """
             Helper function, crossover integer objects.
