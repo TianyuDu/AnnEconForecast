@@ -37,3 +37,9 @@ def inv_diff(
         inv[col_name][date] = base_val + diff[col_name][date]
 
     return inv
+
+
+def gen_slp_seq(
+    src: pd.DataFrame
+):
+    raise NotImplementedError()
