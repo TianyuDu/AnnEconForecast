@@ -39,8 +39,9 @@ def inv_diff(
 
     return inv
 
-
+# Instance data type, a single training example.
 Instance = Tuple[np.ndarray, np.ndarray, pd.Timestamp]
+
 def gen_slp_sequential(
     df: pd.DataFrame,
     num_time_steps: int,
