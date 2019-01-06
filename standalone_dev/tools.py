@@ -76,7 +76,7 @@ def gen_slp_sequential(
 
 
 def format_instances(
-    instances: List[Tuple[np.ndarray, np.ndarray]]
+    instances: List[Instance]
 ) -> Tuple[np.ndarray, np.ndarray, list]:
     """
     Return shape:
@@ -85,7 +85,7 @@ def format_instances(
     time_index: len=num_instances, list.
     """
     num_instances = len(instances)
-    typical_X, typical_y = instances[0]
+    typical_X, typical_y, t = instances[0]
     num_time_steps, num_inputs = typical_X.shape
     _, num_outputs =  typical_y.shape
 
@@ -93,15 +93,14 @@ def format_instances(
 
     X_lst = [z[0] for z in instances]
     y_lst = [z[1] for z in instances]
+    ts = [z[2] for z in instances]
     X = np.squeeze(X_lst)
     y = np.squeeze(y_lst)
 
     X = X.reshape(num_instances, num_time_steps, num_inputs)
     y = y.reshape(num_instances, num_time_steps, num_outputs)
 
-    return X, y
-
-
+    return X, y, ts
 
 
 
