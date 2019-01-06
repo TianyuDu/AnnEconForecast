@@ -41,7 +41,7 @@ def inv_diff(
 
 
 def gen_slp_sequential(
-    data: np.ndarray,
+    dataframe: pd.array,
     num_time_steps: int,
     target_idx: int = None
 ) -> List[Tuple[np.ndarray, np.ndarray]]:
@@ -49,6 +49,7 @@ def gen_slp_sequential(
     GENerate Supervised Learning Problem with SEQUENTIAL label.
     data.shape = (num_obs, 1)
     """
+    data = dataframe
     instances = list()
 
     for t in range(len(data)):
@@ -67,16 +68,17 @@ def gen_slp_sequential(
             print(f"Failed time step ignored: {t}")
 
     return instances
-    
+
 
 
 def format_instances(
     instances: List[Tuple[np.ndarray, np.ndarray]]
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, list]:
     """
     Return shape:
     X: (num_instances, num_time_steps, num_inputs)
     y: (num_instances, num_time_steps, num_outputs)
+    time_index: len=num_instances, list.
     """
     num_instances = len(instances)
     typical_X, typical_y = instances[0]
