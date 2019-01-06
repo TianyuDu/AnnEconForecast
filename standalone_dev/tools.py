@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from typing import List, Tuple
 
 
 def progbar(curr, total, full_progbar):
@@ -39,7 +40,74 @@ def inv_diff(
     return inv
 
 
-def gen_slp_seq(
-    src: pd.DataFrame
-):
-    raise NotImplementedError()
+def gen_slp_sequential(
+    data: np.ndarray,
+    num_time_steps: int,
+    target_idx: int = None
+) -> List[Tuple[np.ndarray, np.ndarray]]:
+    """
+    GENerate Supervised Learning Problem with SEQUENTIAL label.
+    data.shape = (num_obs, 1)
+    """
+    instances = list()
+
+    for t in range(len(data)):
+        try:
+            feature = data[t: t+num_time_steps, :]
+            if target_idx is None:
+                label = data[t+1: t+num_time_steps+1, :]
+            else:
+                label = data[t+1: t+num_time_steps+1, target_idx]
+            assert len(feature) == len(label)
+            instances.append((
+                feature,
+                label
+            ))
+        except AssertionError:
+            print(f"Failed time step ignored: {t}")
+
+    return instances
+    
+
+
+def format_instances(
+    instances: List[Tuple[np.ndarray, np.ndarray]]
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Return shape:
+    X: (num_instances, num_time_steps, num_inputs)
+    y: (num_instances, num_time_steps, num_outputs)
+    """
+    num_instances = len(instances)
+    typical_X, typical_y = instances[0]
+    num_time_steps, num_inputs = typical_X.shape
+    _, num_outputs =  typical_y.shape
+
+    print(f"num_inputs={num_inputs}, num_outputs={num_outputs}, num_time_steps={num_time_steps}")
+
+    X_lst = [z[0] for z in instances]
+    y_lst = [z[1] for z in instances]
+    X = np.squeeze(X_lst)
+    y = np.squeeze(y_lst)
+
+    X = X.reshape(num_instances, num_time_steps, num_inputs)
+    y = y.reshape(num_instances, num_time_steps, num_outputs)
+
+    return X, y
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
