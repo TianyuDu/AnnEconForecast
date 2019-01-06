@@ -40,35 +40,39 @@ def inv_diff(
     return inv
 
 
+Instance = Tuple[np.ndarray, np.ndarray, pd.Timestamp]
 def gen_slp_sequential(
-    dataframe: pd.array,
+    df: pd.DataFrame,
     num_time_steps: int,
-    target_idx: int = None
-) -> List[Tuple[np.ndarray, np.ndarray]]:
+    label_col: str = None
+) -> List[Instance]:
     """
     GENerate Supervised Learning Problem with SEQUENTIAL label.
+    Sliding Window Method
     data.shape = (num_obs, 1)
     """
-    data = dataframe
+    X_set = df.copy()
+    if label_col is None:
+        # The next-observed values of ALL features are interpreted as label.
+        y_set = df.copy()
+    else:
+        y_set = df[label_col].copy()
+        
     instances = list()
-
-    for t in range(len(data)):
+    for t in range(len(X_set)):
         try:
-            feature = data[t: t+num_time_steps, :]
-            if target_idx is None:
-                label = data[t+1: t+num_time_steps+1, :]
-            else:
-                label = data[t+1: t+num_time_steps+1, target_idx]
+            feature = X_set.iloc[t: t+num_time_steps, :]
+            label = y_set.iloc[t+1: t+num_time_steps+1, :]
             assert len(feature) == len(label)
             instances.append((
-                feature,
-                label
+                feature.values,
+                label.values,
+                label.index[-1]
             ))
         except AssertionError:
             print(f"Failed time step ignored: {t}")
 
     return instances
-
 
 
 def format_instances(
