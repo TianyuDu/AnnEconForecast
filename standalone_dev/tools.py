@@ -104,7 +104,34 @@ def format_instances(
     return X, y, ts
 
 
-
+def split_dataset(
+    X: np.ndarray,
+    y: np.ndarray,
+    ts: List[pd.Timestamp],
+    ratio={"train": 0.8, "val": 0.1, "test": 0.1},
+    shuffle=False
+):
+    if shuffle:
+        raise NotImplementedError()
+    train_end = int(ratio["train"] * X.shape[0])
+    val_end = train_end + int(ratio["val"] * X.shape[0])
+    
+    X_train = X[:train_end, :, :]
+    y_train = y[:train_end, :, :]
+    ts_train = ts[:train_end]
+    
+    X_val = X[train_end: val_end, :, :]
+    y_val = y[train_end: val_end, :, :]
+    ts_val = ts[train_end: val_end]
+    
+    X_test = X[val_end:, :, :]
+    y_test = y[val_end:, :, :]
+    ts_test = ts[val_end:]
+    
+    return (X_train, y_train, ts_train,
+            X_val, y_val, ts_val,
+            X_test, y_test, ts_test
+           )
 
 
 
