@@ -89,7 +89,7 @@ def format_instances(
     num_time_steps, num_inputs = typical_X.shape
     _, num_outputs =  typical_y.shape
 
-    print(f"num_inputs={num_inputs}, num_outputs={num_outputs}, num_time_steps={num_time_steps}")
+    print(f"num_instances={num_instances}, num_inputs={num_inputs}, num_outputs={num_outputs}, num_time_steps={num_time_steps}")
 
     X_lst = [z[0] for z in instances]
     y_lst = [z[1] for z in instances]
