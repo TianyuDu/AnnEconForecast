@@ -1,5 +1,9 @@
 # Artificial Neural Networks in Economic Forecasting
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/1a59eb686665b90ec53e/maintainability)](https://codeclimate.com/github/TianyuDu/AnnEconForecast/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/1a59eb686665b90ec53e/test_coverage)](https://codeclimate.com/github/TianyuDu/AnnEconForecast/test_coverage)
+
 ## About this Project
 
 ANNEF is a project focusing on the interdisciplinary areas of economics, computer science, and statistics.
