@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 from typing import List, Tuple
 
 
@@ -134,7 +135,17 @@ def split_dataset(
            )
 
 
-
+def mkdirs(base: str) -> dict:
+    path_col = {
+        "BASE_PATH": base,
+        "TB_PATH": base + "/tensorboard",
+        "FIG_PATH": base + "/figures",
+        "NUM_PATH": base + "/numericals"
+    }
+    for p in path_col.values():
+        print(f"Creating directory: {p}")
+        os.mkdir(p)
+    return path_col
 
 
 
