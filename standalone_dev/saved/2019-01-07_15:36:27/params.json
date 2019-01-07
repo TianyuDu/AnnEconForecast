@@ -1,0 +1,1 @@
+{"COL_NAME": "UNRATE", "P": 6, "NUM_TIME_STEPS": 6, "D": 1, "Q": null, "NUM_INPUTS": 1, "NUM_OUTPUTS": 1, "RNN_NEURONS": [64, 128], "LR": 0.01, "EPOCHS": 500, "CELL_TYPE": "LSTM", "PATIENT": 30}
