@@ -1,4 +1,4 @@
 saved_models/* filter=lfs diff=lfs merge=lfs -text
-*.ipynb linguist-language=Python
+*.ipynb linguist-vendored
 *.html linguist-vendored
 *.md linguist-Documentation
