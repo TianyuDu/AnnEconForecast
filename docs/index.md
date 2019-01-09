@@ -13,6 +13,7 @@ In this project, we aim to implement a wide range of models, both from structura
 #### Documentation Site-map
 
 * [The Project Methodology and Workflow](method.md)
+* [A Demonstration with Deep Neural Networks](./ts_dnn.md)
 * [The Second Demonstration](demo2.md)
 * [How to Train a Model](train.md)
 * [How to Restore a Saved Model](restore.md)
