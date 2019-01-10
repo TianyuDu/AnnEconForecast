@@ -13,7 +13,7 @@ In this project, we aim to implement a wide range of models, both from structura
 #### Documentation Site-map
 
 * [The Project Methodology and Workflow](method.md)
-* [A Demonstration with Deep Neural Networks](./ts_dnn.md)
+* [A Demonstration with Dense Layer Only](./ts_dnn.md)
 * [The Second Demonstration](demo2.md)
 * [How to Train a Model](train.md)
 * [How to Restore a Saved Model](restore.md)
@@ -29,32 +29,6 @@ In this project, we aim to implement a wide range of models, both from structura
 #### Main Model
 
 - `/core`  core files containing codes
-
-```
-AnnEconForecast/core/
-├── ga
-│   ├── control.py
-│   ├── genetic_hpt.py
-│   └── genetic_optimizer.py
-├── models
-│   ├── baseline_lstm.py
-│   ├── baseline_rnn.py
-│   ├── generic_rnn.py
-│   ├── stacked_lstm.py
-│   └── stat_models.py
-├── tools
-│   ├── data_import.py
-│   ├── evaluate.py
-│   ├── metrics.py
-│   ├── param_set_generator.py
-│   ├── rnn_prepare.py
-│   ├── stacked_lstm_oop.py
-│   ├── time_series.py
-│   └── visualize.py
-└── training
-    ├── hps.py
-    └── hps_methods.py
-```
 
 **Note** for descriptions on other directories other than `core`, please refer to [layout description](layout.md).
 
@@ -81,6 +55,8 @@ Those models are implemented using `statsmodels` package.
 > **Civilian Unemployment Rate**
 
 > Config: LAGS=3-epochs=500-num_neurons=(64, 128, 256)-learning_rate=0.03
+
+**Note** [The DNN demonstration](./demo_src/dnn_demo/ts_dnn.md) provides a more basic basic example with dense layers only.
 
 In this first demonstration model, we trained a relatively small-scale neural network. 
 
