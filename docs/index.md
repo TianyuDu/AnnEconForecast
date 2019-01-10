@@ -21,7 +21,6 @@ In this project, we aim to implement a wide range of models, both from structura
 * [The Project Road Map](roadmap.md)
 * [Notes on Datasets](data.md)
 * [References](ref.md)
-* [Test Link](./pset1.pdf)
 
 
 
