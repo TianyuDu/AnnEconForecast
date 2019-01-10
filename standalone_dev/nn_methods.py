@@ -1,12 +1,13 @@
 import numpy as np
-import
+import pandas as pd
+from typing import Tuple, List
 
 
 # Instance data type, a single training example.
 Instance = Tuple[np.ndarray, np.ndarray, pd.Timestamp]
 
 
-def gen_seq_slp(
+def gen_slp_seq(
     df: pd.DataFrame,
     num_time_steps: int,
     label_col: str = None
@@ -41,13 +42,13 @@ def gen_seq_slp(
     return instances
 
 
-def gen_pt_slp(diff, num_time_steps):
+def gen_slp_pt(df, num_time_steps):
     """
     Generate the supervised learning problem with
     point-valued label in each instance.
     """
-    slp_sequential = gen_slp_sequential(
-        diff,
+    slp_sequential = gen_slp_seq(
+        df,
         num_time_steps=num_time_steps
     )
     instances = [
@@ -55,3 +56,40 @@ def gen_pt_slp(diff, num_time_steps):
         for x, y, t in slp_sequential
     ]
     return instances
+
+
+def gen_slp(
+    df,
+    num_time_steps,
+    sequential: bool,
+    label_col: str = None
+    ):
+    if sequential:
+        return gen_slp_seq(df, num_time_steps)
+    else:
+        return gen_slp_pt(df, num_time_steps)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
