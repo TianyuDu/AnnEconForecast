@@ -1,0 +1,1 @@
+{"model_type": "Univariate one step DNN", "ipynb": "ts_dnn.ipynb", "file_dir": "./data/UNRATE.csv", "fea_name": null, "lab_name": "UNRATE", "P": 6, "D": 1, "num_inputs": 1, "num_outputs": 1, "neurons": [32, 64], "lr": 0.01, "epochs": null, "patient": 100, "epsilon": 1e-08}
