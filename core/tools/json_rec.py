@@ -96,3 +96,15 @@ class ParamWriter():
             print("The json file given cannot be found, \
                     None is returned.")
             return None
+
+
+def write_param(
+    param: dict,
+    log_dir: str
+) -> None:
+    encoded = json.dumps(param)
+    with open(log_dir, "w") as f:
+        f.write(encoded)
+
+
+
