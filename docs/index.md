@@ -13,7 +13,7 @@ In this project, we aim to implement a wide range of models, both from structura
 #### Documentation Site-map
 
 * [The Project Methodology and Workflow](method.md)
-* [A Demonstration with Dense Layer Only](./ts_dnn.md)
+* [A Demonstration with Dense Layer Only](./ts_dnn.html)
 * [The Second Demonstration](demo2.md)
 * [How to Train a Model](train.md)
 * [How to Restore a Saved Model](restore.md)
@@ -21,6 +21,7 @@ In this project, we aim to implement a wide range of models, both from structura
 * [The Project Road Map](roadmap.md)
 * [Notes on Datasets](data.md)
 * [References](ref.md)
+* [Test Link](./pset1.pdf)
 
 
 
@@ -56,7 +57,7 @@ Those models are implemented using `statsmodels` package.
 
 > Config: LAGS=3-epochs=500-num_neurons=(64, 128, 256)-learning_rate=0.03
 
-**Note** [The DNN demonstration](./demo_src/dnn_demo/ts_dnn.md) provides a more basic basic example with dense layers only.
+**Note** [The DNN demonstration](./ts_dnn.html) provides a more basic basic example with dense layers only.
 
 In this first demonstration model, we trained a relatively small-scale neural network. 
 
