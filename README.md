@@ -1,8 +1,8 @@
 # Artificial Neural Networks in Economic Forecasting
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/1a59eb686665b90ec53e/maintainability)](https://codeclimate.com/github/TianyuDu/AnnEconForecast/maintainability)
+[![forthebadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
-[![Test Coverage](https://api.codeclimate.com/v1/badges/1a59eb686665b90ec53e/test_coverage)](https://codeclimate.com/github/TianyuDu/AnnEconForecast/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1a59eb686665b90ec53e/maintainability)](https://codeclimate.com/github/TianyuDu/AnnEconForecast/maintainability)
 
 ## About this Project
 
