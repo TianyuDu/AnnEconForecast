@@ -6,9 +6,13 @@ import numpy as numpy
 import pandas as pd
 from datetime import datetime
 from matplotlib import pyplot as plt
+plt.style.use("seaborn-dark")
 
 
-def gen_sup(df: pd.DataFrame, lag: int = 6):
+def generate_supervised(
+    df: pd.DataFrame,
+    lag: int = 6
+) -> (pd.DataFrame, pd.DataFrame):
     lagged = [df.shift(i) for i in range(lag + 1)]
     col_names = [f"lag[{i}]" for i in range(lag + 1)]
     frame = pd.concat(lagged, axis=1)
@@ -20,6 +24,11 @@ def gen_sup(df: pd.DataFrame, lag: int = 6):
     assert features.shape == target.shape, "Something went wrong."
     print(f"X@{features.shape}, Y@{target.shape}")
     return features, target
+
+def gen_data_tensor(
+    df: pd.DataFrame,
+    lag: int = 6
+):
 
 if __name__ == "__main__":
     df = pd.read_csv(
