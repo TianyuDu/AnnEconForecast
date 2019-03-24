@@ -9,6 +9,7 @@ from matplotlib import pyplot as plt
 plt.style.use("seaborn-dark")
 import torch
 from torch.utils.data import TensorDataset, DataLoader
+from sklearn.model_selection import train_test_split
 
 
 def summarize_dataset(df: pd.DataFrame) -> None:
@@ -41,10 +42,40 @@ def generate_supervised(
     print(f"X@{features.shape}, Y@{target.shape}")
     return features, target
 
-def gen_data_tensor(
+
+def gen_data_tensors(
     df: pd.DataFrame,
-    lag: int = 6
-):
+    lag: int = 6,
+    batch_size: int = 32,
+    validation_ratio: float = 0.2
+) -> (DataLoader, DataLoader, TensorDataset, TensorDataset):
+    """
+    Primary goal: create dataloader object.
+    """
+    x_train, y_train = generate_supervised(df, lag=lag)
+    # Transform DataFrame to NumpyArray.
+    x_train, y_train = map(lambda x: x.values, (x_train, y_train))
+    # Generating Validation Set.
+    x_train, x_val, y_train, y_val = train_test_split(
+        x_train, y_train, test_size=validation_ratio, shuffle=True
+    )
+
+    # Transform to Tensor
+    x_train, y_train, x_val, y_val = map(
+        torch.tensor, (x_train, y_train, x_val, y_val)
+    )
+
+    assert batch_size <= x_train.shape[0] and batch_size <= x_val.shape[0],\
+        "Batch size cannot be greater than number of training instances."
+    
+    train_ds = TensorDataset(x_train, y_train)
+    train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
+
+    val_ds = TensorDataset(x_val, y_val)
+    val_dl = DataLoader(val_ds, batch_size=batch_size, shuffle=True)
+
+    return train_dl, val_dl, train_ds, val_ds
+
 
 if __name__ == "__main__":
     df = pd.read_csv(
