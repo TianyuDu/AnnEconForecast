@@ -19,18 +19,12 @@ if __name__ == '__main__':
         index_col=0,
         date_parser=lambda x: datetime.strptime(x, "%Y")
     )
-    X, Y = data.gen_sup(df, lag=24)
-    num_train = int(0.8 * X.shape[0])
-    inputs = torch.from_numpy(X.values[:num_train, ...])
-    target = torch.from_numpy(Y.values[:num_train, ...])
-    test_inputs = torch.from_numpy(X.values[num_train:, ...])
-    test_targets = torch.from_numpy(Y.values[num_train:, ...])
-    assert inputs.shape == target.shape
-    assert test_inputs.shape == test_targets.shape
-    # inputs = torch.from_numpy(data[3:, :-1])
-    # target = torch.from_numpy(data[3:, 1:])  # One step shifting.
-    # test_inputs = torch.from_numpy(data[:3, :-1])
-    # test_target = torch.from_numpy(data[:3, 1:])
+    train_dl, val_dl, train_ds, val_ds = data.gen_data_tensors(
+        df,
+        lag=16,
+        batch_size=32,
+        validation_ratio=0.2
+    )
     # build the model
     seq = Sequence()
     seq.double()  # Cast all floating point parameters and buffers to double datatype
