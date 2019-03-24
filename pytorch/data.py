@@ -16,12 +16,12 @@ def summarize_dataset(df: pd.DataFrame) -> None:
     Summarized time series information.
     """
     print(">>>> Dataset Received <<<<")
-    print(f"Date range from {df.index[0]} to {df.index[-1]}")
-    print(f"Number of observations: {len(df)}")
+    print(f"* Date range from {df.index[0]} to {df.index[-1]}")
+    print(f"* Number of observations: {len(df)}")
     try:
-        print(f"Features: Number of features: {df.shape[1]}")
+        print(f"* Features: Number of features: {df.shape[1]}")
     except IndexError:
-        print(f"Features: Univariate series.")
+        print(f"* Features: Univariate series.")
 
 
 def generate_supervised(
