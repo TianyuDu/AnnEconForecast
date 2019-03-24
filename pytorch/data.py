@@ -28,6 +28,7 @@ def generate_supervised(
     df: pd.DataFrame,
     lag: int = 6
 ) -> (pd.DataFrame, pd.DataFrame):
+    summarize_dataset(df)
     lagged = [df.shift(i) for i in range(lag + 1)]
     col_names = [f"lag[{i}]" for i in range(lag + 1)]
     frame = pd.concat(lagged, axis=1)
