@@ -7,7 +7,7 @@ import tqdm
 from matplotlib import pyplot as plt
 
 import data
-from model import *
+from model import Sequence
 
 
 if __name__ == '__main__':
