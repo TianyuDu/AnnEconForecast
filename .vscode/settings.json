@@ -1,5 +1,5 @@
 {
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": false,
-    "python.pythonPath": "/Library/Frameworks/Python.framework/Versions/3.6"
+    "python.pythonPath": "/usr/local/bin/python3"
 }
