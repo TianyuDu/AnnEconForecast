@@ -5,6 +5,7 @@ import pandas as pd
 import torch
 import tqdm
 from matplotlib import pyplot as plt
+plt.style.use("seaborn-dark")
 
 import data
 from model import Sequence
