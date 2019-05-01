@@ -7,6 +7,25 @@ from typing import Callable, Dict, List, Tuple, Union, Iterable
 import numpy as np
 
 
+# SAMPLE_PARAM = {"gene_pool": Dict[str, Union[object, List[object]]],
+#                 "pop_size": int,
+#                 "eval_func": Callable[[Dict[str, object]], Union[float, int]],
+#                 "mode": Union["min", "max"],
+#                 "retain": float = 0.3,
+#                 "shot_prob": float = 0.05,
+#                 "mutate_prob": float = 0.05,
+#                 "verbose": bool = False,
+#                 "ignore": Iterable[str] = ()
+#                 }
+
+
+class Optimizer:
+    # The baseline optimizer powered by the genetic algorithm.
+    def __init__(self, param_dict=None):
+        if param_dict is None:
+            self.__dict__.update(param_dict)
+        
+
 class GeneticOptimizer:
     """
     The baseline optimizer using genetic algorithm.
