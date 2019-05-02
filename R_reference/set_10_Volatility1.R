@@ -1,0 +1,89 @@
+
+# Install and load required packages
+
+chooseCRANmirror(graphics=FALSE, ind=33)
+if (!require("MASS")) install.packages("MASS")
+if (!require("moments")) install.packages("moments")
+if (!require("MTS")) install.packages("MTS")
+install.packages("MFTSR", repos="http://R-Forge.R-project.org")
+
+library(aTSA)
+library(xts)
+library(anytime)
+library(MASS)
+library(moments)
+library(MTS)
+library(MFTSR)
+
+# Dowload data on S&P500 index, daily frequency
+# Source: https://finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC
+
+# Load, extract Close price, convert to xts format, and plot
+setwd("C:/Teaching/Undergrad/data ECO374")
+ 
+data_SP500_full <- read.csv(file="SP500_daily.csv", header=TRUE, sep=",")
+ 
+xtsdata_SP500 <- xts(x=data_SP500_full[c("Close")], order.by=anytime(data_SP500_full$Date))
+ 
+plot.xts(xtsdata_SP500, plot.type = c("single"), main ="S&P 500 index, close price" , legend.loc = "topleft", grid.col="lightgray")
+
+
+# Plot of returns
+xtsdata_SP500_returns <- diff(log(xtsdata_SP500))
+xtsdata_SP500_returns <- na.omit(xtsdata_SP500_returns)
+
+plot.xts(xtsdata_SP500_returns, plot.type = c("single"), main ="S&P 500 index, returns" , legend.loc = "topleft", grid.col="lightgray", col="blue")
+
+# Summary statistics of returns
+summary(xtsdata_SP500_returns)
+
+
+# Note that the mean of the returns is very close to zero, and hence returns SQUARED closely approximate
+# the VARIANCE of the returns.
+
+#Plot of returns SQUARED (variance)
+xtsdata_SP500_returns_SQUARED <- xtsdata_SP500_returns^2
+
+plot.xts(xtsdata_SP500_returns_SQUARED, plot.type = c("single"), main ="S&P 500 index, returns SQUARED (variance)" , legend.loc = "topleft", grid.col="lightgray", col="red")
+
+#ACF plots
+maxlag <- 30
+ACF1 <- acf(as.matrix(xtsdata_SP500_returns$Close), main=NULL, lag.max=maxlag, plot=FALSE)
+ACF2 <- acf(as.matrix(xtsdata_SP500_returns_SQUARED$Close), main=NULL, lag.max=maxlag, plot=FALSE)
+
+par(mfcol=c(1,2), mai=c(0.4, 0.4, 0.7, 0.1))
+plot(ACF1[1:maxlag],ylim=c(-0.05,0.25), main="ACF returns")
+plot(ACF2[1:maxlag],ylim=c(-0.05,0.25), main="ACF returns SQUARED (variance)")
+
+# Unit root test for returns
+adf.test(xtsdata_SP500_returns)
+
+# Plot histogram of returns with an overlay of best-fit Gaussian density 
+# Note that the returns do not fit the Gaussian density well
+
+fit <- fitdistr(xtsdata_SP500_returns, "normal")
+para <- fit$estimate
+hist(xtsdata_SP500_returns, prob = TRUE, breaks=200, xlim=c(-0.03,0.03), col="lightgrey")
+curve(dnorm(x, para[1], para[2]), col = 2, add = TRUE)
+
+
+# Moments of the density of returns
+X <- xtsdata_SP500_returns$Close
+all.moments( X, central=TRUE, order.max=4 )
+
+# The returns have a leptocurtic density with "heavy tails"
+hist(xtsdata_SP500_returns, prob = TRUE, breaks=1000, ylim = c(0, 10), xlim=c(-0.04,-0.02), col="lightgrey")
+curve(dnorm(x, para[1], para[2]), col = 2, add = TRUE)
+
+# EWMA: estimate the smoothing parameter lambda
+# If lambda is negative, then the mul-tivariate Gaussian likelihood is used to estimate the smoothing parameter.
+Y <- as.matrix(xtsdata_SP500_returns$Close)
+EWMA <- EWMAvol(Y, lambda = -1)
+
+
+# EWMA: plot
+EWMA <- ewmaVol(xtsdata_SP500_returns, lambda=0.941)
+plot(fitted(EWMA))
+
+
+

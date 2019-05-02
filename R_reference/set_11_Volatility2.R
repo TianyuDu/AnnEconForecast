@@ -1,0 +1,53 @@
+
+# Set data directory path
+setwd("C:/Teaching/Undergrad/data ECO374") 
+
+# Install and load required packages
+chooseCRANmirror(graphics=FALSE, ind=33)
+if (!require("fGarch")) install.packages("fGarch")
+
+library(aTSA)
+library(xts)
+library(anytime)
+library(fGarch)
+
+# Dowload data on S&P500 index, daily frequency
+# Source: https://finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC
+# Load, extract Close price, convert to xts format, and plot
+data_SP500_full <- read.csv(file="SP500_daily.csv", header=TRUE, sep=",")
+xtsdata_SP500 <- xts(x=data_SP500_full[c("Close")], order.by=anytime(data_SP500_full$Date))
+plot.xts(xtsdata_SP500, plot.type = c("single"), main ="S&P 500 index, close price" , legend.loc = "topleft", grid.col="lightgray")
+
+# Plot of returns
+xtsdata_SP500_returns <- diff(log(xtsdata_SP500))
+xtsdata_SP500_returns <- na.omit(xtsdata_SP500_returns)
+
+plot.xts(xtsdata_SP500_returns, plot.type = c("single"), main ="S&P 500 index, returns" , legend.loc = "topleft", grid.col="lightgray", col="blue")
+
+# Plot of returns SQUARED (variance)
+xtsdata_SP500_returns_SQUARED <- xtsdata_SP500_returns^2
+plot.xts(xtsdata_SP500_returns_SQUARED, plot.type = c("single"), main ="S&P 500 index, returns SQUARED (variance)" , legend.loc = "topleft", grid.col="lightgray", col="red")
+
+# ACF and PACF plots of returns SQUARED (variance)
+maxlag <- 30
+ACF <- acf(as.matrix(xtsdata_SP500_returns_SQUARED$Close), main=NULL, lag.max=maxlag, plot=FALSE)
+PACF <- pacf(as.matrix(xtsdata_SP500_returns_SQUARED$Close), main=NULL, lag.max=maxlag, plot=FALSE)
+
+par(mfcol=c(1,2), mai=c(0.4, 0.4, 0.7, 0.1), cex.main=0.9)
+plot(ACF[1:maxlag],ylim=c(-0.05,0.25), main="ACF of returns variance")
+plot(PACF[1:maxlag],ylim=c(-0.05,0.25), main="PACF of returns variance")
+
+# ARCH model estimation
+ARCH <- garchFit(~garch(12,0), data = xtsdata_SP500_returns, trace = FALSE)
+summary(ARCH)
+
+# GARCH model estimation
+# Note that GARCH(1,1) with 4 parameters has lower AIC and higher Log likelihood than ARCH(12) with 14 parameters
+GARCH <- garchFit(~garch(1,1), data = xtsdata_SP500_returns, trace = FALSE)
+summary(GARCH)
+
+# Forecast (plot along with last 100 observations)
+# Note that we have not included any model for the mean here
+forecast <- predict(GARCH, plot=TRUE, nx=100)
+
+
