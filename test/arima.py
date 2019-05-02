@@ -12,22 +12,12 @@ from sklearn.metrics import mean_squared_error as mse
 plt.style.use("seaborn-dark")
 
 PATH = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
-def paser(x):
-    return datetime.strptime(x, "%Y")
-
-df = pd.read_csv(PATH, index_col=0,
-                parse_dates=[0],
-                date_parser=paser,
-                verbose=True)
-
-
-tsa.graphics.plot_pacf(df, lags=36)
 
 def model_selection(
     series,
     param_set={
         "P": range(1, 9),
-        "D": range(1, 3),
+        "D": range(0, 2),
         "Q": range(1, 9)
     }
 ):
@@ -49,11 +39,6 @@ def model_selection(
     print(f"Total failed orders: {fails}")
     return records
 
-records = model_selection(df)
-
-for r in records:
-    print(f"Order={r['order']}, AIC={r['result'].aic}")
-
 def arima_test(
     order: tuple,
     train: np.ndarray,
@@ -73,15 +58,34 @@ def arima_test(
     return pred
 
 
-N = 240
-train, test = df[:N].values, df[N:].values
-pred = arima_test((5, 1, 4), train, test)
-residual = test - pred
-plt.plot(pred, label="Prediction")
-plt.plot(test, label="Actual")
-plt.legend()
-plt.show()
+if __name__ == "__main__":
+    def paser(x):
+        return datetime.strptime(x, "%Y")
 
-plt.plot(residual, label="Residual")
-plt.legend()
-plt.show()
+
+    df = pd.read_csv(PATH, index_col=0,
+                    parse_dates=[0],
+                    date_parser=paser,
+                    verbose=True)
+
+
+    tsa.graphics.plot_pacf(df, lags=36)
+
+    records = model_selection(df)
+
+    for r in records:
+        print(f"Order={r['order']}, AIC={r['result'].aic}")
+
+
+    N = 240
+    train, test = df[:N].values, df[N:].values
+    pred = arima_test((5, 1, 4), train, test)
+    residual = test - pred
+    plt.plot(pred, label="Prediction")
+    plt.plot(test, label="Actual")
+    plt.legend()
+    plt.show()
+
+    plt.plot(residual, label="Residual")
+    plt.legend()
+    plt.show()
