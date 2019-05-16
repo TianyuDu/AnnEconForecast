@@ -1,0 +1,63 @@
+---
+title: "Set_13_SETAR"
+output: html_notebook
+---
+
+Set data directory path
+```{r setup, include=FALSE, cache = FALSE}
+library(knitr)
+opts_knit$set(root.dir = "C:/Teaching/Undergrad/data ECO374")
+```
+
+Install and load required packages
+```{r}
+if (!require("tsDyn")) install.packages("tsDyn")
+library(tsDyn)
+library(xts)
+library(anytime)
+```
+
+Download data on 3-month treasury bills
+Source: https://fred.stlouisfed.org/series/TB3MS
+Load, convert to xts format, and plot
+```{r}
+#setwd("C:/Teaching/Undergrad/data ECO374")
+data_TB_full <- read.csv(file="TB3MS.csv", header=TRUE, sep=",")
+
+xtsdata_TB <- xts(x=data_TB_full[c("TB3MS")], order.by=anytime(data_TB_full$DATE))
+ 
+plot.xts(xtsdata_TB, plot.type = c("single"), main ="3-month Treasury Bill interest rate" , legend.loc = "topleft", grid.col="lightgray")
+```
+
+SETAR model
+
+Make a dummy variable for r>7%
+```{r}
+threshold = 7
+n <- length(xtsdata_TB$TB3MS)
+D <- seq(0,0,length.out=n)
+D[which(xtsdata_TB$TB3MS > threshold)] <- 1 
+plot(D, type="l")
+```
+
+Assess evidence for SETAR model
+Note that the results point to two regimes with different dynamics
+```{r}
+Y <- xtsdata_TB$TB3MS
+lagY <- lag(xtsdata_TB$TB3MS, k=1)
+lagYD <- lagY*D
+reg <- lm(Y ~ lagY + D + lagYD)
+summary(reg)
+```
+
+Estimate a SETAR model
+```{r}
+SETAR <- setar(xtsdata_TB$TB3MS, mL=1, mH=1, th=threshold)
+summary(SETAR)
+```
+
+Forecast with SETAR
+```{r}
+predict(SETAR, n.ahead=12)
+```
+

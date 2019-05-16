@@ -1,0 +1,115 @@
+---
+title: "Set_11_Garch"
+output:
+  html_notebook: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+Set data directory path
+```{r setup, include=FALSE, cache = FALSE}
+if (!require("knitr")) install.packages("knitr")
+library(knitr)
+opts_knit$set(root.dir = "C:/Teaching/Undergrad/data ECO374")
+```
+ 
+Install and load required packages
+```{r}
+chooseCRANmirror(graphics=FALSE, ind=33)
+if (!require("fGarch")) install.packages("fGarch")
+
+library(aTSA)
+library(xts)
+library(anytime)
+library(MASS)
+library(moments)
+library(fGarch)
+```
+
+Simulate GARCH(1,1) process with low and high persistence
+```{r}
+spec = garchSpec(model = list(omega = 2, alpha = 0.4, beta = 0.4))
+GARCH1 <- garchSim(spec, n = 1000, extended = TRUE)
+spec = garchSpec(model = list(omega = 2, alpha = 0.1, beta = 0.88))
+GARCH2 <- garchSim(spec, n = 1000, extended = TRUE)
+```
+
+Plot the simulated series
+```{r}
+par(mfcol=c(1,2), mai=c(0.4, 0.4, 0.7, 0.1), cex.main=0.9)
+plot(GARCH1$garch, type="l", ylim=c(-40,40), main = expression(paste("GARCH(1,1): ", alpha, " = 0.4,  ", beta, " = 0.4;","  persistence = 0.67")), cex.main=0.8)
+plot(GARCH2$garch, type="l", ylim=c(-40,40), main = expression(paste("GARCH(1,1): ", alpha, " = 0.1,  ", beta, " = 0.88;", "  persistence = 0.83")), cex.main=0.8)
+```
+
+Plot the conditional standard deviations of the simulated series
+```{r}
+par(mfcol=c(1,2), mai=c(0.4, 0.4, 0.7, 0.1), cex.main=0.9)
+plot(GARCH1$sigma, type="l", ylim=c(0,20), main = expression(paste("GARCH(1,1): std. dev.;","  persistence = 0.67")), cex.main=0.8)
+plot(GARCH2$sigma, type="l", ylim=c(0,20), main = expression(paste("GARCH(1,1): std. dev.;","  persistence = 0.83")), cex.main=0.8)
+```
+
+Unconditional moments: persistence = 0.67
+```{r}
+all.moments(GARCH1$garch, central=TRUE, order.max=4)
+```
+
+Unconditional moments: persistence = 0.83
+```{r}
+all.moments(GARCH2$garch, central=TRUE, order.max=4)
+```
+
+Distributions of GARCH draws (persistence 0.67)
+Note that the distribution is not Normal in a similar way to a typical financial time series.
+```{r}
+r_t1 <- GARCH1$garch
+fit1 <- fitdistr(r_t1, "normal")
+para1 <- fit1$estimate
+
+r_t2 <- GARCH2$garch
+fit2 <- fitdistr(r_t2, "normal")
+para2 <- fit2$estimate
+
+par(mfcol=c(1,2), mai=c(0.4, 0.4, 0.7, 0.1), cex.main=0.9)
+hist(r_t1, prob = TRUE, breaks=50, xlim=c(-15,15), col="lightgrey", main="Histogram of GARCH draws, persistence = 0.67")
+curve(dnorm(x, para1[1], para1[2]), col = 2, add = TRUE)
+hist(r_t2, prob = TRUE, breaks=50, xlim=c(-45,45), col="lightgrey", main="Histogram of GARCH draws, persistence = 0.83")
+curve(dnorm(x, para2[1], para2[2]), col = 2, add = TRUE)
+```
+
+ACF and PACF of the GARCH draws square (variance)
+```{r}
+maxlag <- 20
+ACF1 <- acf(r_t1^2, main=NULL, lag.max=maxlag, plot=FALSE)
+PACF1 <- pacf(r_t1^2, main=NULL, lag.max=maxlag, plot=FALSE)
+
+ACF2 <- acf(r_t2^2, main=NULL, lag.max=maxlag, plot=FALSE)
+PACF2 <- pacf(r_t2^2, main=NULL, lag.max=maxlag, plot=FALSE)
+
+par(mfcol=c(2,2), mai=c(0.4, 0.4, 0.7, 0.1), cex.main=0.9)
+plot(ACF1[1:maxlag], ylim=c(-0.1,0.3), main="ACF of variance, persistence = 0.67")
+plot(PACF1[1:maxlag], ylim=c(-0.1,0.3),main="PACF of variance, persistence = 0.67")
+plot(ACF2[1:maxlag], ylim=c(-0.1,0.3), main="ACF of variance, persistence = 0.83")
+plot(PACF2[1:maxlag], ylim=c(-0.1,0.3),main="PACF of variance, persistence = 0.83")
+```
+
+ACF and PACF of the normalized GARCH draws 
+Note that all the information of the process is contained in the conditional variance.
+Once we normalize with it, there is no more information left.
+```{r}
+maxlag <- 20
+r_t_normalized1 = GARCH1$garch / GARCH1$sigma
+ACF1 <- acf(r_t_normalized1, main=NULL, lag.max=maxlag, plot=FALSE)
+PACF1 <- pacf(r_t_normalized1, main=NULL, lag.max=maxlag, plot=FALSE)
+
+r_t_S_normalized2 = GARCH2$garch / GARCH2$sigma
+ACF2 <- acf(r_t_S_normalized2, main=NULL, lag.max=maxlag, plot=FALSE)
+PACF2 <- pacf(r_t_S_normalized2, main=NULL, lag.max=maxlag, plot=FALSE)
+
+par(mfcol=c(2,2), mai=c(0.4, 0.4, 0.7, 0.1), cex.main=0.9)
+plot(ACF1[1:maxlag], main="ACF of normalized r_t, persistence = 0.67")
+plot(PACF1[1:maxlag], main="PACF of normalized r_t, persistence = 0.67")
+
+plot(ACF2[1:maxlag], main="ACF of normalized r_t, persistence = 0.83")
+plot(PACF2[1:maxlag], main="PACF of normalized r_t, persistence = 0.83")
+```

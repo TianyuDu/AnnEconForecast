@@ -1,0 +1,88 @@
+---
+title: "Set_11_Archp"
+output:
+  html_notebook: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+Set data directory path
+```{r setup, include=FALSE, cache = FALSE}
+if (!require("knitr")) install.packages("knitr")
+library(knitr)
+opts_knit$set(root.dir = "C:/Teaching/Undergrad/data ECO374")
+```
+ 
+Install and load required packages
+```{r}
+chooseCRANmirror(graphics=FALSE, ind=33)
+if (!require("fGarch")) install.packages("fGarch")
+
+library(aTSA)
+library(xts)
+library(anytime)
+library(MASS)
+library(moments)
+library(fGarch)
+```
+
+Simulate ARCH(p)
+```{r}
+spec = garchSpec(model = list(omega = 2, alpha = c(0.3, 0.1, 0.4), beta = 0))
+ARCHp <- garchSim(spec, n = 1000, extended = TRUE)
+
+plot(ARCHp$garch, type="l", main = expression(paste("ARCH(3): ", alpha[1], " = 0.3,  ", alpha[2], " = 0.1,  ", alpha[3], " = 0.4")), cex.main=0.9)
+```
+
+Distributions of ARCH draws
+Note that the distribution is not Normal in a similar way to a typical financial time series.
+```{r}
+r_t <- ARCHp$garch
+fit <- fitdistr(r_t, "normal")
+para <- fit$estimate
+hist(r_t, prob = TRUE, breaks=100, xlim=c(-11,11), col="lightgrey", main="Histogram of ARCH draws", cex.main=0.9)
+curve(dnorm(x, para[1], para[2]), col = 2, add = TRUE)
+```
+
+Moments of the ARCH draws (alpha=0.6)
+```{r}
+all.moments(r_t, central=TRUE, order.max=4)
+```
+
+ACF and PACF of the ARCH draws and their square (variance)
+```{r}
+maxlag <- 30
+ACF <- acf(r_t, main=NULL, lag.max=maxlag, plot=FALSE)
+PACF <- pacf(r_t, main=NULL, lag.max=maxlag, plot=FALSE)
+
+ACF_S <- acf(r_t^2, main=NULL, lag.max=maxlag, plot=FALSE)
+PACF_S <- pacf(r_t^2, main=NULL, lag.max=maxlag, plot=FALSE)
+
+par(mfcol=c(2,2), mai=c(0.4, 0.4, 0.7, 0.1), cex.main=0.9)
+plot(ACF[1:maxlag], ylim=c(-0.1,0.5), main="ACF of ARCH draws")
+plot(PACF[1:maxlag], ylim=c(-0.1,0.5),main="PACF of ARCH draws")
+plot(ACF_S[1:maxlag], ylim=c(-0.1,0.5), main="ACF of ARCH draws SQUARED")
+plot(PACF_S[1:maxlag], ylim=c(-0.1,0.5),main="PACF of ARCH draws SQUARED")
+```
+
+ACF and PACF of the normalized ARCH draws (variance) 
+Note that all the information of the process is contained in the conditional variance.
+Once we normalize with it, there is no more information left.
+```{r}
+maxlag <- 20
+r_t_normalized = ARCHp$garch / ARCHp$sigma
+ACF <- acf(r_t_normalized, main=NULL, lag.max=maxlag, plot=FALSE)
+PACF <- pacf(r_t_normalized, main=NULL, lag.max=maxlag, plot=FALSE)
+
+r_t_S_normalized = ARCHp$garch^2 / ARCHp$sigma^2
+ACF_S <- acf(r_t_S_normalized, main=NULL, lag.max=maxlag, plot=FALSE)
+PACF_S <- pacf(r_t_S_normalized, main=NULL, lag.max=maxlag, plot=FALSE)
+
+par(mfcol=c(2,2), mai=c(0.4, 0.4, 0.7, 0.1), cex.main=0.9)
+plot(ACF[1:maxlag], main="ACF of ARCH draws normalized")
+plot(PACF[1:maxlag], main="PACF of ARCH draws normalized")
+
+plot(ACF_S[1:maxlag], main="ACF of ARCH draws SQUARED normalized")
+plot(PACF_S[1:maxlag], main="PACF of ARCH draws SQUARED normalized")
+```

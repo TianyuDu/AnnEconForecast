@@ -1,0 +1,74 @@
+---
+title: "Set_13_MC"
+output: html_notebook
+---
+
+Set data directory path
+```{r setup, include=FALSE, cache = FALSE}
+library(knitr)
+opts_knit$set(root.dir = "C:/Teaching/Undergrad/data ECO374")
+```
+
+Install and load required packages
+```{r}
+if (!require("statip")) install.packages("statip")
+library(statip)
+```
+
+Simualte a 2-state Markov chain
+```{r}
+n <- 500
+y <- seq(0,0,length.out=n)
+s1 <- seq(0,0,length.out=n+1)
+s2 <- seq(0,0,length.out=n+1)
+e <- rnorm(n, mean = 0, sd = 1)
+
+s1[1] <- 0 # initialize 
+s2[1] <- 1
+
+for (i in 1:500) {
+
+  if (s1[i]==1)  {
+    y[i] <- 1 + e[i]            # model in state 1
+    
+    s1[i+1] <- rbern(1, 0.7)
+    if (s1[i+1]==0) {
+      s2[i+1] <- 1
+    } else {
+      s2[i+1] <- 0
+    }
+    
+    
+  } else {
+    y[i] <- -1 + e[i]
+    
+    s2[i+1] <- rbern(1, 0.9)
+    if (s2[i+1]==0) {
+      s1[i+1] <- 1
+    } else {
+      s1[i+1] <- 0
+    }
+  }
+  
+}
+
+plot(y, type="l")
+
+```
+
+State 1 indicator
+```{r}
+s1
+```
+
+State 2 indicator
+```{r}
+s2
+```
+
+
+Histogram of draws
+```{r}
+hist(y, prob = TRUE, breaks=50, xlim=c(-3,3), col="lightgrey", main="Histogram of MC draws", cex.main=0.9)
+```
+

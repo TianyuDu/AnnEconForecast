@@ -1,0 +1,52 @@
+---
+title: "Set_13_LSTAR"
+output: html_notebook
+---
+
+Set data directory path
+```{r setup, include=FALSE, cache = FALSE}
+library(knitr)
+opts_knit$set(root.dir = "C:/Teaching/Undergrad/data ECO374")
+```
+
+Install and load required packages
+```{r}
+if (!require("tsDyn")) install.packages("tsDyn")
+library(tsDyn)
+library(xts)
+library(anytime)
+```
+
+Download data on U.S. Industrial Production, Quarterly, Continuously Compounded Rate of Change
+Remove any lines with missing values
+Source: https://fred.stlouisfed.org/series/INDPRO
+Load, convert to xts format, and plot
+```{r}
+setwd("C:/Teaching/Undergrad/data ECO374")
+data_IP_full <- read.csv(file="INDPRO.csv", header=TRUE, sep=",")
+xtsdata_IP <- xts(x=data_IP_full[c("INDPRO_CCH")], order.by=anytime(data_IP_full$DATE))
+plot.xts(xtsdata_IP, plot.type = c("single"), main ="U.S. Industrial Production, Q rate of change" , legend.loc = "topleft", grid.col="lightgray")
+```
+
+Estimate an LSTAR model
+```{r}
+LSTAR <- lstar(xtsdata_IP$INDPRO_CCH, m=1, d=1, mL=1, mH=1, gamma=1, th=1)
+summary(LSTAR)
+```
+
+Obtain a linear model approximation
+```{r}
+maxlag <- 24
+ACF <- acf(as.vector(xtsdata_IP$INDPRO_CCH), lag.max=maxlag, plot = FALSE)
+PACF <- pacf(as.vector(xtsdata_IP$INDPRO_CCH), lag.max=maxlag, plot = FALSE)
+par(mfcol=c(1,2), mai=c(0.4, 0.4, 0.7, 0.1), cex.main=0.9)
+plot(ACF[1:maxlag], main="ACF")
+plot(PACF[1:maxlag], main="PACF")
+```
+
+Compare model fit (AIC) with LSTAR
+```{r}
+mlin <- arima(xtsdata_IP$INDPRO_CCH, order = c(1,0,0), include.mean=TRUE)
+summary(mlin)
+```
+
