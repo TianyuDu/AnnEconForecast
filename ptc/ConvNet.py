@@ -24,4 +24,4 @@ def ConvNet(torch.nn.Module):
         self.fc3 = torch.nn.Linear(84, 10)
 
     def forward(self, inputs):
-        
+        pass
