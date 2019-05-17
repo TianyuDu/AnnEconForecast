@@ -18,8 +18,10 @@ autoplot(ts) +
 
 transformed <- diff(ts, lag=1, differences=1)
 
-acf <- Acf(transformed, plot=TRUE)
-pacf <- Pacf(transformed, plot=TRUE)
+ACF <- Acf(transformed, plot=TRUE)
+PACF <-Pacf(transformed, plot=TRUE)
+
+# AR=4, MA=Inf -> ARIMA(4,1,0)
 
 autoplot(transformed) + 
     ggtitle("Differenced Series") +
@@ -27,3 +29,10 @@ autoplot(transformed) +
     ylab("Transformed")
 
 adf.test(transformed)
+
+# ==== Fit and Evaluate the Model ====
+model <- arima(ts, order = c(4,1,0))
+res <- residuals(model)
+mse <- mean(res**2)
+print(mse)
+fore <- predict(model, n.ahead=10)
