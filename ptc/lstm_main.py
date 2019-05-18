@@ -7,27 +7,30 @@ import tqdm
 from matplotlib import pyplot as plt
 plt.style.use("seaborn-dark")
 
-from ptc import data_proc
-from ptc.model import *
+# import ptc.data_proc as data_proc
+import data_proc
+# from ptc.model import *
+from model import *
 
 
-DATASOURCE = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
+CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
+SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
 # if __name__ == '__main__':
-EPOCHS = 3000
+EPOCHS = 1000
 # load data and make training set
 # data = torch.load('traindata.pt')
 df = pd.read_csv(
-    DATASOURCE,
+    SUNSPOT_DATA,
     index_col=0,
-    date_parser=lambda x: datetime.strptime(x, "%Y-%m-01")
+    date_parser=lambda x: datetime.strptime(x, "%Y")
 )
 
 # TODO: preprocessing date, and write reconstruction script.
 
 train_dl, val_dl, train_ds, val_ds = data_proc.gen_data_tensors(
     df,
-    lag=16,
+    lag=8,
     batch_size=32,
     validation_ratio=0.2
 )
@@ -39,11 +42,11 @@ try:
     del(seq)
 except NameError:
     pass 
-seq = SingleLayerLSTM()
+seq = SingleLayerLSTM(neurons=[64])
 seq.double()  # Cast all floating point parameters and buffers to double datatype
 criterion = torch.nn.MSELoss()
 # use LBFGS as optimizer since we can load the whole data to train
-optimizer = torch.optim.Adam(seq.parameters(), lr=0.3)
+optimizer = torch.optim.Adam(seq.parameters(), lr=0.1)
 # begin to train
 with tqdm.trange(EPOCHS) as prg:
     for i in prg:
@@ -51,7 +54,7 @@ with tqdm.trange(EPOCHS) as prg:
         out = seq(train_ds.tensors[0])  # Equivalently, seq.forward(inputs)
         loss = criterion(out, train_ds.tensors[1])
 
-        prg.set_description(f"Epoch [{i}], loss: {loss.item()}")
+        prg.set_description(f"Epoch [{i:0.3f}], loss: {loss.item()}")
 
         loss.backward()
         optimizer.step()
@@ -71,16 +74,16 @@ with torch.no_grad():
     # y = pred.detach().numpy()  # Fetch the result.
 
 # Actual forecast is the first element of every array.
-extract = lambda x: x.detach().numpy()[..., 0]
-forecast = np.concatenate(
-    [extract(pred_train), extract(pred_test)])
-actual = np.concatenate(
-    [extract(train_ds.tensors[1]), extract(val_ds.tensors[1])])
-plt.plot(forecast, label="Predicted")
-plt.plot(actual, label="Actual")
-plt.title("One step forecast")
-plt.legend()
-plt.show()
+# extract = lambda x: x.detach().numpy()[..., 0]
+# forecast = np.concatenate(
+#     [extract(pred_train), extract(pred_test)])
+# actual = np.concatenate(
+#     [extract(train_ds.tensors[1]), extract(val_ds.tensors[1])])
+# plt.plot(forecast, label="Predicted")
+# plt.plot(actual, label="Actual")
+# plt.title("One step forecast")
+# plt.legend()
+# plt.show()
 
 # # draw the result
 # plt.figure(figsize=(30, 10))
