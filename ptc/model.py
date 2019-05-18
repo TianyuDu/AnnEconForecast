@@ -5,7 +5,7 @@ from typing import Set
 
 class SingleLayerLSTM(torch.nn.Module):
     """
-    MANY-TO-MANY MODEL
+    MANY-TO-MANY MODEL.
     """
     def __init__(self, neurons: Set[int]=[32]):
         super().__init__()
