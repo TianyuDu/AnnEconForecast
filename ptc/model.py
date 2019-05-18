@@ -1,12 +1,12 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import torch
-
+from typing import Set
 
 class SingleLayerLSTM(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, neurons: Set[int]=[32]):
         super().__init__()
-        self.lstm_neurons = 32
+        self.lstm_neurons = neurons[0]
         # LSTM Cells.
         # A stacked/multi-layer LSTM model.
         # Number of features in input seq, 1 if univariate time series.
