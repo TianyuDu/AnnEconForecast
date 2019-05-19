@@ -32,7 +32,7 @@ class SlpGenerator(GenericGenerator):
 
     def get_many_to_many(
         self,
-        lag: int = 6
+        lag: int=6
     ) -> (pd.DataFrame, pd.DataFrame):
         """
         Generate themany-to-many supervised learning problem.
@@ -56,9 +56,10 @@ class SlpGenerator(GenericGenerator):
         if self.v:
             print(f"X@{fea.shape}, Y@{tar.shape}")
 
-        # Cast the datatype to float 32
+        # Cast the datatype to float 32, and swap order.
         c = lambda x: x.astype(np.float32)
-        return c(fea), c(tar)
+        swap = lambda x: x[x.columns[::-1]]
+        return swap(c(fea)), swap(c(tar))
 
     def get_many_to_one(self):
         return super().get_many_to_one()
