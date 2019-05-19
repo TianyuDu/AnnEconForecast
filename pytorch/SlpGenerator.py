@@ -90,11 +90,15 @@ class SlpGenerator(GenericGenerator):
             idx_lst.append(t)
         col_names = [f"lag[{i}]" for i in range(1, lag+1)][::-1]
         fea = pd.DataFrame(
-            data=fea_lst, index=idx_lst,
+            data=fea_lst,
+            index=idx_lst,
             columns=col_names
             )
-        tar = pd.DataFrame(data=tar_lst, index=idx_lst,
-        columns=["Target"])
+        tar = pd.DataFrame(
+            data=tar_lst,
+            index=idx_lst,
+            columns=["Target"]
+            )
 
         c = lambda x: x.astype(np.float32)
         swap = lambda x: x[x.columns[::-1]]
@@ -108,6 +112,15 @@ class SlpGenerator(GenericGenerator):
 
 
 if __name__ == "__main__":
-    df2 = pd.DataFrame(list(range(30)))
+    # The artificial time series
+    df2 = pd.DataFrame(
+        data=[x+0.1 for x in list(range(30))],
+        index=range(1980, 2010))
     g = SlpGenerator(df2)
-    fea, tar = g.get_many_to_many()
+    fea, tar = g.get_many_to_one()
+    print("features")
+    print(fea.head())
+    print(fea.tail())
+    print("targets")
+    print(tar.head())
+    print(tar.tail())
