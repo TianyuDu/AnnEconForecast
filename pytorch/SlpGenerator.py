@@ -56,8 +56,9 @@ class SlpGenerator(GenericGenerator):
         if self.v:
             print(f"X@{fea.shape}, Y@{tar.shape}")
 
-        # Cast the datatype
-        return fea.astype(np.float32), tar.astype(np.float32)
+        # Cast the datatype to float 32
+        c = lambda x: x.astype(np.float32)
+        return c(fea), c(tar)
 
     def get_many_to_one(self):
         return super().get_many_to_one()
