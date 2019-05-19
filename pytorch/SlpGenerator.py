@@ -36,9 +36,9 @@ class SlpGenerator(GenericGenerator):
     ) -> (pd.DataFrame, pd.DataFrame):
         """
         Generate themany-to-many supervised learning problem.
-        For each time step t:
-            fea(tures): (t, t+1, ..., t+lag)
-            tar(gets): (t+1, t+2, ..., t+lag+1)
+        For each time step t, the associated fea, tar are
+            fea: [t-lag, t-lag+1, ..., t-1]
+            tar: [t-lag+1, t-lag+2, ..., t]
         """
         lagged = [self.df.shift(i) for i in range(lag + 1)]
         col_names = [f"lag[{i}]" for i in range(lag + 1)]
