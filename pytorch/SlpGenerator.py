@@ -35,7 +35,8 @@ class SlpGenerator(GenericGenerator):
         lag: int=6
     ) -> (pd.DataFrame, pd.DataFrame):
         """
-        Generate themany-to-many supervised learning problem.
+        Generate the many-to-many (shift) supervised learning problem.
+        For one period forecasting.
         For each time step t, the associated fea, tar are
             fea: [t-lag, t-lag+1, ..., t-1]
             tar: [t-lag+1, t-lag+2, ..., t]
@@ -52,7 +53,6 @@ class SlpGenerator(GenericGenerator):
             f"The shape of features and targets in the N-to-N supervised \
                 learning problem should be the same. \
                 Shapes received: X@{fea.shape}, Y@{tar.shape}."
-
         if self.v:
             print(f"X@{fea.shape}, Y@{tar.shape}")
 
