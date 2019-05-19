@@ -1,5 +1,5 @@
 """
-Mar. 12 2019
+Created: Mar. 12 2019
 Generate one step batch training from fred dataset.
 """
 import numpy as numpy
@@ -23,24 +23,6 @@ def summarize_dataset(df: pd.DataFrame) -> None:
         print(f"* Features: Number of features: {df.shape[1]}")
     except IndexError:
         print(f"* Features: Univariate series.")
-
-
-def generate_supervised(
-    df: pd.DataFrame,
-    lag: int = 6
-) -> (pd.DataFrame, pd.DataFrame):
-    summarize_dataset(df)
-    lagged = [df.shift(i) for i in range(lag + 1)]
-    col_names = [f"lag[{i}]" for i in range(lag + 1)]
-    frame = pd.concat(lagged, axis=1)
-    frame.columns = col_names
-    frame.dropna(inplace=True)
-    # In N-to-N models, 
-    features = frame.iloc[:, 1:]
-    target = frame.iloc[:, :-1]
-    assert features.shape == target.shape, "Something went wrong."
-    print(f"X@{features.shape}, Y@{target.shape}")
-    return features, target
 
 
 def gen_data_tensors(
