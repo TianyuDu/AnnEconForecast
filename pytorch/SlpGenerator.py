@@ -61,8 +61,51 @@ class SlpGenerator(GenericGenerator):
         swap = lambda x: x[x.columns[::-1]]
         return swap(c(fea)), swap(c(tar))
 
-    def get_many_to_one(self):
-        return super().get_many_to_one()
+    def get_many_to_one(
+        self,
+        lag: int=6
+    ) -> (pd.DataFrame, pd.DataFrame):
+        """
+        Generate the many-to-one (last) supervised learning problem.
+        For each time step t, the associated fea, tar are
+            fea: [t-lag, t-lag+1, ..., t-1]
+            tar: [t]
+        """
+        indices = list(self.df.index)
+        fea_lst, tar_lst, idx_lst= [], [], []
+        for (i, t) in enumerate(indices):
+            # ==== Debug ====
+            assert t == indices[i]
+            # ==== End ====
+            cur_fea = self.df.iloc[i-lag:i]
+            if cur_fea.empty:
+                if self.v:
+                    print(f"At timestep {t}, not sufficient lags, dropped.")
+                continue
+            cur_tar = self.df.iloc[[i]]
+            # Extract
+            e = lambda x: np.squeeze(x.values)
+            fea_lst.append(e(cur_fea))
+            tar_lst.append(e(cur_tar))
+            idx_lst.append(t)
+        col_names = [f"lag[{i}]" for i in range(1, lag+1)][::-1]
+        fea = pd.DataFrame(
+            data=fea_lst, index=idx_lst,
+            columns=col_names
+            )
+        tar = pd.DataFrame(data=tar_lst, index=idx_lst,
+        columns=["Target"])
+
+        c = lambda x: x.astype(np.float32)
+        swap = lambda x: x[x.columns[::-1]]
+        fea, tar = swap(c(fea)), swap(c(tar))
+        assert len(fea) == len(tar), \
+            "The number of observations in feature and target \
+            data frame do not agree."
+        if self.v:
+            print(f"X@{fea.shape}, Y@{tar.shape}")
+        return swap(c(fea)), swap(c(tar))
+
 
 if __name__ == "__main__":
     df2 = pd.DataFrame(list(range(30)))
