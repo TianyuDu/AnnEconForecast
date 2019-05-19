@@ -1,8 +1,13 @@
 """
 Converting time series to suprevised learning problems.
 """
+from typing import Union
+
 import numpy as np
 import pandas as pd
+import torch
+from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader, TensorDataset
 
 import data_proc
 
@@ -109,6 +114,47 @@ class SlpGenerator(GenericGenerator):
         if self.v:
             print(f"X@{fea.shape}, Y@{tar.shape}")
         return swap(c(fea)), swap(c(tar))
+
+
+    def get_tensors(
+        self,
+        mode: Union["NtoN", "Nto1"],
+        lag: int=6,
+        shuffle: bool=True,
+        batch_size: int=32,
+        validation_ratio: float=0.2
+    ) -> (DataLoader, DataLoader, TensorDataset, TensorDataset):
+        """
+        Primary goal: create dataloader object.
+        """
+        if mode == "NtoN":
+            x_train, y_train = self.get_many_to_many(lag=lag)
+        elif mode == "Nto1":
+            x_train, y_train = self.get_many_to_one(lag=lag)
+        else:
+            raise ValueError(
+                f"Undefined mode, avaiable: NtoN, Nto1. Received {mode}.")
+        # Transform DataFrame to NumpyArray.
+        x_train, y_train = map(lambda x: x.values, (x_train, y_train))
+        # Generating Validation Set.
+        x_train, x_val, y_train, y_val = train_test_split(
+            x_train, y_train, test_size=validation_ratio, shuffle=shuffle
+        )
+        # Transform to Tensor
+        x_train, y_train, x_val, y_val = map(
+            torch.tensor, (x_train, y_train, x_val, y_val)
+        )
+
+        assert batch_size <= x_train.shape[0] and batch_size <= x_val.shape[0],\
+            "Batch size cannot be greater than number of training or validation instances."
+
+        train_ds = TensorDataset(x_train, y_train)
+        train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=shuffle)
+
+        val_ds = TensorDataset(x_val, y_val)
+        val_dl = DataLoader(val_ds, batch_size=batch_size, shuffle=shuffle)
+
+        return train_dl, val_dl, train_ds, val_ds
 
 
 if __name__ == "__main__":
