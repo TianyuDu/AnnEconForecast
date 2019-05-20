@@ -45,8 +45,8 @@ if __name__ == "__main__":
     net = FcModel.FcNet(num_fea=lags, num_tar=1, neurons=neurons)
     optimizer = torch.optim.Adam(net.parameters(), lr=0.01)
     criterion = torch.nn.MSELoss()
-    train_log = logger()
-    val_log = logger()
+    train_log = TrainLogger()
+    val_log = TrainLogger()
 
     with tqdm.trange(epochs) as prg:
         for i in prg:
