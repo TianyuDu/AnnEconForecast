@@ -18,6 +18,18 @@ from Logger import logger
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
+# Let's call hyper-parameters profile.
+PROFILE = {
+    "train_size": 231, # Include both training and validation sets.
+    "test_size": 58,
+    "lags": 6,
+    "vr": 0.2, # Validation ratio.
+    "neurons": (64, 128, 256),
+    "epochs": 100
+}
+
+if __name__ == "__main__":
+    globals().update(PROFILE)
 df = pd.read_csv(
     SUNSPOT_DATA,
     index_col=0,
