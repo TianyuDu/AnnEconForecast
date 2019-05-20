@@ -10,7 +10,7 @@ plt.style.use("seaborn-dark")
 # import ptc.data_proc as data_proc
 import data_proc
 # from ptc.model import *
-from model import *
+from LstmModel import *
 
 
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
@@ -54,7 +54,7 @@ with tqdm.trange(EPOCHS) as prg:
         out = seq(train_ds.tensors[0])  # Equivalently, seq.forward(inputs)
         loss = criterion(out, train_ds.tensors[1])
 
-        prg.set_description(f"Epoch [{i:0.3f}], loss: {loss.item()}")
+        prg.set_description(f"Epoch [{i}], loss: {loss.item():0.6f}")
 
         loss.backward()
         optimizer.step()
