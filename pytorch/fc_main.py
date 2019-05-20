@@ -10,6 +10,7 @@ import tqdm
 import torch
 import FcModel
 import SlpGenerator
+from Logger import logger
 
 # NOTE: reme mber to uncomment this.
 # if __name__ == "__main__":
@@ -31,30 +32,10 @@ train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
     mode="Nto1", lag=6, shuffle=True, batch_size=32, validation_ratio=0.2
 )
 
-net = FcModel.FcNet(num_fea=6, num_tar=1, neurons=(128, 256, 512))
+net = FcModel.FcNet(num_fea=6, num_tar=1, neurons=(64, 128, 256))
 optimizer = torch.optim.Adam(net.parameters(), lr=0.01)
 criterion = torch.nn.MSELoss()
-EPOCHS = 200
-class logger:
-    def __init__(self):
-        self.t, self.v = [], []
-
-    def __repr__(self):
-        return f"Log with:\n\ttime={self.t}\n\tvalue={self.v}"
-
-    def add(self, time, value):
-        self.t.append(time)
-        self.v.append(value)
-
-    def clear(self):
-        self.__init__()
-
-    def get_array(self):
-        return np.array(self.t), np.array(self.v)
-
-    def get_df(self):
-        return pd.DataFrame(data=self.v, index=self.t)
-
+EPOCHS = 100
 train_log = logger()
 val_log = logger()
 
@@ -91,7 +72,7 @@ for i in range(EPOCHS):
     print(f"Epoch: {i}\tTotal Loss: {train_loss:0.6f}\tLatest Val Loss: {val_loss:0.6f}")
 
 # Create plot
-plt.plot(train_log.get_df(), label="Train Loss")
-plt.plot(val_log.get_df(), label="Validation Loss")
+plt.plot(train_log.get_df(ln=True), label="Train Loss")
+plt.plot(val_log.get_df(ln=True), label="Validation Loss")
 plt.legend()
 plt.show()
