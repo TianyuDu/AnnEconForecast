@@ -10,7 +10,7 @@ import tqdm
 import torch
 import FcModel
 import SlpGenerator
-from Logger import logger
+import Logger
 
 
 # Settings 
@@ -45,12 +45,12 @@ if __name__ == "__main__":
     net = FcModel.FcNet(num_fea=lags, num_tar=1, neurons=neurons)
     optimizer = torch.optim.Adam(net.parameters(), lr=0.01)
     criterion = torch.nn.MSELoss()
-    train_log = TrainLogger()
-    val_log = TrainLogger()
+    train_log = Logger.TrainLogger()
+    val_log = Logger.TrainLogger()
 
     with tqdm.trange(epochs) as prg:
         for i in prg:
-            train_loss = 0.
+            train_loss = []
             for batch_idx, (data, target) in enumerate(train_dl):
                 # data, target = Variable(data), Variable(target)
                 data, target = map(torch.Tensor, (data, target))
@@ -61,25 +61,25 @@ if __name__ == "__main__":
                 optimizer.zero_grad()
                 out = net(data)
                 loss = criterion(out, target)
-                train_loss += loss.data.item()
+                train_loss.append(loss.data.item())
                 loss.backward()
                 optimizer.step()
                 # if batch_idx % 50 == 0:
                 #     print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 #         i, batch_idx * len(data), len(train_dl.dataset),
                 #         100. * batch_idx / len(train_dl), loss.data.item()))
-            train_log.add(i, train_loss)
+            train_log.add(i, np.mean(train_loss))
             if i % 10 == 0:
-                val_loss = 0.
+                val_loss = []
                 with torch.no_grad():
                     for batch_idx, (data, target) in enumerate(val_dl):
                         data, target = map(torch.Tensor, (data, target))
                         out = net(data)
                         loss = criterion(out, target)
-                        val_loss += loss.data.item()
+                        val_loss.append(loss.data.item())
                 val_log.add(i, val_loss)
             prg.set_description(
-                f"Epoch [{i}/{epochs}]: TrainLoss={train_loss: 0.3f}, ValLoss={val_loss: 0.3f}")
+                f"Epoch [{i}/{epochs}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
             # print(f"Epoch: {i}\tTotal Loss: {train_loss:0.6f}\tLatest Val Loss: {val_loss:0.6f}")
 
     # Create plot
