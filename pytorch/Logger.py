@@ -1,6 +1,9 @@
 """
 May 19 2019
 """
+import numpy as np
+import pandas as pd
+
 
 class logger:
     """
