@@ -13,12 +13,20 @@ setwd("/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast")
 df <- read.csv("./data/sunspots.csv", header=TRUE, sep=",", col.names=c("Year", "Sunspots"))
 
 ts_all <- ts(df$Sunspots,start=c(1700),frequency=1)
+
 # Train and test spliting
 train_size <- as.integer(0.8 * length(ts_all))
 test_size <- length(ts_all) - train_size
 
 ts_train <- head(ts_all, train_size)
 ts_test <- tail(ts_all, test_size)
+
+# Forecasting of naive preddictor, as a baseline model.
+baseline_error <- mean(
+    diff(ts_test) ** 2
+)
+cat(baseline_error)
+# ==== End ====
 
 autoplot(ts_train) +
     ggtitle("Number of sunspots") +
