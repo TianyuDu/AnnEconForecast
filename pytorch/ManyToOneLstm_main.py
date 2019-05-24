@@ -26,7 +26,6 @@ PROFILE = {
     "epochs": 1000
 }
 
-
 # if __name__ == '__main__':
 globals().update(PROFILE)
 # load data and make training set
