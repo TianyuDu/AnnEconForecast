@@ -14,7 +14,7 @@ class Net(torch.nn.Module):
         num_fea: int,
         num_tar: int,
         neurons: Set[int]
-        ):
+    ) -> None:
         super().__init__()
         OUT_SIZE=1
         self.fc1 = torch.nn.Linear(num_fea, neurons[0])
