@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 
-class TrainLogger():
+class Logger():
     """
     The logger object is used to store metrics on training and 
     validation set during the training process.
