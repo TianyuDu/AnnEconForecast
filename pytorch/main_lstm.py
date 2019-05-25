@@ -63,20 +63,16 @@ net = LSTM.PoolingLSTM(
 
 net.double()  # Cast all floating point parameters and buffers to double datatype
 criterion = torch.nn.MSELoss()
-# use LBFGS as optimizer since we can load the whole data to train
 optimizer = torch.optim.Adam(net.parameters(), lr=0.03)
 
-# train_log = Logger.TrainLogger()
-# val_log = Logger.TrainLogger()
-# begin to train
-with tqdm.trange(EPOCHS) as prg:
+with tqdm.trange(EPOCHS) as prg, SummaryWriter(comment=LOG_NAME) as writer:
     for i in prg:
         train_loss = []
+        # TODO: rename all data to feature
         for batch_idx, (data, target) in enumerate(train_dl):
             # data, target = Variable(data), Variable(target)
             data, target = map(torch.Tensor, (data, target))
             data, target = data.double(), target.double()
-
             optimizer.zero_grad()
             out = net(data)
             loss = criterion(out, target)
@@ -109,10 +105,11 @@ with tqdm.trange(EPOCHS) as prg:
         prg.set_description(
             f"Epoch [{i+1}/{EPOCHS}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
         # print(f"Epoch: {i}\tTotal Loss: {train_loss:0.6f}\tLatest Val Loss: {val_loss:0.6f}")
-        writer.add_graph(net, (torch.zeros(LAGS)))
-        with open(writer.logdir + "/profile.json", "a") as f:
-            encoded = json.dumps(PROFILE)
-            f.write(encoded)
+    # TODO: deal with the add graph function here.
+    # writer.add_graph(net, (torch.zeros(32, LAGS)))
+    with open(writer.logdir + "/profile.json", "a") as f:
+        encoded = json.dumps(PROFILE)
+        f.write(encoded)
 
 # begin to predict, no need to track gradient here
 # with torch.no_grad():
