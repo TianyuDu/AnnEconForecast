@@ -16,10 +16,9 @@ class Net(torch.nn.Module):
         neurons: Set[int]
     ) -> None:
         super().__init__()
-        OUT_SIZE=1
         self.fc1 = torch.nn.Linear(num_fea, neurons[0])
         self.fc2 = torch.nn.Linear(neurons[0], neurons[1])
-        self.fc3 = torch.nn.Linear(neurons[1], OUT_SIZE)
+        self.fc3 = torch.nn.Linear(neurons[1], num_tar)
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
