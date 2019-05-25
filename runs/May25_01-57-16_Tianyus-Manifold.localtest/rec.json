@@ -1,1 +1,0 @@
-{"train_size": 231, "test_size": 58, "lags": 6, "vr": 0.2, "neurons": [64, 258], "epochs": 100, "LOG_NAME": "void"}
