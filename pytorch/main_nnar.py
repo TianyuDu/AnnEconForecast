@@ -34,6 +34,12 @@ PROFILE = {
 
 if __name__ == "__main__":
     globals().update(PROFILE)
+    try:
+        LOG_NAME = input("Log name ([Enter] for default name): ")
+        assert LOG_NAME != ""
+    except AssertionError:
+        print(f"Default name: {LOG_NAME} is used.")
+
     df = pd.read_csv(
         SUNSPOT_DATA,
         index_col=0,
