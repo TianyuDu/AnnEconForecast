@@ -18,12 +18,12 @@ CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconFor
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
 PROFILE = {
-    "train_size": 231,  # Include both training and validation sets.
-    "test_size": 58,
-    "lags": 8,
-    "vr": 0.2,  # Validation ratio.
-    "neurons": (64, 128),
-    "epochs": 1000
+    "TRAIN_SIZE": 231,  # Include both training and validation sets.
+    "TEST_SIZE": 58,
+    "LAGS": 8,
+    "VAL_RATIO": 0.2,  # Validation ratio.
+    "NEURONS": (64, 128),
+    "EPOCHS": 1000
 }
 
 # if __name__ == '__main__':
@@ -38,16 +38,16 @@ df = pd.read_csv(
 
 # TODO: preprocessing date, and write reconstruction script.
 
-df_train, df_test = df[:train_size], df[-test_size:]
+df_train, df_test = df[:TRAIN_SIZE], df[-TEST_SIZE:]
 
 gen = SlpGenerator.SlpGenerator(df_train)
-fea, tar = gen.get_many_to_one(lag=lags)
+fea, tar = gen.get_many_to_one(lag=LAGS)
 train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
-    mode="Nto1", lag=lags, shuffle=True, batch_size=32, validation_ratio=vr
+    mode="Nto1", lag=LAGS, shuffle=True, batch_size=32, validation_ratio=VAL_RATIO
 )
 # build the model
 net = ManyToOneLSTM.ManyToOneLSTM(
-    neurons=neurons
+    neurons=NEURONS
 )
 net.double()  # Cast all floating point parameters and buffers to double datatype
 criterion = torch.nn.MSELoss()
@@ -57,7 +57,7 @@ optimizer = torch.optim.Adam(net.parameters(), lr=0.03)
 train_log = Logger.TrainLogger()
 val_log = Logger.TrainLogger()
 # begin to train
-with tqdm.trange(epochs) as prg:
+with tqdm.trange(EPOCHS) as prg:
     for i in prg:
         train_loss = []
         for batch_idx, (data, target) in enumerate(train_dl):
@@ -83,7 +83,7 @@ with tqdm.trange(epochs) as prg:
                     val_loss.append(loss.data.item())
             val_log.add(i, np.mean(val_loss))
         prg.set_description(
-            f"Epoch [{i}/{epochs}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
+            f"Epoch [{i}/{EPOCHS}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
         # print(f"Epoch: {i}\tTotal Loss: {train_loss:0.6f}\tLatest Val Loss: {val_loss:0.6f}")
 
 
