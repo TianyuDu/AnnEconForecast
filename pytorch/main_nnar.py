@@ -74,7 +74,15 @@ if __name__ == "__main__":
                 loss.backward()
                 optimizer.step()
             # train_log.add(i, np.mean(train_loss))
-            writer.add_scalar("loss/train_loss", np.mean(train_loss), i)
+            # Write MSE
+            writer.add_scalars(
+                "loss/mse", {"Train": np.mean(train_loss)}, i
+            )
+            # Write RMSE
+            func = lambda x: np.sqrt(np.mean(x))
+            writer.add_scalars(
+                "loss/rmse", {"Train": func(train_loss)}, i
+            )
             if i % 5 == 0:
                 val_loss = []
                 with torch.no_grad():
@@ -84,7 +92,13 @@ if __name__ == "__main__":
                         loss = criterion(out, target)
                         val_loss.append(loss.data.item())
                 # val_log.add(i, np.mean(val_loss))
-                writer.add_scalar("loss/val_loss", np.mean(val_loss), i)
+                writer.add_scalars(
+                    "loss/mse", {"Validation": np.mean(val_loss)}, i
+                )
+
+                writer.add_scalars(
+                    "loss/rmse", {"Validation": func(val_loss)}, i
+                )
             prg.set_description(
                 f"Epoch [{i+1}/{EPOCHS}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
         writer.add_graph(net, (torch.zeros(LAGS)))
