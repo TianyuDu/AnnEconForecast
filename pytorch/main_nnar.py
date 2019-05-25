@@ -22,12 +22,13 @@ SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForec
 
 # Let's call hyper-parameters profile.
 PROFILE = {
-    "train_size": 231, # Include both training and validation sets.
-    "test_size": 58,
-    "lags": 6,
-    "vr": 0.2, # Validation ratio.
-    "neurons": (64, 128),
-    "epochs": 300,
+    "MODEL": "NNAR",
+    "TRAIN_SIZE": 231, # Include both training and validation sets.
+    "TEST_SIZE": 58,
+    "LAGS": 6,
+    "VAL_RATIO": 0.2, # Validation ratio.
+    "NEURONS": (64, 128),
+    "EPOCHS": 300,
     "LOG_NAME": "null3" # Name for tensorboard logs.
 }
 
@@ -38,22 +39,22 @@ if __name__ == "__main__":
         index_col=0,
         date_parser=lambda x: datetime.strptime(x, "%Y")
     )
-    df_train, df_test = df[:train_size], df[-test_size:]
+    df_train, df_test = df[:TRAIN_SIZE], df[-TEST_SIZE:]
     print(f"Train&validation size: {len(df_train)}, test size: {len(df_test)}")
 
     gen = SlpGenerator.SlpGenerator(df_train)
-    fea, tar = gen.get_many_to_one(lag=lags)
+    fea, tar = gen.get_many_to_one(lag=LAGS)
     train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
-        mode="Nto1", lag=lags, shuffle=True, batch_size=32, validation_ratio=vr
+        mode="Nto1", lag=LAGS, shuffle=True, batch_size=32, validation_ratio=VAL_RATIO
     )
 
-    net = FcModel.Net(num_fea=lags, num_tar=1, neurons=neurons)
+    net = FcModel.Net(num_fea=LAGS, num_tar=1, neurons=NEURONS)
     optimizer = torch.optim.Adam(net.parameters(), lr=0.01)
     criterion = torch.nn.MSELoss()
     # train_log = LogUtility.Logger()
     # val_log = LogUtility.Logger()
 
-    with tqdm.trange(epochs) as prg, SummaryWriter(comment=LOG_NAME) as writer:
+    with tqdm.trange(EPOCHS) as prg, SummaryWriter(comment=LOG_NAME) as writer:
         for i in prg:
             train_loss = []
             for batch_idx, (data, target) in enumerate(train_dl):
@@ -77,7 +78,7 @@ if __name__ == "__main__":
                 val_log.add(i, np.mean(val_loss))
                 writer.add_scalar("val_loss", np.mean(val_loss), i)
             prg.set_description(
-                f"Epoch [{i+1}/{epochs}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
+                f"Epoch [{i+1}/{EPOCHS}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
 
     # Create plot
     # plt.close()
