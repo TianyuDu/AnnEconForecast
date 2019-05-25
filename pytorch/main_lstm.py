@@ -8,7 +8,6 @@ import tqdm
 from matplotlib import pyplot as plt
 from tensorboardX import SummaryWriter
 
-import SlpGenerator
 # import Logger
 import LSTM
 import SlpGenerator
@@ -85,6 +84,14 @@ with tqdm.trange(EPOCHS) as prg:
             loss.backward()
             optimizer.step()
         # # train_log.add(i, np.mean(train_loss))
+        # MSE Loss
+        writer.add_scalars(
+            "loss/mse", {"Train": np.mean(train_loss)}, i)
+        # RMSE Loss
+        func = lambda x: np.sqrt(np.mean(x))
+        writer.add_scalars(
+            "loss/rmse", {"Train": func(train_loss)}, i)
+
         if i % 10 == 0:
             val_loss = []
             with torch.no_grad():
@@ -95,16 +102,23 @@ with tqdm.trange(EPOCHS) as prg:
                     loss = criterion(out, target)
                     val_loss.append(loss.data.item())
             # val_log.add(i, np.mean(val_loss))
+            writer.add_scalars(
+                "loss/mse", {"Validation": np.mean(val_loss)}, i)
+            writer.add_scalars(
+                "loss/rmse", {"Validation": func(val_loss)}, i)
         prg.set_description(
             f"Epoch [{i+1}/{EPOCHS}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
         # print(f"Epoch: {i}\tTotal Loss: {train_loss:0.6f}\tLatest Val Loss: {val_loss:0.6f}")
-
+        writer.add_graph(net, (torch.zeros(LAGS)))
+        with open(writer.logdir + "/profile.json", "a") as f:
+            encoded = json.dumps(PROFILE)
+            f.write(encoded)
 
 # begin to predict, no need to track gradient here
-with torch.no_grad():
-    pred_train = net(train_ds.tensors[0], future=True)
-    loss = criterion(pred_train[:, :-future], train_ds.tensors[1])
-    print("train loss", loss.item())
+# with torch.no_grad():
+#     pred_train = net(train_ds.tensors[0], future=True)
+#     loss = criterion(pred_train[:, :-future], train_ds.tensors[1])
+#     print("train loss", loss.item())
 
 # with torch.no_grad():
 #     future = 1
