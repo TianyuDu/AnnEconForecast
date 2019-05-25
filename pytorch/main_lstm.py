@@ -28,7 +28,8 @@ PROFILE = {
     "VAL_RATIO": 0.2,  # Validation ratio.
     "NEURONS": (32, 64),
     "EPOCHS": 100,
-    "LOG_NAME": "null"
+    "LOG_NAME": "untitled",
+    "TASK_NAME": "Pooling LSTM on sunspot"
 }
 
 # if __name__ == '__main__':
@@ -107,15 +108,43 @@ with tqdm.trange(EPOCHS) as prg, SummaryWriter(comment=LOG_NAME) as writer:
         # print(f"Epoch: {i}\tTotal Loss: {train_loss:0.6f}\tLatest Val Loss: {val_loss:0.6f}")
     # TODO: deal with the add graph function here.
     # writer.add_graph(net, (torch.zeros(32, LAGS)))
-    with open(writer.logdir + "/profile.json", "a") as f:
+
+    # Save the training profile.
+    with open("./" + writer.logdir + "/profile.json", "a") as f:
         encoded = json.dumps(PROFILE)
         f.write(encoded)
 
-# begin to predict, no need to track gradient here
-# with torch.no_grad():
-#     pred_train = net(train_ds.tensors[0], future=True)
-#     loss = criterion(pred_train[:, :-future], train_ds.tensors[1])
-#     print("train loss", loss.item())
+    # begin to predict, no need to track gradient here
+    with torch.no_grad():
+        gen_test = SlpGenerator.SlpGenerator(df_test, verbose=False)
+        fea_df, tar_df = gen_test.get_many_to_one(lag=LAGS)
+        assert len(fea_df) == len(tar_df)
+
+        pred = list()
+        for i in range(len(fea_df)):
+            f = lambda x, idx: torch.Tensor(x.iloc[idx].values)
+            feature = f(fea_df, i)
+            feature = feature.view(1, feature.shape[0])
+            feature = feature.double()
+            pred.append(net(feature))
+        
+        pred_df = pd.DataFrame(
+            data=np.array(pred),
+            index=tar_df.index
+        )
+        total = pd.concat([tar_df, pred_df])
+        mse = np.mean((pred_df.values - tar_df.values) ** 2)
+        fig = plt.figure(dpi=200)
+        # plt.plot(np.random.rand(10), linewidth=0.7, alpha=0.6)
+        plt.plot(total)
+        plt.grid()
+        plt.title(f"Test Set of {TASK_NAME} After {EPOCHS} Epochs")
+        plt.xlabel("Date")
+        plt.ylabel("Value")
+        plt.legend(["Actual", f"Forecast, MSE={mse}"])
+        writer.add_figure("Test set predictions", fig)
+
+        # print("train loss", loss.item())
 
 # with torch.no_grad():
 #     future = 1
