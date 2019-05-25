@@ -3,19 +3,22 @@ Main model for the fully-connected ANN
 NNAR, neural network auto-regression.
 """
 import json
+from datetime import datetime
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from datetime import datetime
-import matplotlib.pyplot as plt
-plt.style.use("seaborn-dark")
-
-import tqdm
 import torch
+import tqdm
 from tensorboardX import SummaryWriter
 
 import FcModel
-import SlpGenerator
 import LogUtility
+import SlpGenerator
+
+plt.style.use("seaborn-dark")
+
+
 
 # Settings 
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
