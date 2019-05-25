@@ -28,7 +28,8 @@ PROFILE = {
     "LAGS": 12,
     "VAL_RATIO": 0.2,  # Validation ratio.
     "NEURONS": (32, 64),
-    "EPOCHS": 100
+    "EPOCHS": 100,
+    "LOG_NAME": "null"
 }
 
 # if __name__ == '__main__':
