@@ -34,8 +34,13 @@ PROFILE = {
 
 # if __name__ == '__main__':
 globals().update(PROFILE)
-# load data and make training set
-# data = torch.load('traindata.pt')
+try:
+    input_name = input("Log name ([Enter] for default name): ")
+    assert input_name != ""
+    LOG_NAME = input_name
+except AssertionError:
+    print(f"Default name: {LOG_NAME} is used.")
+
 df = pd.read_csv(
     SUNSPOT_DATA,
     index_col=0,
