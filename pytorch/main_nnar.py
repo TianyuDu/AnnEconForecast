@@ -2,6 +2,7 @@
 Main model for the fully-connected ANN
 NNAR, neural network auto-regression.
 """
+import json
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -29,7 +30,7 @@ PROFILE = {
     "VAL_RATIO": 0.2, # Validation ratio.
     "NEURONS": (64, 128),
     "EPOCHS": 100,
-    "LOG_NAME": "new_test" # Name for tensorboard logs.
+    "LOG_NAME": "null" # Name for tensorboard logs.
 }
 
 if __name__ == "__main__":
@@ -40,7 +41,7 @@ if __name__ == "__main__":
         LOG_NAME = input_name
     except AssertionError:
         print(f"Default name: {LOG_NAME} is used.")
-
+    
     df = pd.read_csv(
         SUNSPOT_DATA,
         index_col=0,
@@ -87,6 +88,9 @@ if __name__ == "__main__":
             prg.set_description(
                 f"Epoch [{i+1}/{EPOCHS}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
         writer.add_graph(net, (torch.zeros(LAGS)))
+        encoded = json.dumps(PROFILE)
+        with open(writer.logdir + "/profile.json", "a") as f:
+            f.write(encoded)
 
     # Create plot
     # plt.close()
