@@ -55,7 +55,7 @@ class StackedLSTM(torch.nn.Module):
 
 class PoolingLSTM(StackedLSTM, torch.nn.Module):
     """
-    This is the last output LSTM
+    The pooling LSTM.
     """
     def __init__(
         self,
