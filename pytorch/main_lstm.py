@@ -8,8 +8,8 @@ from matplotlib import pyplot as plt
 plt.style.use("seaborn-dark")
 
 import SlpGenerator
-import Logger
-import ManyToOneLSTM
+# import Logger
+import LSTM
 # import ptc.data_proc as data_proc
 # from ptc.model import *
 
@@ -20,10 +20,10 @@ SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForec
 PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
-    "LAGS": 8,
+    "LAGS": 12,
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "NEURONS": (64, 128),
-    "EPOCHS": 1000
+    "NEURONS": (32, 64),
+    "EPOCHS": 100
 }
 
 # if __name__ == '__main__':
@@ -40,22 +40,24 @@ df = pd.read_csv(
 
 df_train, df_test = df[:TRAIN_SIZE], df[-TEST_SIZE:]
 
-gen = SlpGenerator.SlpGenerator(df_train)
+gen = SlpGenerator.SlpGenerator(df_train, verbose=False)
 fea, tar = gen.get_many_to_one(lag=LAGS)
 train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
     mode="Nto1", lag=LAGS, shuffle=True, batch_size=32, validation_ratio=VAL_RATIO
 )
 # build the model
-net = ManyToOneLSTM.ManyToOneLSTM(
+net = LSTM.PoolingLSTM(
+    lags=LAGS,
     neurons=NEURONS
 )
+
 net.double()  # Cast all floating point parameters and buffers to double datatype
 criterion = torch.nn.MSELoss()
 # use LBFGS as optimizer since we can load the whole data to train
 optimizer = torch.optim.Adam(net.parameters(), lr=0.03)
 
-train_log = Logger.TrainLogger()
-val_log = Logger.TrainLogger()
+# train_log = Logger.TrainLogger()
+# val_log = Logger.TrainLogger()
 # begin to train
 with tqdm.trange(EPOCHS) as prg:
     for i in prg:
@@ -71,7 +73,7 @@ with tqdm.trange(EPOCHS) as prg:
             train_loss.append(loss.data.item())
             loss.backward()
             optimizer.step()
-        train_log.add(i, np.mean(train_loss))
+        # # train_log.add(i, np.mean(train_loss))
         if i % 10 == 0:
             val_loss = []
             with torch.no_grad():
@@ -81,18 +83,17 @@ with tqdm.trange(EPOCHS) as prg:
                     out = net(data)
                     loss = criterion(out, target)
                     val_loss.append(loss.data.item())
-            val_log.add(i, np.mean(val_loss))
+            # val_log.add(i, np.mean(val_loss))
         prg.set_description(
-            f"Epoch [{i}/{EPOCHS}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
+            f"Epoch [{i+1}/{EPOCHS}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
         # print(f"Epoch: {i}\tTotal Loss: {train_loss:0.6f}\tLatest Val Loss: {val_loss:0.6f}")
 
 
-# # begin to predict, no need to track gradient here
-# with torch.no_grad():
-#     future = 1
-#     pred_train = seq(train_ds.tensors[0], future=future)
-#     loss = criterion(pred_train[:, :-future], train_ds.tensors[1])
-#     print("train loss", loss.item())
+# begin to predict, no need to track gradient here
+with torch.no_grad():
+    pred_train = net(train_ds.tensors[0], future=True)
+    loss = criterion(pred_train[:, :-future], train_ds.tensors[1])
+    print("train loss", loss.item())
 
 # with torch.no_grad():
 #     future = 1
