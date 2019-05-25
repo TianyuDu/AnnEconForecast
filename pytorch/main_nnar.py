@@ -33,7 +33,7 @@ PROFILE = {
     "VAL_RATIO": 0.2, # Validation ratio.
     "NEURONS": (64, 128),
     "EPOCHS": 100,
-    "LOG_NAME": "null" # Name for tensorboard logs.
+    "LOG_NAME": "untitled" # Name for tensorboard logs.
 }
 
 if __name__ == "__main__":
