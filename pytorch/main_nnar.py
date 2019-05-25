@@ -98,8 +98,8 @@ if __name__ == "__main__":
             prg.set_description(
                 f"Epoch [{i+1}/{EPOCHS}]: TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
         writer.add_graph(net, (torch.zeros(LAGS)))
-        encoded = json.dumps(PROFILE)
         with open(writer.logdir + "/profile.json", "a") as f:
+            encoded = json.dumps(PROFILE)
             f.write(encoded)
 
     # Create plot
