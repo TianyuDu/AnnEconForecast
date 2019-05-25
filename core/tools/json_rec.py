@@ -34,9 +34,9 @@ class ParamWriter():
         self.verbose = verbose
 
     def write(
-            self,
-            param: Dict[str, object],
-            file_dir: Union[str, None] = None
+        self,
+        param: Dict[str, object],
+        file_dir: Union[str, None] = None
     ) -> None:
         """
         Write config parameter to json file.
@@ -71,8 +71,8 @@ class ParamWriter():
             f.write(encoded)
 
     def read(
-            self,
-            file_dir: Union[str, None] = None
+        self,
+        file_dir: Union[str, None] = None
     ) -> Dict[str, object]:
         """
         Read config parameters from json file.
