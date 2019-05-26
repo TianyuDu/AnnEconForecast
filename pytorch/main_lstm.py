@@ -6,9 +6,6 @@ import pandas as pd
 import torch
 import tqdm
 import matplotlib
-c = input("Use Agg as matplotlib (avoid tkinter)[y/n]:")
-if c.lower() == "y":
-    matplotlib.use("agg")
 from matplotlib import pyplot as plt
 from tensorboardX import SummaryWriter
 
@@ -46,6 +43,9 @@ def core(
     # locals().update(PROFILE)
     # print(locals())
     if verbose:
+        c = input("Use Agg as matplotlib (avoid tkinter)[y/n]:")
+        if c.lower() == "y":
+            matplotlib.use("agg")
         try:
             input_name = input("Log name ([Enter] for default name): ")
             assert input_name != ""
