@@ -33,7 +33,7 @@ PROFILE = {
     "VAL_RATIO": 0.2,  # Validation ratio.
     "LEARNING_RATE": 0.1,
     "NEURONS": (32, 64),
-    "EPOCHS": 100,
+    "EPOCHS": 500,
     "LOG_NAME":"untitled",
     "TASK_NAME": "LastOut LSTM on sunspot"
 }
