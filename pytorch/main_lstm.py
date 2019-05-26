@@ -6,7 +6,9 @@ import pandas as pd
 import torch
 import tqdm
 import matplotlib
-matplotlib.use("agg")
+c = input("Use Agg as matplotlib (avoid tkinter):")
+if c.lower() == "y":
+    matplotlib.use("agg")
 from matplotlib import pyplot as plt
 from tensorboardX import SummaryWriter
 
