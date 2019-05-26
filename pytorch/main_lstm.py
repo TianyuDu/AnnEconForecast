@@ -6,7 +6,7 @@ import pandas as pd
 import torch
 import tqdm
 import matplotlib
-c = input("Use Agg as matplotlib (avoid tkinter):")
+c = input("Use Agg as matplotlib (avoid tkinter)[y/n]:")
 if c.lower() == "y":
     matplotlib.use("agg")
 from matplotlib import pyplot as plt
@@ -23,18 +23,19 @@ plt.style.use("seaborn-dark")
 
 # Default directories for data
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
-SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
+SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
 PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
     "LAGS": 12,
     "VAL_RATIO": 0.2,  # Validation ratio.
+    "LEARNING_RATE": 0.1,
     "NEURONS": (32, 64),
     "EPOCHS": 100,
     "LOG_NAME":"untitled",
-    "TASK_NAME": "Pooling LSTM on sunspot"
+    "TASK_NAME": "LastOut LSTM on sunspot"
 }
 
 if __name__ == '__main__':
@@ -62,14 +63,13 @@ if __name__ == '__main__':
         mode="Nto1", lag=LAGS, shuffle=True, batch_size=32, validation_ratio=VAL_RATIO
     )
     # build the model
-    net = LstmModels.PoolingLSTM(
-        lags=LAGS,
-        neurons=NEURONS
-    )
+    # net = LstmModels.PoolingLSTM(lags=LAGS, neurons=NEURONS)
+
+    net = LstmModels.LastOutLSTM(neurons=NEURONS)
 
     net.double()  # Cast all floating point parameters and buffers to double datatype
     criterion = torch.nn.MSELoss()
-    optimizer = torch.optim.Adam(net.parameters(), lr=0.03)
+    optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
 
     with tqdm.trange(EPOCHS) as prg, SummaryWriter(comment=LOG_NAME) as writer:
         for i in prg:
