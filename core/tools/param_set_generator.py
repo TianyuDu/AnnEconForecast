@@ -47,10 +47,10 @@ def gen_hparam_set(
             f"{k}={v}" for k, v in zip(detected_list_keys, coor))
         for i, key in enumerate(detected_list_keys):
             new_para[key] = coor[i]
-        new_para["tensorboard_path"] += hparam_str
-        new_para["model_path"] += hparam_str
-        new_para["fig_path"] += hparam_str
-        new_para["hparam_str"] = hparam_str
+        # new_para["tensorboard_path"] += hparam_str
+        # new_para["model_path"] += hparam_str
+        # new_para["fig_path"] += hparam_str
+        # new_para["hparam_str"] = hparam_str
         gen.append(new_para)
 
     print(f"Total number of parameter sets generated: {len(gen)}")
