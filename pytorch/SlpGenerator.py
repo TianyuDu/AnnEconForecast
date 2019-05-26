@@ -57,7 +57,8 @@ class SlpGenerator(GenericGenerator):
             f"The shape of features and targets in the N-to-N supervised \
                 learning problem should be the same. \
                 Shapes received: X@{fea.shape}, Y@{tar.shape}."
-        print(f"X@{fea.shape}, Y@{tar.shape}")
+        if self.v:
+            print(f"X@{fea.shape}, Y@{tar.shape}")
 
         # Cast the datatype to float 32, and swap order.
         c = lambda x: x.astype(np.float32)
@@ -109,7 +110,8 @@ class SlpGenerator(GenericGenerator):
         assert len(fea) == len(tar), \
             "The number of observations in feature and target \
             data frame do not agree."
-        print(f"X@{fea.shape}, Y@{tar.shape}")
+        if self.v:
+            print(f"X@{fea.shape}, Y@{tar.shape}")
         return swap(c(fea)), swap(c(tar))
 
 
