@@ -7,10 +7,6 @@ import itertools
 import os
 from typing import Dict, List, Union
 
-import matplotlib
-from matplotlib import pyplot as plt
-
-
 def gen_hparam_set(
     src_dict: Dict[str, Union[List[object], object]]
 ) -> List[Dict[str, object]]:
