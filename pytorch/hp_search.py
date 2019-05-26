@@ -6,6 +6,10 @@ from datetime import datetime
 import sys
 sys.path.extend(["./core", "./core/tools"])
 
+import matplotlib
+matplotlib.use("agg")
+from matplotlib import pyplot as plt
+
 import tqdm
 
 import main_lstm
@@ -18,14 +22,14 @@ SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForec
 SRC_PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
-    "LAGS": [6, 9],
+    "LAGS": [6, 9, 12],
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "LEARNING_RATE": [0.01, 0.03],
-    "NEURONS": [(32, 64), (64, 128)],
-    "EPOCHS": 1,
-    "LOG_NAME": "untitled",
-    "TASK_NAME": "Untitile",
-    "DATA_DIR": SUNSPOT_DATA
+    "LEARNING_RATE": [0.01, 0.03, 0.1, 0.3],
+    "NEURONS": [(32, 64), (64, 128), (128, 256)],
+    "EPOCHS": [100, 300, 500, 1000],
+    "LOG_NAME": "lastout",
+    "TASK_NAME": "LastOutLSTM on Sunspot",
+    "DATA_DIR": SUNSPOT_DATA_E
 }
 
 if __name__ == "__main__":
