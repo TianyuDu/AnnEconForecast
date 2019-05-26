@@ -61,8 +61,8 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
         self,
         lags: int,
         neurons: Tuple[int]=(32, 64),
-        num_inputs: int = 1,  # Dimension of feature series
-        num_outputs: int = 1  # Dimension of target series
+        num_inputs: int=1,  # Dimension of feature series
+        num_outputs: int=1  # Dimension of target series
         ) -> None:
         super().__init__(neurons=neurons, num_inputs=num_inputs, num_outputs=num_outputs)
         # Output Pooling Overtime Layer, for PoolingLSTM only.
@@ -143,5 +143,57 @@ class LastOutLSTM(StackedLSTM, torch.nn.Module):
     Therefore, in contrast to the PoolingLSTM,
     the last out LSTM does not require a pre-defined "numlag" parameter.
     """
-    def __init__(self):
-        #TODO: STOPPED HERE
+    def __init__(
+        self,
+        neurons: Tuple[int]=(32, 64),
+        num_inputs: int=1,
+        num_outputs: int=1
+        ) -> None:
+        super().__init__(
+            neurons=neurons,
+            num_inputs=num_inputs,
+            num_outputs=num_outputs
+        )
+
+    def forward(self, inputs):
+        """
+        inputs: tensor with shale (batchsize, num_lags) univariate time series.
+        """
+        # LSTM Layer 1
+        h_t = torch.randn(
+            inputs.size(0),
+            self.lstm_neurons[0],
+            dtype=torch.double
+        )
+
+        c_t = torch.randn(
+            inputs.size(0),
+            self.lstm_neurons[0],
+            dtype=torch.double
+        )
+        # LSTM Layer 2
+        h_t2 = torch.randn(
+            inputs.size(0),
+            self.lstm_neurons[1],
+            dtype=torch.double
+        )
+        c_t2 = torch.randn(
+            inputs.size(0),
+            self.lstm_neurons[1],
+            dtype=torch.double
+        )
+
+        out_seq = list()
+
+        for input_t in inputs.chunk(inputs.size(1), dim=1):
+            # Expand input tensor by time step.
+            # To a SequenceLength tuple with each element@(batchsize, 1)
+            # Corresponding to the i-th observation in all samples.
+            # (inputs, (h, c)) -> (h, c) updated.
+            h_t, c_t = self.lstm1(input_t, (h_t, c_t))
+            h_t2, c_t2 = self.lstm2(h_t, (h_t2, c_t2))
+            out = self.linear(h_t2)  # (batchsize, 1) single time step output
+            out_seq.append(out)
+        # Take the last element as the forecasting
+        predict = out_seq[-1]
+        return predict
