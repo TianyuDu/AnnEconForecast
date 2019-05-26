@@ -21,7 +21,8 @@ class GenericGenerator():
     def __init__(self, main_df: pd.DataFrame, verbose=True):
         self.df = main_df.copy()
         self.v = verbose
-        data_proc.summarize_dataset(self.df)
+        if self.v:
+            data_proc.summarize_dataset(self.df)
 
     def get_many_to_many(self):
         raise NotImplementedError()
