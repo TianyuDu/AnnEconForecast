@@ -7,7 +7,6 @@ import sys
 sys.path.extend(["./core", "./core/tools"])
 
 import matplotlib
-matplotlib.use("agg")
 from matplotlib import pyplot as plt
 
 import tqdm
@@ -33,6 +32,10 @@ SRC_PROFILE = {
 }
 
 if __name__ == "__main__":
+    c = input("Use Agg as matplotlib (avoid tkinter)[y/n]:")
+    if c.lower() == "y":
+        matplotlib.use("agg")
+    
     profile_set = gen_hparam_set(SRC_PROFILE)
     print("====Sample Configuration====")
     pprint(profile_set[0])
