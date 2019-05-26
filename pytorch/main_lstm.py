@@ -23,17 +23,17 @@ plt.style.use("seaborn-dark")
 
 # Default directories for data
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
-SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
+SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
 
 PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
-    "LAGS": 12,
+    "LAGS": 6,
     "VAL_RATIO": 0.2,  # Validation ratio.
     "LEARNING_RATE": 0.1,
     "NEURONS": (32, 64),
-    "EPOCHS": 500,
+    "EPOCHS": 100,
     "LOG_NAME":"untitled",
     "TASK_NAME": "LastOut LSTM on sunspot"
 }
