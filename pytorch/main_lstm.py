@@ -28,6 +28,7 @@ SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForec
 
 # if __name__ == '__main__':
 def core(
+    DATA_DIR,
     TRAIN_SIZE,
     TEST_SIZE,
     LAGS,
@@ -36,20 +37,24 @@ def core(
     NEURONS,
     EPOCHS,
     LOG_NAME,
-    TASK_NAME
+    TASK_NAME,
+    profile_record: dict,
+    verbose: bool=True # set verbose=False when running hyper-parameter search.
+    # To ensure progress bar work correctly
     ) -> None:
     # globals().update(PROFILE)
     # locals().update(PROFILE)
     # print(locals())
-    try:
-        input_name = input("Log name ([Enter] for default name): ")
-        assert input_name != ""
-        LOG_NAME = input_name
-    except AssertionError:
-        print(f"Default name: {LOG_NAME} is used.")
+    if verbose:
+        try:
+            input_name = input("Log name ([Enter] for default name): ")
+            assert input_name != ""
+            LOG_NAME = input_name
+        except AssertionError:
+            print(f"Default name: {LOG_NAME} is used.")
 
     df = pd.read_csv(
-        SUNSPOT_DATA,
+        DATA_DIR,
         index_col=0,
         date_parser=lambda x: datetime.strptime(x, "%Y")
     )
@@ -58,7 +63,7 @@ def core(
 
     df_train, df_test = df[:TRAIN_SIZE], df[-TEST_SIZE:]
 
-    gen = SlpGenerator.SlpGenerator(df_train, verbose=False)
+    gen = SlpGenerator.SlpGenerator(df_train, verbose=verbose)
     fea, tar = gen.get_many_to_one(lag=LAGS)
     train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
         mode="Nto1", lag=LAGS, shuffle=True, batch_size=32, validation_ratio=VAL_RATIO
@@ -117,7 +122,7 @@ def core(
 
         # Save the training profile.
         with open("./" + writer.logdir + "/profile.json", "a") as f:
-            encoded = json.dumps(PROFILE)
+            encoded = json.dumps(profile_record)
             f.write(encoded)
 
         # begin to predict, no need to track gradient here
