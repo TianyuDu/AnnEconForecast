@@ -7,6 +7,9 @@ import sys
 sys.path.extend(["./core", "./core/tools"])
 
 import matplotlib
+c = input("Use Agg as matplotlib (avoid tkinter)[y/n]:")
+if c.lower() == "y":
+    matplotlib.use("agg")
 from matplotlib import pyplot as plt
 
 import tqdm
@@ -23,19 +26,15 @@ SRC_PROFILE = {
     "TEST_SIZE": 58,
     "LAGS": [6, 9, 12],
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "LEARNING_RATE": [0.01, 0.03, 0.1, 0.3],
-    "NEURONS": [(32, 64), (64, 128), (128, 256)],
-    "EPOCHS": [100, 300, 500, 1000],
+    "LEARNING_RATE": [0.01, 0.03, 0.1],
+    "NEURONS": [(32, 64), (64, 128)],
+    "EPOCHS": [100, 300, 500],
     "LOG_NAME": "lastout",
     "TASK_NAME": "LastOutLSTM on Sunspot",
     "DATA_DIR": SUNSPOT_DATA_E
 }
 
 if __name__ == "__main__":
-    c = input("Use Agg as matplotlib (avoid tkinter)[y/n]:")
-    if c.lower() == "y":
-        matplotlib.use("agg")
-    
     profile_set = gen_hparam_set(SRC_PROFILE)
     print("====Sample Configuration====")
     pprint(profile_set[0])
