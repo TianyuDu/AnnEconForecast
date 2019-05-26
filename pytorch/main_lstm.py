@@ -26,20 +26,21 @@ CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconFor
 SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
-PROFILE = {
-    "TRAIN_SIZE": 231,  # Include both training and validation sets.
-    "TEST_SIZE": 58,
-    "LAGS": 6,
-    "VAL_RATIO": 0.2,  # Validation ratio.
-    "LEARNING_RATE": 0.01,
-    "NEURONS": (32, 128),
-    "EPOCHS": 20,
-    "LOG_NAME":"untitled",
-    "TASK_NAME": "LastOut LSTM on sunspot"
-}
-
-if __name__ == '__main__':
-    globals().update(PROFILE)
+# if __name__ == '__main__':
+def core(
+    TRAIN_SIZE,
+    TEST_SIZE,
+    LAGS,
+    VAL_RATIO,
+    LEARNING_RATE,
+    NEURONS,
+    EPOCHS,
+    LOG_NAME,
+    TASK_NAME
+    ) -> None:
+    # globals().update(PROFILE)
+    # locals().update(PROFILE)
+    # print(locals())
     try:
         input_name = input("Log name ([Enter] for default name): ")
         assert input_name != ""
