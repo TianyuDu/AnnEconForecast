@@ -5,6 +5,10 @@ import numpy as np
 import pandas as pd
 import torch
 import tqdm
+import matplotlib
+c = input("Use Agg as matplotlib (avoid tkinter):")
+if c.lower() == "y":
+    matplotlib.use("agg")
 from matplotlib import pyplot as plt
 from tensorboardX import SummaryWriter
 
@@ -17,9 +21,10 @@ plt.style.use("seaborn-dark")
 # import ptc.data_proc as data_proc
 # from ptc.model import *
 
-
+# Default directories for data
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
+SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
 
 PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
