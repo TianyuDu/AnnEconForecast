@@ -135,3 +135,13 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
         # out_seq = torch.stack(out_seq, dim=1).squeeze(dim=2)
         return predict
 
+class LastOutLSTM(StackedLSTM, torch.nn.Module):
+    """
+    The last output LSTM with single step forecast.
+    Given a sequence taking N lagged values (x[t-L], ..., x[t-1]), 
+    the last y-hat produced by RNN is taken to be the predicted value of x[t].
+    Therefore, in contrast to the PoolingLSTM,
+    the last out LSTM does not require a pre-defined "numlag" parameter.
+    """
+    def __init__(self):
+        #TODO: STOPPED HERE
