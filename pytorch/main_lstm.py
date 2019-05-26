@@ -29,11 +29,11 @@ SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
 PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
-    "LAGS": 6,
+    "LAGS": 8,
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "LEARNING_RATE": 0.1,
-    "NEURONS": (32, 64),
-    "EPOCHS": 100,
+    "LEARNING_RATE": 0.01,
+    "NEURONS": (256, 512),
+    "EPOCHS": 300,
     "LOG_NAME":"untitled",
     "TASK_NAME": "LastOut LSTM on sunspot"
 }
