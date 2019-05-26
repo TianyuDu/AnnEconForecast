@@ -23,17 +23,17 @@ plt.style.use("seaborn-dark")
 
 # Default directories for data
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
-SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
+SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
 PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
-    "LAGS": 8,
+    "LAGS": 6,
     "VAL_RATIO": 0.2,  # Validation ratio.
     "LEARNING_RATE": 0.01,
-    "NEURONS": (256, 512),
-    "EPOCHS": 300,
+    "NEURONS": (32, 128),
+    "EPOCHS": 20,
     "LOG_NAME":"untitled",
     "TASK_NAME": "LastOut LSTM on sunspot"
 }
@@ -148,7 +148,9 @@ if __name__ == '__main__':
             plt.xlabel("Date")
             plt.ylabel("Value")
             plt.legend(["Actual", f"Forecast, MSE={mse}"])
-            writer.add_figure("Test set predictions", fig)
+            writer.add_figure(
+                "Test set predictions", fig, global_step=EPOCHS
+            )
 
 # with torch.no_grad():
 #     future = 1
