@@ -70,7 +70,6 @@ def core(
     )
     # build the model
     # net = LstmModels.PoolingLSTM(lags=LAGS, neurons=NEURONS)
-
     net = LstmModels.LastOutLSTM(neurons=NEURONS)
 
     net.double()  # Cast all floating point parameters and buffers to double datatype
