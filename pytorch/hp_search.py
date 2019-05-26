@@ -3,11 +3,13 @@ TODO: write documents
 """
 from pprint import pprint
 from datetime import datetime
+import sys
+sys.path.extend(["./core", "./core/tools"])
 
 import tqdm
 
 import main_lstm
-from core.tools.param_set_generator import gen_hparam_set
+from param_set_generator import gen_hparam_set
 
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
 SUNSPOT_DATA_E = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
@@ -20,9 +22,9 @@ SRC_PROFILE = {
     "VAL_RATIO": 0.2,  # Validation ratio.
     "LEARNING_RATE": [0.01, 0.03],
     "NEURONS": [(32, 64), (64, 128)],
-    "EPOCHS": 100,
+    "EPOCHS": 1,
     "LOG_NAME": "untitled",
-    "TASK_NAME": "LastOut LSTM on sunspot",
+    "TASK_NAME": "Untitile",
     "DATA_DIR": SUNSPOT_DATA
 }
 
@@ -35,4 +37,4 @@ if __name__ == "__main__":
     for i in tqdm.trange(len(profile_set), desc="Hyper-Param Profile"):
         PROFILE = profile_set[i]
         main_lstm.core(**PROFILE, profile_record=PROFILE, verbose=False)
-    print(f"Total time taken: {datetime.now() - start}")
+    print(f"\nTotal time taken: {datetime.now() - start}")
