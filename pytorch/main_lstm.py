@@ -111,7 +111,7 @@ def core(
                 writer.add_scalars(
                     "loss/rmse", {"Validation": func(val_loss)}, i)
             prg.set_description(
-                f"TrainLoss={np.mean(train_loss): 0.3f}, ValLoss={np.mean(val_loss): 0.3f}")
+                f"TrainLoss:{np.mean(train_loss): 0.3f}, ValLoss:{np.mean(val_loss): 0.3f}")
             # print(f"Epoch: {i}\tTotal Loss: {train_loss:0.6f}\tLatest Val Loss: {val_loss:0.6f}")
         # TODO: deal with the add graph function here.
         # writer.add_graph(net, (torch.zeros(32, LAGS)))
