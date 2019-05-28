@@ -19,6 +19,7 @@ from param_set_generator import gen_hparam_set
 
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
 SUNSPOT_DATA_E = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
+SUNSPOT_DATA_EG = "/home/ec2-user/AnnEconForecast/data/sunspots.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
 SRC_PROFILE = {
@@ -31,7 +32,7 @@ SRC_PROFILE = {
     "EPOCHS": [100, 300, 500, 1000],
     "LOG_NAME": "lastout",
     "TASK_NAME": "LastOutLSTM on Sunspot",
-    "DATA_DIR": SUNSPOT_DATA_E
+    "DATA_DIR": SUNSPOT_DATA_EG
 }
 
 if __name__ == "__main__":
@@ -39,6 +40,8 @@ if __name__ == "__main__":
     print("====Sample Configuration====")
     pprint(profile_set[0])
     print("============================")
+    print(torch.cuda.is_avaiable())
+    dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     start = datetime.now()
     for i in tqdm.trange(len(profile_set), desc="Hyper-Param Profile"):
         PROFILE = profile_set[i]
