@@ -24,11 +24,11 @@ SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForec
 SRC_PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
-    "LAGS": [6, 9, 12],
+    "LAGS": [3, 6, 7, 8, 9, 10, 12],
     "VAL_RATIO": 0.2,  # Validation ratio.
     "LEARNING_RATE": [0.01, 0.03, 0.1],
-    "NEURONS": [(32, 64), (64, 128)],
-    "EPOCHS": [100, 300, 500],
+    "NEURONS": [(32, 64), (64, 128), (128, 256), (256, 512)],
+    "EPOCHS": [100, 300, 500, 1000],
     "LOG_NAME": "lastout",
     "TASK_NAME": "LastOutLSTM on Sunspot",
     "DATA_DIR": SUNSPOT_DATA_E
