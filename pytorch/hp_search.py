@@ -13,6 +13,7 @@ if c.lower() == "y":
 from matplotlib import pyplot as plt
 
 import tqdm
+import torch
 
 import main_lstm
 from param_set_generator import gen_hparam_set
