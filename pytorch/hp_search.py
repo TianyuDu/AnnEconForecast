@@ -13,6 +13,7 @@ if c.lower() == "y":
 from matplotlib import pyplot as plt
 
 import tqdm
+import torch
 
 import main_lstm
 from param_set_generator import gen_hparam_set
@@ -20,18 +21,20 @@ from param_set_generator import gen_hparam_set
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
 SUNSPOT_DATA_E = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
+SUNSPOT_DATA_EG = "/home/ec2-user/AnnEconForecast/data/sunspots.csv"
+
 
 SRC_PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
-    "LAGS": [3, 6, 7, 8, 9, 10, 12],
+    "LAGS": [6, 9, 12, 15],
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "LEARNING_RATE": [0.01, 0.03, 0.1],
-    "NEURONS": [(32, 64), (64, 128), (128, 256), (256, 512)],
-    "EPOCHS": [100, 300, 500, 1000],
+    "LEARNING_RATE": [0.01, 0.03, 0.1, 0.3],
+    "NEURONS": [(128, 256), (256, 512), (512, 1024), (1024, 2048)],
+    "EPOCHS": [500, 1000, 1500],
     "LOG_NAME": "lastout",
     "TASK_NAME": "LastOutLSTM on Sunspot",
-    "DATA_DIR": SUNSPOT_DATA_E
+    "DATA_DIR": SUNSPOT_DATA_EG
 }
 
 # torch.set_default_tensor_type('torch.cuda.FloatTensor')
@@ -41,11 +44,8 @@ if __name__ == "__main__":
     print("====Sample Configuration====")
     pprint(profile_set[0])
     print("============================")
-<<<<<<< HEAD
-    print("Cuda avaiable: "torch.cuda.is_available())
+    print("Cuda avaiable: ", torch.cuda.is_available())
     # dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-=======
->>>>>>> 0529f6177b0b4bd500c80a16c56b3ef8559107da
     start = datetime.now()
     for i in tqdm.trange(len(profile_set), desc="Hyper-Param Profile"):
         PROFILE = profile_set[i]
