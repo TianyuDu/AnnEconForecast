@@ -23,6 +23,23 @@ CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconFor
 SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
+def to_device(data, device):
+    if isinstance(data, (list, tuple)):
+        return [to_device(x, device) for x in data]
+    return data.to(device, non_blocking=True)
+
+class DeviceDataLoader():
+    def __init__(self, dl, device):
+        self.dl = dl
+        self.device = device
+    
+    def __iter__(self):
+        for b in self.dl:
+            yield to_device(b, self.device)
+    
+    def __len__(self):
+        return len(self.dl)
+
 # if __name__ == '__main__':
 def core(
     DATA_DIR,
@@ -59,17 +76,28 @@ def core(
     # TODO: preprocessing date, and write reconstruction script.
 
     df_train, df_test = df[:TRAIN_SIZE], df[-TEST_SIZE:]
-
+    
     gen = SlpGenerator.SlpGenerator(df_train, verbose=verbose)
     fea, tar = gen.get_many_to_one(lag=LAGS)
     train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
-        mode="Nto1", lag=LAGS, shuffle=True, batch_size=32, validation_ratio=VAL_RATIO
+        mode="Nto1", lag=LAGS, shuffle=True, batch_size=32, validation_ratio=VAL_RATIO,
+        pin_memory=False
     )
     # build the model
     # net = LstmModels.PoolingLSTM(lags=LAGS, neurons=NEURONS)
     net = LstmModels.LastOutLSTM(neurons=NEURONS)
-
-    net.double()  # Cast all floating point parameters and buffers to double datatype
+    
+    # ==== Move everything to GPU ====
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    # print("Device detected: ", device)
+    move = lambda x: x.to(device)
+    torch.set_default_tensor_type('torch.cuda.FloatTensor')
+    train_dl = DeviceDataLoader(train_dl, device)
+    val_dl = DeviceDataLoader(val_dl, device)
+    
+    net.float()  # Cast all floating point parameters and buffers to double datatype
+    net = net.to(device)
+    net = to_device(net, device)
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
 
@@ -78,9 +106,16 @@ def core(
             train_loss = []
             # TODO: rename all data to feature
             for batch_idx, (data, target) in enumerate(train_dl):
-                # data, target = Variable(data), Variable(target)
-                data, target = map(torch.Tensor, (data, target))
-                data, target = data.double(), target.double()
+                # data, target = map(torch.Tensor, (data, target))
+                # data, target = data.double(), target.double()
+                # ========
+                # print("data.shape", data.shape)
+                # print("data.device: ", data.device)
+                # print("target.device: ", target.device)
+                # ==== GPU ====
+                data = data.to(device).float()
+                target = target.to(device).float()
+                # ==== END ====
                 optimizer.zero_grad()
                 out = net(data)
                 loss = criterion(out, target)
@@ -95,13 +130,15 @@ def core(
             func = lambda x: np.sqrt(np.mean(x))
             writer.add_scalars(
                 "loss/rmse", {"Train": func(train_loss)}, i)
-
+            # print(f">>>> Training phase done: {i}")
             if i % 10 == 0:
                 val_loss = []
                 with torch.no_grad():
                     for batch_idx, (data, target) in enumerate(val_dl):
-                        data, target = map(torch.Tensor, (data, target))
-                        data, target = data.double(), target.double()
+                        # data, target = map(torch.Tensor, (data, target))
+                        # data, target = data.double(), target.double()
+                        data = data.to(device).float()
+                        target = target.to(device).float()
                         out = net(data)
                         loss = criterion(out, target)
                         val_loss.append(loss.data.item())
@@ -133,6 +170,7 @@ def core(
                 feature = f(fea_df, i)
                 feature = feature.view(1, feature.shape[0])
                 feature = feature.double()
+                feature = feature.to(device).float()
                 pred.append(net(feature))
             
             pred_df = pd.DataFrame(

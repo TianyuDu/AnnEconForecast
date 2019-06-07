@@ -122,7 +122,8 @@ class SlpGenerator(GenericGenerator):
         lag: int=6,
         shuffle: bool=True,
         batch_size: int=32,
-        validation_ratio: float=0.2
+        validation_ratio: float=0.2,
+        pin_memory: bool=False
     ) -> (DataLoader, DataLoader, TensorDataset, TensorDataset):
         """
         Primary goal: create dataloader object.
@@ -149,10 +150,10 @@ class SlpGenerator(GenericGenerator):
             "Batch size cannot be greater than number of training or validation instances."
 
         train_ds = TensorDataset(x_train, y_train)
-        train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=shuffle)
+        train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=shuffle, pin_memory=pin_memory)
 
         val_ds = TensorDataset(x_val, y_val)
-        val_dl = DataLoader(val_ds, batch_size=batch_size, shuffle=shuffle)
+        val_dl = DataLoader(val_ds, batch_size=batch_size, shuffle=shuffle, pin_memory=pin_memory)
 
         return train_dl, val_dl, train_ds, val_ds
 

@@ -1,5 +1,6 @@
 """
-TODO: write documents
+Jun. 7 2019
+This is the script for training with GPUs on server.
 """
 from pprint import pprint
 from datetime import datetime
@@ -7,9 +8,7 @@ import sys
 sys.path.extend(["./core", "./core/tools"])
 
 import matplotlib
-c = input("Use Agg as matplotlib (avoid tkinter)[y/n]:")
-if c.lower() == "y":
-    matplotlib.use("agg")
+matplotlib.use("agg")
 from matplotlib import pyplot as plt
 
 import tqdm
@@ -26,11 +25,11 @@ SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForec
 SRC_PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
-    "LAGS": [3, 6, 7, 8, 9, 10, 12],
+    "LAGS": 12,
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "LEARNING_RATE": [0.01, 0.03, 0.1],
-    "NEURONS": [(32, 64), (64, 128), (128, 256), (256, 512)],
-    "EPOCHS": [100, 300, 500, 1000],
+    "LEARNING_RATE": 0.03,
+    "NEURONS": (512, 1024),
+    "EPOCHS": 100,
     "LOG_NAME": "lastout",
     "TASK_NAME": "LastOutLSTM on Sunspot",
     "DATA_DIR": SUNSPOT_DATA_EG
@@ -39,14 +38,9 @@ SRC_PROFILE = {
 # torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
 if __name__ == "__main__":
-    profile_set = gen_hparam_set(SRC_PROFILE)
-    print("====Sample Configuration====")
-    pprint(profile_set[0])
-    print("============================")
-    print("Cuda avaiable: "torch.cuda.is_available())
+    print("CUDA Device Avaiable: ", torch.cuda.is_available())
     # dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     start = datetime.now()
-    for i in tqdm.trange(len(profile_set), desc="Hyper-Param Profile"):
-        PROFILE = profile_set[i]
-        main_lstm.core(**PROFILE, profile_record=PROFILE, verbose=False)
+    # PROFILE = SRC_PROFILE
+    main_lstm.core(**SRC_PROFILE, profile_record=SRC_PROFILE, verbose=False)
     print(f"\nTotal time taken: {datetime.now() - start}")

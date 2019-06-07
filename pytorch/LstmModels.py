@@ -62,9 +62,10 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
         lags: int,
         neurons: Tuple[int]=(32, 64),
         num_inputs: int=1,  # Dimension of feature series
-        num_outputs: int=1  # Dimension of target series
+        num_outputs: int=1,  # Dimension of target series
+        dtype=torch.double
         ) -> None:
-        super().__init__(neurons=neurons, num_inputs=num_inputs, num_outputs=num_outputs)
+        super().__init__(neurons=neurons, num_inputs=num_inputs, num_outputs=num_outputs, dtype=dtype)
         # Output Pooling Overtime Layer, for PoolingLSTM only.
         self.pooling = torch.nn.Linear(
             in_features=lags,
@@ -78,25 +79,21 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
         # LSTM Layer 1
         h_t = torch.randn(
             inputs.size(0),
-            self.lstm_neurons[0],
-            dtype=torch.double
+            self.lstm_neurons[0]
         )
         
         c_t = torch.randn(
             inputs.size(0),
-            self.lstm_neurons[0],
-            dtype=torch.double
+            self.lstm_neurons[0]
         )
         # LSTM Layer 2
         h_t2 = torch.randn(
             inputs.size(0),
-            self.lstm_neurons[1],
-            dtype=torch.double
+            self.lstm_neurons[1]
         )
         c_t2 = torch.randn(
             inputs.size(0),
-            self.lstm_neurons[1],
-            dtype=torch.double
+            self.lstm_neurons[1]
         )
         
         # print(f"Shapes:\n\th:{h_t.shape}, h2:{h_t2.shape}\n\tc:{c_t.shape}, c2:{c_t2.shape}")
@@ -162,34 +159,38 @@ class LastOutLSTM(StackedLSTM, torch.nn.Module):
         # LSTM Layer 1
         h_t = torch.randn(
             inputs.size(0),
-            self.lstm_neurons[0],
-            dtype=torch.double
+            self.lstm_neurons[0]
         )
 
         c_t = torch.randn(
             inputs.size(0),
-            self.lstm_neurons[0],
-            dtype=torch.double
+            self.lstm_neurons[0]
         )
         # LSTM Layer 2
         h_t2 = torch.randn(
             inputs.size(0),
-            self.lstm_neurons[1],
-            dtype=torch.double
+            self.lstm_neurons[1]
         )
         c_t2 = torch.randn(
             inputs.size(0),
-            self.lstm_neurons[1],
-            dtype=torch.double
+            self.lstm_neurons[1]
         )
 
         out_seq = list()
 
-        for input_t in inputs.chunk(inputs.size(1), dim=1):
+        for (i, input_t) in enumerate(inputs.chunk(inputs.size(1), dim=1)):
             # Expand input tensor by time step.
             # To a SequenceLength tuple with each element@(batchsize, 1)
             # Corresponding to the i-th observation in all samples.
             # (inputs, (h, c)) -> (h, c) updated.
+            # print(h_t.dtype)
+            # print(c_t.dtype)
+            
+            # ==== To correct input type ==== 
+            # if input_t.dtype == torch.float64:
+            #     print("Input Type detected: ", input_t.dtype)
+            #     input_t = input_t.float()
+            #     print(f"order: {i}/{len(inputs.chunk(inputs.size(1), dim=1))}")
             h_t, c_t = self.lstm1(input_t, (h_t, c_t))
             h_t2, c_t2 = self.lstm2(h_t, (h_t2, c_t2))
             out = self.linear(h_t2)  # (batchsize, 1) single time step output
