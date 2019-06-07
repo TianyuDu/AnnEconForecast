@@ -13,14 +13,12 @@ if c.lower() == "y":
 from matplotlib import pyplot as plt
 
 import tqdm
-import torch
 
 import main_lstm
 from param_set_generator import gen_hparam_set
 
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
 SUNSPOT_DATA_E = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
-SUNSPOT_DATA_EG = "/home/ec2-user/AnnEconForecast/data/sunspots.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
 SRC_PROFILE = {
@@ -33,7 +31,7 @@ SRC_PROFILE = {
     "EPOCHS": [100, 300, 500, 1000],
     "LOG_NAME": "lastout",
     "TASK_NAME": "LastOutLSTM on Sunspot",
-    "DATA_DIR": SUNSPOT_DATA_EG
+    "DATA_DIR": SUNSPOT_DATA_E
 }
 
 # torch.set_default_tensor_type('torch.cuda.FloatTensor')
@@ -43,8 +41,11 @@ if __name__ == "__main__":
     print("====Sample Configuration====")
     pprint(profile_set[0])
     print("============================")
+<<<<<<< HEAD
     print("Cuda avaiable: "torch.cuda.is_available())
     # dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+=======
+>>>>>>> 0529f6177b0b4bd500c80a16c56b3ef8559107da
     start = datetime.now()
     for i in tqdm.trange(len(profile_set), desc="Hyper-Param Profile"):
         PROFILE = profile_set[i]
