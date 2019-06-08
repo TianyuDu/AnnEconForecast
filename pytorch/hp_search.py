@@ -17,12 +17,7 @@ import torch
 
 import main_lstm
 from param_set_generator import gen_hparam_set
-
-CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
-SUNSPOT_DATA_E = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
-SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
-SUNSPOT_DATA_EG = "/home/ec2-user/AnnEconForecast/data/sunspots.csv"
-
+import DIRS
 
 SRC_PROFILE = {
     "TRAIN_SIZE": 231,  # Include both training and validation sets.
@@ -34,7 +29,7 @@ SRC_PROFILE = {
     "EPOCHS": [500, 1000, 1500],
     "LOG_NAME": "lastout",
     "TASK_NAME": "LastOutLSTM on Sunspot",
-    "DATA_DIR": SUNSPOT_DATA_EG
+    "DATA_DIR": DIRS.DEXCAUS["ec2_gpu"]
 }
 
 # torch.set_default_tensor_type('torch.cuda.FloatTensor')
