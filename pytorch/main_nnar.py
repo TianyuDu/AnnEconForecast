@@ -23,6 +23,7 @@ plt.style.use("seaborn-dark")
 # Settings 
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
+SUNSPOT_DATA_EC2 = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
 
 # Let's call hyper-parameters profile.
 PROFILE = {
