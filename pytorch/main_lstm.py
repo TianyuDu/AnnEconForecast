@@ -19,9 +19,9 @@ plt.style.use("seaborn-dark")
 # from ptc.model import *
 
 # Default directories for data
-CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
-SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
-SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
+# CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
+# SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
+# SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
 def to_device(data, device):
     if isinstance(data, (list, tuple)):
@@ -66,21 +66,35 @@ def core(
             LOG_NAME = input_name
         except AssertionError:
             print(f"Default name: {LOG_NAME} is used.")
-
+    
+    # ==== TODO ====
+    # Extract this portion to an external function used as 
+    # an arg in the profile -> Data cleaning call
+    # or just use a DataFrame as an arg, so that the csv file
+    # is read from hard drive only once.
     df = pd.read_csv(
         DATA_DIR,
         index_col=0,
-        date_parser=lambda x: datetime.strptime(x, "%Y")
+        date_parser=lambda x: datetime.strptime(x, "%Y-%m-%d"),
+        engine="c"
     )
-
+    
+    df = df[df != "."]
+    df.dropna(inplace=True)
+    
+    # ==== END ====
     # TODO: preprocessing date, and write reconstruction script.
-
+    if TRAIN_SIZE < 1 and TEST_SIZE:
+        assert TRAIN_SIZE + TEST_SIZE == 1
+        TRAIN_SIZE = int(len(df) * TRAIN_SIZE)
+        TEST_SIZE = len(df) - TRAIN_SIZE
+    
     df_train, df_test = df[:TRAIN_SIZE], df[-TEST_SIZE:]
     
     gen = SlpGenerator.SlpGenerator(df_train, verbose=verbose)
     fea, tar = gen.get_many_to_one(lag=LAGS)
     train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
-        mode="Nto1", lag=LAGS, shuffle=True, batch_size=32, validation_ratio=VAL_RATIO,
+        mode="Nto1", lag=LAGS, shuffle=True, batch_size=256, validation_ratio=VAL_RATIO,
         pin_memory=False
     )
     # build the model

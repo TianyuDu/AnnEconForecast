@@ -13,5 +13,5 @@ SUNSPOT = {
     }
 
 DEXCAUS = {
-    "ec2_gpu": "/home/ec2-user/AnnEconForecast/data"
+    "ec2_gpu": "/home/ec2-user/AnnEconForecast/data/DEXCAUS.csv"
 }

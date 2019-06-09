@@ -19,16 +19,18 @@ import main_lstm
 from param_set_generator import gen_hparam_set
 import DIRS
 
+# For sunspot, train_size = 231, test_size = 58
+
 SRC_PROFILE = {
-    "TRAIN_SIZE": 231,  # Include both training and validation sets.
-    "TEST_SIZE": 58,
-    "LAGS": [6, 9, 12, 15],
+    "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
+    "TEST_SIZE": 0.2,
+    "LAGS": [12, 36],
     "VAL_RATIO": 0.2,  # Validation ratio.
     "LEARNING_RATE": [0.01, 0.03, 0.1, 0.3],
-    "NEURONS": [(128, 256), (256, 512), (512, 1024), (1024, 2048)],
-    "EPOCHS": [500, 1000, 1500],
+    "NEURONS": [(512, 1024), (1024, 2048)],
+    "EPOCHS": [300, 500, 1000],
     "LOG_NAME": "lastout",
-    "TASK_NAME": "LastOutLSTM on Sunspot",
+    "TASK_NAME": "Exchange rate",
     "DATA_DIR": DIRS.DEXCAUS["ec2_gpu"]
 }
 
@@ -40,9 +42,11 @@ if __name__ == "__main__":
     pprint(profile_set[0])
     print("============================")
     print("Cuda avaiable: ", torch.cuda.is_available())
+    # TODO: manage cuda devices.
     # dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     start = datetime.now()
     for i in tqdm.trange(len(profile_set), desc="Hyper-Param Profile"):
         PROFILE = profile_set[i]
         main_lstm.core(**PROFILE, profile_record=PROFILE, verbose=False)
     print(f"\nTotal time taken: {datetime.now() - start}")
+    

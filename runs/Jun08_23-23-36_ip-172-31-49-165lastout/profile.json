@@ -1,0 +1,1 @@
+{"TRAIN_SIZE": 0.8, "TEST_SIZE": 0.2, "LAGS": 12, "VAL_RATIO": 0.2, "LEARNING_RATE": 0.1, "NEURONS": [1024, 2048], "EPOCHS": 300, "LOG_NAME": "lastout", "TASK_NAME": "Exchange rate", "DATA_DIR": "/home/ec2-user/AnnEconForecast/data/DEXCAUS.csv"}
