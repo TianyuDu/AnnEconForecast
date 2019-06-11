@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from Typing import Callable, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -15,13 +16,6 @@ import SlpGenerator
 
 plt.style.use("seaborn-dark")
 
-# import ptc.data_proc as data_proc
-# from ptc.model import *
-
-# Default directories for data
-# CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
-# SUNSPOT_DATA = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
-# SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 
 def to_device(data, device):
     if isinstance(data, (list, tuple)):
@@ -40,25 +34,22 @@ class DeviceDataLoader():
     def __len__(self):
         return len(self.dl)
 
-# if __name__ == '__main__':
 def core(
-    DATA_DIR,
-    TRAIN_SIZE,
-    TEST_SIZE,
-    LAGS,
-    VAL_RATIO,
-    LEARNING_RATE,
-    NEURONS,
-    EPOCHS,
-    LOG_NAME,
-    TASK_NAME,
+    DATA_DIR: str,
+    TRAIN_SIZE: Union[int, float],
+    TEST_SIZE: Union[int, float],
+    LAGS: int,
+    VAL_RATIO: float,
+    LEARNING_RATE: float,
+    NEURONS: Tuple[int],
+    EPOCHS: int,
+    LOG_NAME: str,
+    TASK_NAME: str,
     profile_record: dict,
+    df_loader: Callable,
     verbose: bool=True # set verbose=False when running hyper-parameter search.
     # To ensure progress bar work correctly
     ) -> None:
-    # globals().update(PROFILE)
-    # locals().update(PROFILE)
-    # print(locals())
     if verbose:
         try:
             input_name = input("Log name ([Enter] for default name): ")
@@ -72,15 +63,6 @@ def core(
     # an arg in the profile -> Data cleaning call
     # or just use a DataFrame as an arg, so that the csv file
     # is read from hard drive only once.
-    df = pd.read_csv(
-        DATA_DIR,
-        index_col=0,
-        date_parser=lambda x: datetime.strptime(x, "%Y-%m-%d"),
-        engine="c"
-    )
-    
-    df = df[df != "."]
-    df.dropna(inplace=True)
     
     # ==== END ====
     # TODO: preprocessing date, and write reconstruction script.
