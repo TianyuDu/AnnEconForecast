@@ -16,7 +16,7 @@ import pandas as pd
 import tqdm
 import torch
 
-import main_lstm
+import lstm_controls
 from param_set_generator import gen_hparam_set
 import DIRS
 
@@ -31,23 +31,19 @@ SRC_PROFILE = {
     "NEURONS": (256, 512),
     "EPOCHS": [300, 500],
     "LOG_NAME": "LASTOUT",
-    "TASK_NAME": "Exchange rate",
-    "DATA_DIR": DIRS.DEXCAUS["ec2_gpu"]
+    "TASK_NAME": "Exchange rate"
 }
 
 def df_loader() -> pd.DataFrame:
     df = pd.read_csv(
-        DATA_DIR,
+        DIRS.DEXCAUS["ec2_gpu"],
         index_col=0,
         date_parser=lambda x: datetime.strptime(x, "%Y-%m-%d"),
         engine="c"
     )
-    
     df = df[df != "."]
     df.dropna(inplace=True)
     return df
-
-# torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
 if __name__ == "__main__":
     profile_set = gen_hparam_set(SRC_PROFILE)
@@ -55,11 +51,14 @@ if __name__ == "__main__":
     pprint(profile_set[0])
     print("============================")
     print("Cuda avaiable: ", torch.cuda.is_available())
-    # TODO: manage cuda devices.
-    # dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     start = datetime.now()
+    raw_df = df_loader()
     for i in tqdm.trange(len(profile_set), desc="Hyper-Param Profile"):
         PROFILE = profile_set[i]
-        main_lstm.core(**PROFILE, profile_record=PROFILE, verbose=False)
+        lstm_controls.core(
+            **PROFILE, 
+            profile_record=PROFILE,
+            raw_data=raw_df,
+            verbose=False
+        )
     print(f"\nTotal time taken: {datetime.now() - start}")
-    
