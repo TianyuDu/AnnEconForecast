@@ -41,6 +41,7 @@ profile = {
     "LAGS": 12,
     # training
     "VAL_RATIO": 0.2,  # Validation ratio.
+    "BATCH_SIZE": 1024,
     "NEURONS": (256, 512),
     "LEARNING_RATE": 0.03,
     "EPOCHS": 500,
@@ -60,6 +61,7 @@ def core(
     TEST_SIZE: Union[int, float],
     LAGS: int,
     VAL_RATIO: float,
+    BATCH_SIZE: int,
     LEARNING_RATE: float,
     NEURONS: Tuple[int],
     EPOCHS: int,
@@ -86,8 +88,9 @@ def core(
     
     gen = SlpGenerator.SlpGenerator(df_train, verbose=verbose)
     fea, tar = gen.get_many_to_one(lag=LAGS)
+    print(fea.shape)
     train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
-        mode="Nto1", lag=LAGS, shuffle=True, batch_size=256, validation_ratio=VAL_RATIO,
+        mode="Nto1", lag=LAGS, shuffle=True, batch_size=BATCH_SIZE, validation_ratio=VAL_RATIO,
         pin_memory=False
     )
     # build the model
