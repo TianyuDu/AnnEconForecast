@@ -10,7 +10,6 @@ import matplotlib
 from matplotlib import pyplot as plt
 from tensorboardX import SummaryWriter
 
-# import Logger
 import LstmModels
 import SlpGenerator
 
@@ -46,10 +45,11 @@ def core(
     LOG_NAME: str,
     TASK_NAME: str,
     profile_record: dict,
-    df_loader: Callable,
+    raw_df: pd.DataFrame,
     verbose: bool=True # set verbose=False when running hyper-parameter search.
     # To ensure progress bar work correctly
     ) -> None:
+    # Query the log name from user.
     if verbose:
         try:
             input_name = input("Log name ([Enter] for default name): ")
@@ -57,14 +57,9 @@ def core(
             LOG_NAME = input_name
         except AssertionError:
             print(f"Default name: {LOG_NAME} is used.")
-    
-    # ==== TODO ====
-    # Extract this portion to an external function used as 
-    # an arg in the profile -> Data cleaning call
-    # or just use a DataFrame as an arg, so that the csv file
-    # is read from hard drive only once.
-    
-    # ==== END ====
+
+    df = raw_df.copy()
+
     # TODO: preprocessing date, and write reconstruction script.
     if TRAIN_SIZE < 1 and TEST_SIZE:
         assert TRAIN_SIZE + TEST_SIZE == 1
