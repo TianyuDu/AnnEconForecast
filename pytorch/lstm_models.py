@@ -54,7 +54,6 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
         self,
         lags: int,
         neurons: Tuple[int],
-        dtype: torch.dtype,  # Datatype 
         num_inputs: int=1,  # Dimension of feature series
         num_outputs: int=1,  # Dimension of target series
         ) -> None:
