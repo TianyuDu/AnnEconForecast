@@ -30,7 +30,7 @@ SRC_PROFILE = {
     "VAL_RATIO": 0.2,  # Validation ratio.
     "BATCH_SIZE": 32,
     "LEARNING_RATE": [0.03, 0.01, 0.3],
-    "NEURONS": (128, 256),
+    "NEURONS": (256, 512),
     "EPOCHS": [300, 500],
     "NAME": "_"
 }
@@ -38,18 +38,18 @@ SRC_PROFILE = {
 SRC_PROFILE = {
     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
     "TEST_SIZE": 0.2,
-    "LAGS": 12,
+    "LAGS": 36,
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "BATCH_SIZE": 32,
-    "LEARNING_RATE": 0.3,
-    "NEURONS": (32, 64),
-    "EPOCHS": [50],
+    "BATCH_SIZE": 128,
+    "LEARNING_RATE": 0.1,
+    "NEURONS": (256, 512),
+    "EPOCHS": [300],
     "NAME": "_"
 }
 
 def df_loader() -> pd.DataFrame:
     df = pd.read_csv(
-        "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv",
+        "/home/ec2-user/AnnEconForecast/data/CPIAUCSL.csv",
         index_col=0,
         date_parser=lambda x: datetime.strptime(x, "%Y-%m-%d"),
         engine="c"

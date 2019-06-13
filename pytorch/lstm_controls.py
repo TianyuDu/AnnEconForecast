@@ -105,8 +105,8 @@ def core(
     if verbose:
         print("Device selected: ", device)
 
-    # TODO: check if this is necessary.
-    # torch.set_default_tensor_type('torch.cuda.FloatTensor')
+    torch.set_default_tensor_type('torch.cuda.FloatTensor')
+    # ==== Unnecessary ====
     # train_dl = DeviceDataLoader(train_dl, device)
     # val_dl = DeviceDataLoader(val_dl, device)
     # ==== end ====

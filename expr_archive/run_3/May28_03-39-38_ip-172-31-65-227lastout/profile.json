@@ -1,1 +1,0 @@
-{"TRAIN_SIZE": 231, "TEST_SIZE": 58, "LAGS": 3, "VAL_RATIO": 0.2, "LEARNING_RATE": 0.1, "NEURONS": [128, 256], "EPOCHS": 1000, "LOG_NAME": "lastout", "TASK_NAME": "LastOutLSTM on Sunspot", "DATA_DIR": "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"}
