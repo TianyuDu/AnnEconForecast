@@ -55,7 +55,7 @@ adf.test(transformed)
 auto.arima(ts_train, max.p=10, max.P=10, max.q=10, max.Q=10, max.d=3, max.D=3, trace=TRUE)
 
 # ==== Fit and Evaluate the Model ====
-model <- arima(ts_train, order=c(3,1,3))
+model <- arima(ts_train, order=c(1, 1, 1))
 res <- residuals(model)
 mse <- mean(res**2)
 rmse <- sqrt(mse)
