@@ -2,11 +2,11 @@ import json
 from datetime import datetime
 from typing import Callable, Tuple, Union
 
+import matplotlib
 import numpy as np
 import pandas as pd
 import torch
 import tqdm
-import matplotlib
 from matplotlib import pyplot as plt
 from tensorboardX import SummaryWriter
 
@@ -32,6 +32,20 @@ class DeviceDataLoader():
     
     def __len__(self):
         return len(self.dl)
+
+# Example Profile
+profile = {
+    "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
+    "TEST_SIZE": 0.2,
+    "LAGS": 12,
+    "VAL_RATIO": 0.2,  # Validation ratio.
+    "LEARNING_RATE": 0.03,
+    "NEURONS": (256, 512),
+    "EPOCHS": 500,
+    "LOG_NAME": "example",
+    "TASK_NAME": "example"
+}
+
 
 def core(
     DATA_DIR: str,

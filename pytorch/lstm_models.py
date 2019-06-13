@@ -1,5 +1,6 @@
 """
 Created: May 19 2019
+Different types of LSTM models
 """
 
 from typing import Tuple
@@ -7,20 +8,6 @@ from typing import Tuple
 import numpy as np
 import torch
 
-# Test the multiple inheritance with super() call.
-# class First():
-#     def __init__(self):
-#         print("first")
-
-# class Second():
-#     def __init__(self):
-#         print("second")
-
-# class Third(First, Second):
-#     def __init__(self):
-#         super().__init__()
-
-# c = Third()
 
 class StackedLSTM(torch.nn.Module):
     """
@@ -70,7 +57,6 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
         dtype: torch.dtype,  # Datatype 
         num_inputs: int=1,  # Dimension of feature series
         num_outputs: int=1,  # Dimension of target series
-        dtype=torch.double
         ) -> None:
         super().__init__(neurons=neurons, num_inputs=num_inputs, num_outputs=num_outputs, dtype=dtype)
         # Output Pooling Overtime Layer, for PoolingLSTM only.
@@ -83,28 +69,14 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
         """
         inputs: tensor@(NSamples, SequenceLength) univariate time series.
         """
+        # Initialize hidden and new cell states.
         # LSTM Layer 1
-        h_t = torch.randn(
-            inputs.size(0),
-            self.lstm_neurons[0]
-        )
-        
-        c_t = torch.randn(
-            inputs.size(0),
-            self.lstm_neurons[0]
-        )
+        h_t = torch.randn(inputs.size(0), self.lstm_neurons[0])
+        c_t = torch.randn(inputs.size(0), self.lstm_neurons[0])
         # LSTM Layer 2
-        h_t2 = torch.randn(
-            inputs.size(0),
-            self.lstm_neurons[1]
-        )
-        c_t2 = torch.randn(
-            inputs.size(0),
-            self.lstm_neurons[1]
-        )
+        h_t2 = torch.randn(inputs.size(0), self.lstm_neurons[1])
+        c_t2 = torch.randn(inputs.size(0), self.lstm_neurons[1])
         
-        # print(f"Shapes:\n\th:{h_t.shape}, h2:{h_t2.shape}\n\tc:{c_t.shape}, c2:{c_t2.shape}")
-
         out_seq = list()
         for input_t in inputs.chunk(inputs.size(1), dim=1):
             # Expand input tensor by time step.
@@ -114,29 +86,18 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
             h_t, c_t = self.lstm1(input_t, (h_t, c_t))
             h_t2, c_t2 = self.lstm2(h_t, (h_t2, c_t2))
             out = self.linear(h_t2)  # (batchsize, 1) single time step output
+            # ==== contingent feature ====
+            assert len(out) == inputs.size(1)
+            # ==== end ====
             out_seq.append(out)
         # out_seq @ (batchsize, lags)
-        # Single step forecasting, using the pooling layer
-        # to map ALL y-hat in the sequence to a single output.
+        assert out_seq.shape == (inputs.size(1), self.lags)
+        # Single step forecasting, using the pooling layer.
         out_seq = torch.stack(out_seq, dim=1).squeeze(dim=2)
         # Then pool over time to construct the final prediction.
         predict = self.pooling(out_seq)
-        
-        # print(f"predict shape: {predict.shape}")
+        assert len(predict) == inputs.size(1)
 
-        # TODO: clean up code here.
-        # For regression problem, the output 
-        # outputs.append(out)
-        # Current: outputs @ (N, 1) * SeqLen
-        # for _ in range(future):
-        #     h_t, c_t = self.lstm1(output, (h_t, c_t))
-        #     h_t2, c_t2 = self.lstm2(h_t, (h_t2, c_t2))
-        #     output = self.linear(h_t2)
-        #     out_seq.append(output)
-        # Current: outputs @ (N, 1) * SeqLen+F
-        # Add SeqLen+F to dim=1 -> (N, SeqLen+F, 1)
-        # Drop dim=2 -> (N, SeqLen+F)
-        # out_seq = torch.stack(out_seq, dim=1).squeeze(dim=2)
         return predict
 
 class LastOutLSTM(StackedLSTM, torch.nn.Module):
@@ -156,47 +117,29 @@ class LastOutLSTM(StackedLSTM, torch.nn.Module):
         num_inputs: int=1,
         num_outputs: int=1
         ) -> None:
-        super().__init__(
-            neurons=neurons,
-            num_inputs=num_inputs,
-            num_outputs=num_outputs
-        )
+        super().__init__(neurons=neurons, num_inputs=num_inputs, num_outputs=num_outputs)
 
     def forward(self, inputs):
         """
         inputs: tensor with shale (batchsize, num_lags) univariate time series.
         """
+        # Initialize hidden and new cell states.
         # LSTM Layer 1
-        h_t = torch.randn(
-            inputs.size(0),
-            self.lstm_neurons[0]
-        )
-
-        c_t = torch.randn(
-            inputs.size(0),
-            self.lstm_neurons[0]
-        )
+        h_t = torch.randn(inputs.size(0), self.lstm_neurons[0])
+        c_t = torch.randn(inputs.size(0), self.lstm_neurons[0])
         # LSTM Layer 2
-        h_t2 = torch.randn(
-            inputs.size(0),
-            self.lstm_neurons[1]
-        )
-        c_t2 = torch.randn(
-            inputs.size(0),
-            self.lstm_neurons[1]
-        )
+        h_t2 = torch.randn(inputs.size(0), self.lstm_neurons[1])
+        c_t2 = torch.randn(inputs.size(0), self.lstm_neurons[1])
 
         out_seq = list()
-
         for (i, input_t) in enumerate(inputs.chunk(inputs.size(1), dim=1)):
             # Expand input tensor by time step.
             # To a SequenceLength tuple with each element@(batchsize, 1)
             # Corresponding to the i-th observation in all samples.
             # (inputs, (h, c)) -> (h, c) updated.
-            # print(h_t.dtype)
-            # print(c_t.dtype)
             
             # ==== To correct input type ==== 
+            # TODO: remove this after debugging on server.
             # if input_t.dtype == torch.float64:
             #     print("Input Type detected: ", input_t.dtype)
             #     input_t = input_t.float()
