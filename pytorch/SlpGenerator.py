@@ -85,7 +85,7 @@ class SlpGenerator(GenericGenerator):
             cur_fea = self.df.iloc[i-lag:i]
             if cur_fea.empty:
                 if self.v:
-                    print(f"\tAt timestep {t}, not sufficient lags, dropped.")
+                    print(f"\tAt timestep {t}, insufficient lags, dropped.")
                 continue
             cur_tar = self.df.iloc[[i]]
             # Extract
