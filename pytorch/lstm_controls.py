@@ -50,6 +50,12 @@ profile = {
 
 
 def core(
+    profile_record: dict,
+    raw_df: pd.DataFrame,
+    verbose: bool,
+    # set verbose=False when running hyper-parameter search.
+    # To ensure progress bar work correctly
+    # ==== Parameter from profile ====
     TRAIN_SIZE: Union[int, float],
     TEST_SIZE: Union[int, float],
     LAGS: int,
@@ -57,12 +63,7 @@ def core(
     LEARNING_RATE: float,
     NEURONS: Tuple[int],
     EPOCHS: int,
-    NAME: str,
-    profile_record: dict,
-    raw_df: pd.DataFrame,
-    verbose: bool=True 
-    # set verbose=False when running hyper-parameter search.
-    # To ensure progress bar work correctly
+    NAME: str
     ) -> None:
     # Query the log name from user.
     if verbose:
