@@ -9,9 +9,9 @@ library(aTSA)
 library(lmtest)
 
 setwd("/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast")
-df <- read.csv("./data/DEXCAUS.csv", header=TRUE, sep=",", col.names=c("Date", "Ex"))
+df <- read.csv("./data/DEXCAUS.csv", header=TRUE, sep=",", col.names=c("Date", "Exchange"))
 
-df <- subset(df, Ex != ".")
+df <- subset(df, Exchange != ".")
 ts_all <- ts(df$Ex)
 
 # Train and test spliting
