@@ -106,9 +106,9 @@ def core(
         print("Device selected: ", device)
 
     # TODO: check if this is necessary.
-    torch.set_default_tensor_type('torch.cuda.FloatTensor')
-    train_dl = DeviceDataLoader(train_dl, device)
-    val_dl = DeviceDataLoader(val_dl, device)
+    # torch.set_default_tensor_type('torch.cuda.FloatTensor')
+    # train_dl = DeviceDataLoader(train_dl, device)
+    # val_dl = DeviceDataLoader(val_dl, device)
     # ==== end ====
 
     net.float()  # Cast all floating point parameters and buffers to double datatype

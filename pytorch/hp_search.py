@@ -28,22 +28,34 @@ SRC_PROFILE = {
     "TEST_SIZE": 0.2,
     "LAGS": [9, 12],
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "BATCH_SIZE": 1024,
+    "BATCH_SIZE": 32,
     "LEARNING_RATE": [0.03, 0.01, 0.3],
     "NEURONS": (128, 256),
     "EPOCHS": [300, 500],
     "NAME": "_"
 }
 
+SRC_PROFILE = {
+    "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
+    "TEST_SIZE": 0.2,
+    "LAGS": 12,
+    "VAL_RATIO": 0.2,  # Validation ratio.
+    "BATCH_SIZE": 32,
+    "LEARNING_RATE": 0.3,
+    "NEURONS": (32, 64),
+    "EPOCHS": [50],
+    "NAME": "_"
+}
+
 def df_loader() -> pd.DataFrame:
     df = pd.read_csv(
-        DIRS.DEXCAUS["ec2_gpu"],
+        "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv",
         index_col=0,
         date_parser=lambda x: datetime.strptime(x, "%Y-%m-%d"),
         engine="c"
     )
-    df[df[df.columns[0]] == "."] = np.nan
-    df.fillna(method="ffill")
+    # df[df[df.columns[0]] == "."] = np.nan
+    # df.fillna(method="ffill")
     # df = df[df != "."]
     # df.dropna(inplace=True)
     return df
@@ -59,6 +71,6 @@ if __name__ == "__main__":
             **PROFILE, 
             profile_record=PROFILE,
             raw_df=raw_df,
-            verbose=False
+            verbose=True
         )
     print(f"\nTotal time taken: {datetime.now() - start}")
