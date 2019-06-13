@@ -8,6 +8,7 @@ import pandas as pd
 import torch
 import tqdm
 from matplotlib import pyplot as plt
+from matplotlib import rcParams
 from tensorboardX import SummaryWriter
 
 import lstm_models
@@ -88,7 +89,6 @@ def core(
     
     gen = SlpGenerator.SlpGenerator(df_train, verbose=verbose)
     fea, tar = gen.get_many_to_one(lag=LAGS)
-    print(fea.shape)
     train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
         mode="Nto1", lag=LAGS, shuffle=True, batch_size=BATCH_SIZE, validation_ratio=VAL_RATIO,
         pin_memory=False
@@ -193,10 +193,11 @@ def core(
                 index=tar_df.index
             )
         # ==== visualize test set prediction ====
+            rcParams["lines.linewidth"] = 0.2
             total = pd.concat([tar_df, pred_df], axis=1)
             total.columns = ["Actual", "Forecast"]
             mse = np.mean((total["Actual"] - total["Forecast"])**2)
-            fig = plt.figure(dpi=200)
+            fig = plt.figure(dpi=700)
 
             plt.plot(total)
             plt.grid()

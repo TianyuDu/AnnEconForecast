@@ -7,7 +7,7 @@ import sys
 sys.path.extend(["./core", "./core/tools"])
 
 import matplotlib
-c = input("Use Agg as matplotlib (avoid tkinter)[y/n]:")
+c = input("Use Agg as matplotlib (avoid tkinter)[y/n]: ")
 if c.lower() == "y":
     matplotlib.use("agg")
 from matplotlib import pyplot as plt
@@ -29,8 +29,8 @@ SRC_PROFILE = {
     "VAL_RATIO": 0.2,  # Validation ratio.
     "BATCH_SIZE": 1024,
     "LEARNING_RATE": [0.01],
-    "NEURONS": (256, 512),
-    "EPOCHS": [300],
+    "NEURONS": (128, 256),
+    "EPOCHS": [50],
     "NAME": "_"
 }
 
@@ -47,9 +47,6 @@ def df_loader() -> pd.DataFrame:
 
 if __name__ == "__main__":
     profile_set = gen_hparam_set(SRC_PROFILE)
-    print("====Sample Configuration====")
-    pprint(profile_set[0])
-    print("============================")
     print("Cuda avaiable: ", torch.cuda.is_available())
     start = datetime.now()
     raw_df = df_loader()
