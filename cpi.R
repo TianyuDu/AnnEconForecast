@@ -9,7 +9,10 @@ library(lmtest)
 library(xts)
 library(anytime)
 
-df <- read.csv("./data/CPIAUCSL.csv", header=TRUE, sep=",")
+setwd("/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast")
+
+df <- read.csv("./data/CPIAUCSL_monthly_change.csv", header=TRUE, sep=",")
+colnames(df) <- c("DATE", "CPIAUCSL")
 
 # ts_data <- ts(df$CPIAUCSL,start=c(1947,1),frequency=12)
 ts_all <- xts(x=df[c("CPIAUCSL")], order.by=anytime(df$DATE))
@@ -53,7 +56,7 @@ adf.test(transformed)
 auto.arima(ts_train$CPIAUCSL, max.p=10, max.P=10, max.q=10, max.Q=10, max.d=10, max.D=10, stationary=FALSE, trace=TRUE)
 
 # ==== Fit and Evaluate the Model ====
-profile <- c(2, 2, 2)
+profile <- c(6, 1, 2)
 model <- arima(ts_train, order=profile)
 res <- residuals(model)
 mse_train <- mean(res**2)
@@ -90,7 +93,7 @@ combined <- cbind("Rolling Forecast"=ts_rf, "Actual"=ts_test)
 autoplot(combined, facets=FALSE, alpha=0.6) +
     ggtitle("One Step Rolling Forecasting on Test Set") +
     xlab("Date") +
-    ylab("Sunspot")
+    ylab("CPI")
 # Performance Metrics
 mse_test <- mean((ts_rf - ts_test) ** 2)
 rmse_test <- sqrt(mse_test)
