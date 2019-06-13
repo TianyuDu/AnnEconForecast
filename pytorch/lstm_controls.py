@@ -42,13 +42,11 @@ profile = {
     "LEARNING_RATE": 0.03,
     "NEURONS": (256, 512),
     "EPOCHS": 500,
-    "LOG_NAME": "example",
-    "TASK_NAME": "example"
+    "NAME": "Example profile"
 }
 
 
 def core(
-    DATA_DIR: str,
     TRAIN_SIZE: Union[int, float],
     TEST_SIZE: Union[int, float],
     LAGS: int,
@@ -56,11 +54,11 @@ def core(
     LEARNING_RATE: float,
     NEURONS: Tuple[int],
     EPOCHS: int,
-    LOG_NAME: str,
-    TASK_NAME: str,
+    NAME: str,
     profile_record: dict,
     raw_df: pd.DataFrame,
-    verbose: bool=True # set verbose=False when running hyper-parameter search.
+    verbose: bool=True 
+    # set verbose=False when running hyper-parameter search.
     # To ensure progress bar work correctly
     ) -> None:
     # Query the log name from user.
@@ -68,13 +66,13 @@ def core(
         try:
             input_name = input("Log name ([Enter] for default name): ")
             assert input_name != ""
-            LOG_NAME = input_name
+            NAME = input_name
         except AssertionError:
-            print(f"Default name: {LOG_NAME} is used.")
+            print(f"Default name: {NAME} is used.")
 
     df = raw_df.copy()
 
-    # TODO: preprocessing date, and write reconstruction script.
+    # TODO: preprocessing data, and write reconstruction script.
     if TRAIN_SIZE < 1 and TEST_SIZE:
         assert TRAIN_SIZE + TEST_SIZE == 1
         TRAIN_SIZE = int(len(df) * TRAIN_SIZE)
@@ -106,7 +104,7 @@ def core(
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
 
-    with tqdm.trange(EPOCHS) as prg, SummaryWriter(comment=LOG_NAME) as writer:
+    with tqdm.trange(EPOCHS) as prg, SummaryWriter(comment=NAME) as writer:
         for i in prg:
             train_loss = []
             # TODO: rename all data to feature
@@ -189,7 +187,7 @@ def core(
             # plt.plot(np.random.rand(10), linewidth=0.7, alpha=0.6)
             plt.plot(total)
             plt.grid()
-            plt.title(f"Test Set of {TASK_NAME} After {EPOCHS} Epochs")
+            plt.title(f"Test Set of {NAME} After {EPOCHS} Epochs")
             plt.xlabel("Date")
             plt.ylabel("Value")
             plt.legend(["Actual", f"Forecast, MSE={mse}"])
