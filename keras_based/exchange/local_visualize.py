@@ -53,8 +53,6 @@ train_yhat = model.predict(model.container.train_X)
 train_yhat = model.container.invert_difference(
     train_yhat, range(len(train_yhat)), fillnone=True
 )
-# FIXME fix the prediction problem: output are nearly zeros
-# Solution: try larger epochs.
 
 plt.close()
 plt.plot(yhat, linewidth=0.6, alpha=0.6, label="Test set yhat")
