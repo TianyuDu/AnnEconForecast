@@ -30,8 +30,7 @@ SRC_PROFILE = {
     "LEARNING_RATE": [0.01, 0.03],
     "NEURONS": (256, 512),
     "EPOCHS": [300, 500],
-    "LOG_NAME": "LASTOUT",
-    "TASK_NAME": "Exchange rate"
+    "NAME": "_"
 }
 
 def df_loader() -> pd.DataFrame:
@@ -58,7 +57,7 @@ if __name__ == "__main__":
         lstm_controls.core(
             **PROFILE, 
             profile_record=PROFILE,
-            raw_data=raw_df,
+            raw_df=raw_df,
             verbose=False
         )
     print(f"\nTotal time taken: {datetime.now() - start}")
