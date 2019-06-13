@@ -13,6 +13,7 @@ if c.lower() == "y":
 from matplotlib import pyplot as plt
 
 import pandas as pd
+import numpy as np
 import tqdm
 import torch
 
@@ -41,8 +42,10 @@ def df_loader() -> pd.DataFrame:
         date_parser=lambda x: datetime.strptime(x, "%Y-%m-%d"),
         engine="c"
     )
-    df = df[df != "."]
-    df.dropna(inplace=True)
+    df[df[df.columns[0]] == "."] = np.nan
+    df.fillna(method="ffill")
+    # df = df[df != "."]
+    # df.dropna(inplace=True)
     return df
 
 if __name__ == "__main__":
