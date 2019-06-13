@@ -158,8 +158,7 @@ def core(
                 writer.add_scalars(
                     "loss/rmse", {"Validation": _rmse(val_loss)}, i)
             prg.set_description(
-                f"TrainLoss:{np.mean(train_loss): 0.7f}, \
-                    ValLoss:{np.mean(val_loss): 0.7f}")
+                f"TrainLoss:{np.mean(train_loss): 0.7f}, ValLoss:{np.mean(val_loss): 0.7f}")
         # TODO: deal with the add graph function here.
         # writer.add_graph(net, (torch.zeros(32, LAGS)))
 
