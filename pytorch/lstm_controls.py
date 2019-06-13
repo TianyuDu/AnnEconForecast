@@ -10,7 +10,7 @@ import tqdm
 from matplotlib import pyplot as plt
 from tensorboardX import SummaryWriter
 
-import LstmModels
+import lstm_models
 import SlpGenerator
 
 plt.style.use("seaborn-dark")
@@ -91,53 +91,56 @@ def core(
         pin_memory=False
     )
     # build the model
-    # net = LstmModels.PoolingLSTM(lags=LAGS, neurons=NEURONS)
-    net = LstmModels.LastOutLSTM(neurons=NEURONS)
+    # net = lstm_models.PoolingLSTM(lags=LAGS, neurons=NEURONS)
+    net = lstm_models.LastOutLSTM(neurons=NEURONS)
     
-    # ==== Move everything to GPU ====
+    # ==== Move everything to GPU (if avaiable) ====
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    # print("Device detected: ", device)
-    move = lambda x: x.to(device)
+    if verbose:
+        print("Device selected: ", device)
+
+    # TODO: check if this is necessary.
     torch.set_default_tensor_type('torch.cuda.FloatTensor')
     train_dl = DeviceDataLoader(train_dl, device)
     val_dl = DeviceDataLoader(val_dl, device)
-    
+    # ==== end ====
+
     net.float()  # Cast all floating point parameters and buffers to double datatype
     net = net.to(device)
+    # TODO: check if this is necessary.
     net = to_device(net, device)
+    # ==== end ====
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.Adam(net.parameters(), lr=LEARNING_RATE)
 
     with tqdm.trange(EPOCHS) as prg, SummaryWriter(comment=NAME) as writer:
         for i in prg:
+            # ======== Training Phase ========
             train_loss = []
             # TODO: rename all data to feature
             for batch_idx, (data, target) in enumerate(train_dl):
                 # data, target = map(torch.Tensor, (data, target))
                 # data, target = data.double(), target.double()
-                # ========
                 # print("data.shape", data.shape)
                 # print("data.device: ", data.device)
                 # print("target.device: ", target.device)
-                # ==== GPU ====
+                # ==== move to GPU ====
                 data = data.to(device).float()
                 target = target.to(device).float()
-                # ==== END ====
+                # ==== end ====
                 optimizer.zero_grad()
                 out = net(data)
                 loss = criterion(out, target)
                 train_loss.append(loss.data.item())
                 loss.backward()
                 optimizer.step()
-            # # train_log.add(i, np.mean(train_loss))
             # MSE Loss
-            writer.add_scalars(
-                "loss/mse", {"Train": np.mean(train_loss)}, i)
+            writer.add_scalars("loss/mse", {"Train": np.mean(train_loss)}, i)
             # RMSE Loss
-            func = lambda x: np.sqrt(np.mean(x))
-            writer.add_scalars(
-                "loss/rmse", {"Train": func(train_loss)}, i)
-            # print(f">>>> Training phase done: {i}")
+            _rmse = lambda x: np.sqrt(np.mean(x))
+            writer.add_scalars("loss/rmse", {"Train": _rmse(train_loss)}, i)
+            
+            # ======== Validation Phase ========
             if i % 10 == 0:
                 val_loss = []
                 with torch.no_grad():
@@ -153,10 +156,10 @@ def core(
                 writer.add_scalars(
                     "loss/mse", {"Validation": np.mean(val_loss)}, i)
                 writer.add_scalars(
-                    "loss/rmse", {"Validation": func(val_loss)}, i)
+                    "loss/rmse", {"Validation": _rmse(val_loss)}, i)
             prg.set_description(
-                f"TrainLoss:{np.mean(train_loss): 0.7f}, ValLoss:{np.mean(val_loss): 0.7f}")
-            # print(f"Epoch: {i}\tTotal Loss: {train_loss:0.6f}\tLatest Val Loss: {val_loss:0.6f}")
+                f"TrainLoss:{np.mean(train_loss): 0.7f}, \
+                    ValLoss:{np.mean(val_loss): 0.7f}")
         # TODO: deal with the add graph function here.
         # writer.add_graph(net, (torch.zeros(32, LAGS)))
 
@@ -165,7 +168,8 @@ def core(
             encoded = json.dumps(profile_record)
             f.write(encoded)
 
-        # begin to predict, no need to track gradient here
+        # Begin to predict on test set, no need to track gradient here.
+        # ==== training set ====
         with torch.no_grad():
             gen_test = SlpGenerator.SlpGenerator(df_test, verbose=False)
             fea_df, tar_df = gen_test.get_many_to_one(lag=LAGS)
@@ -176,19 +180,22 @@ def core(
                 f = lambda x, idx: torch.Tensor(x.iloc[idx].values)
                 feature = f(fea_df, i)
                 feature = feature.view(1, feature.shape[0])
-                feature = feature.double()
-                feature = feature.to(device).float()
+                # TODO: check this.
+                # feature = feature.double()
+                # feature = feature.to(device).float()
+                feature = feature.to(device)
                 pred.append(net(feature))
             
             pred_df = pd.DataFrame(
                 data=np.array(pred),
                 index=tar_df.index
             )
+        # ==== visualize test set prediction ====
             total = pd.concat([tar_df, pred_df], axis=1)
             total.columns = ["Actual", "Forecast"]
             mse = np.mean((total["Actual"] - total["Forecast"])**2)
             fig = plt.figure(dpi=200)
-            # plt.plot(np.random.rand(10), linewidth=0.7, alpha=0.6)
+
             plt.plot(total)
             plt.grid()
             plt.title(f"Test Set of {NAME} After {EPOCHS} Epochs")
