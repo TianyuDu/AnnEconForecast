@@ -87,6 +87,9 @@ def core(
     
     df_train, df_test = df[:TRAIN_SIZE], df[-TEST_SIZE:]
     
+    if verbose:
+        print(f"Training set: {TRAIN_SIZE}; test set: {TEST_SIZE}")
+
     gen = SlpGenerator.SlpGenerator(df_train, verbose=verbose)
     fea, tar = gen.get_many_to_one(lag=LAGS)
     train_dl, val_dl, train_ds, val_ds = gen.get_tensors(
