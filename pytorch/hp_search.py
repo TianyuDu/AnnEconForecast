@@ -27,7 +27,7 @@ SRC_PROFILE = {
     "TEST_SIZE": 0.2,
     "LAGS": 12,
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "BATCH_SIZE": 1024
+    "BATCH_SIZE": 1024,
     "LEARNING_RATE": [0.01],
     "NEURONS": (256, 512),
     "EPOCHS": [300],
