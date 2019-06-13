@@ -66,7 +66,8 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
     def __init__(
         self,
         lags: int,
-        neurons: Tuple[int]=(32, 64),
+        neurons: Tuple[int],
+        dtype: torch.dtype,  # Datatype 
         num_inputs: int=1,  # Dimension of feature series
         num_outputs: int=1,  # Dimension of target series
         dtype=torch.double
@@ -151,7 +152,7 @@ class LastOutLSTM(StackedLSTM, torch.nn.Module):
     """
     def __init__(
         self,
-        neurons: Tuple[int]=(32, 64),
+        neurons: Tuple[int],
         num_inputs: int=1,
         num_outputs: int=1
         ) -> None:
