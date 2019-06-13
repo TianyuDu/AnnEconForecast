@@ -25,12 +25,12 @@ import DIRS
 SRC_PROFILE = {
     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
     "TEST_SIZE": 0.2,
-    "LAGS": 12,
+    "LAGS": [9, 12],
     "VAL_RATIO": 0.2,  # Validation ratio.
     "BATCH_SIZE": 1024,
-    "LEARNING_RATE": [0.01],
+    "LEARNING_RATE": [0.03, 0.01, 0.3],
     "NEURONS": (128, 256),
-    "EPOCHS": [50],
+    "EPOCHS": [300, 500],
     "NAME": "_"
 }
 
