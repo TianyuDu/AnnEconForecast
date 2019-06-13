@@ -7,12 +7,15 @@ library(forecast)
 library(stats)
 library(aTSA)
 library(lmtest)
+library(xts)
+library(anytime)
 
 setwd("/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast")
-df <- read.csv("./data/DEXCAUS.csv", header=TRUE, sep=",", col.names=c("Date", "Exchange"))
+df <- read.csv("./data/DEXCAUS_cleaned.csv", header=TRUE, sep=",", col.names=c("Date", "Exchange"))
 
-df <- subset(df, Exchange != ".")
-ts_all <- ts(df$Ex)
+# ts_all <- ts(df, start=c(1971, 1, 04),frequency=30)
+
+ts_all <- xts(x=df[c("Exchange")], order.by=anytime(df$Date))
 
 # Train and test spliting
 train_size <- as.integer(0.8 * length(ts_all))
@@ -23,7 +26,7 @@ ts_test <- tail(ts_all, test_size)
 
 # Forecasting of naive preddictor, as a baseline model.
 baseline_error <- mean(
-    diff(ts_test) ** 2
+    na.omit(diff(ts_test)) ** 2
 )
 cat(baseline_error)
 # ==== End ====
@@ -52,15 +55,16 @@ autoplot(transformed) +
 adf.test(transformed)
 
 # Find the model minimizing AIC w/ correction.
-auto.arima(ts_train, max.p=10, max.P=10, max.q=10, max.Q=10, max.d=3, max.D=3, trace=TRUE)
+# auto.arima(ts_train, max.p=30, max.P=30, max.q=30, max.Q=30, max.d=3, max.D=3, stationary=TRUE, trace=TRUE)
+auto.arima(ts_train, max.order=30, stationary=FALSE, trace=TRUE)
 
 # ==== Fit and Evaluate the Model ====
-model <- arima(ts_train, order=c(1, 1, 1))
+model <- arima(ts_train, order=c(0, 1, 2))
 res <- residuals(model)
 mse <- mean(res**2)
 rmse <- sqrt(mse)
 
-err_abspec <- abs(res)/ts_train
+err_abspec <- abs(res) / as.matrix(ts_train)
 mape <- mean(
     err_abspec[err_abspec != Inf]
 )
