@@ -35,13 +35,16 @@ class DeviceDataLoader():
 
 # Example Profile
 profile = {
+    # data
     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
     "TEST_SIZE": 0.2,
     "LAGS": 12,
+    # training
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "LEARNING_RATE": 0.03,
     "NEURONS": (256, 512),
+    "LEARNING_RATE": 0.03,
     "EPOCHS": 500,
+    # other
     "NAME": "Example profile"
 }
 
