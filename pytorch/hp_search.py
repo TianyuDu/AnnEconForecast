@@ -35,21 +35,21 @@ SRC_PROFILE = {
     "NAME": "_"
 }
 
-SRC_PROFILE = {
-    "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
-    "TEST_SIZE": 0.2,
-    "LAGS": 36,
-    "VAL_RATIO": 0.2,  # Validation ratio.
-    "BATCH_SIZE": 128,
-    "LEARNING_RATE": 0.1,
-    "NEURONS": (256, 512),
-    "EPOCHS": [300],
-    "NAME": "_"
-}
+# SRC_PROFILE = {
+#     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
+#     "TEST_SIZE": 0.2,
+#     "LAGS": 36,
+#     "VAL_RATIO": 0.2,  # Validation ratio.
+#     "BATCH_SIZE": 128,
+#     "LEARNING_RATE": 0.1,
+#     "NEURONS": (256, 512),
+#     "EPOCHS": [300],
+#     "NAME": "_"
+# }
 
 def df_loader() -> pd.DataFrame:
     df = pd.read_csv(
-        "/home/ec2-user/AnnEconForecast/data/CPIAUCSL.csv",
+        "/home/ec2-user/AnnEconForecast/data/CPIAUCSL_monthly_change.csv",
         index_col=0,
         date_parser=lambda x: datetime.strptime(x, "%Y-%m-%d"),
         engine="c"
@@ -65,12 +65,14 @@ if __name__ == "__main__":
     print("Cuda avaiable: ", torch.cuda.is_available())
     start = datetime.now()
     raw_df = df_loader()
-    for i in tqdm.trange(len(profile_set), desc="Hyper-Param Profile"):
-        PROFILE = profile_set[i]
-        lstm_controls.core(
-            **PROFILE, 
-            profile_record=PROFILE,
-            raw_df=raw_df,
-            verbose=True
-        )
+    with tqdm.trange(len(profile_set)) as prg:
+        for i in prg:
+            PROFILE = profile_set[i]
+            prg.set_description(f"n={PROFILE['NEURONS']};total:")
+            lstm_controls.core(
+                **PROFILE, 
+                profile_record=PROFILE,
+                raw_df=raw_df,
+                verbose=False
+            )
     print(f"\nTotal time taken: {datetime.now() - start}")
