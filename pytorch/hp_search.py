@@ -20,6 +20,7 @@ import torch
 import lstm_controls
 from param_set_generator import gen_hparam_set
 import DIRS
+from ProfileLoader import ProfileLoader
 
 # For sunspot, train_size = 231, test_size = 58
 
@@ -49,7 +50,12 @@ def df_loader() -> pd.DataFrame:
     return df
 
 if __name__ == "__main__":
-    profile_set = gen_hparam_set(SRC_PROFILE)
+    if input("Create new experiments?[y/n] ").lower() == "y":
+        profile_set = gen_hparam_set(SRC_PROFILE)
+    else:
+        path = input("Directory of profiles: ")
+        loader = ProfileLoader(path)
+        profile_set = loader.get_all()
     print("Cuda avaiable: ", torch.cuda.is_available())
     start = datetime.now()
     raw_df = df_loader()
