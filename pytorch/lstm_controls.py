@@ -107,8 +107,8 @@ def core(
 
     torch.set_default_tensor_type('torch.cuda.FloatTensor')
     # ==== Unnecessary ====
-    # train_dl = DeviceDataLoader(train_dl, device)
-    # val_dl = DeviceDataLoader(val_dl, device)
+    train_dl = DeviceDataLoader(train_dl, device)
+    val_dl = DeviceDataLoader(val_dl, device)
     # ==== end ====
 
     net.float()  # Cast all floating point parameters and buffers to double datatype
@@ -164,7 +164,7 @@ def core(
                 writer.add_scalars(
                     "loss/rmse", {"Validation": _rmse(val_loss)}, i)
             prg.set_description(
-                f"TrainLoss:{np.mean(train_loss): 0.7f}, ValLoss:{np.mean(val_loss): 0.7f}")
+                f"TrainMSE:{np.mean(train_loss): 0.7f}, ValMSE:{np.mean(val_loss): 0.7f}")
         # TODO: deal with the add graph function here.
         # writer.add_graph(net, (torch.zeros(32, LAGS)))
 
