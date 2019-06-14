@@ -26,26 +26,14 @@ import DIRS
 SRC_PROFILE = {
     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
     "TEST_SIZE": 0.2,
-    "LAGS": [9, 12],
+    "LAGS": [12, 16, 20],
     "VAL_RATIO": 0.2,  # Validation ratio.
-    "BATCH_SIZE": 32,
-    "LEARNING_RATE": [0.03, 0.01, 0.3],
-    "NEURONS": (256, 512),
-    "EPOCHS": [300, 500],
+    "BATCH_SIZE": [32, 128],
+    "LEARNING_RATE": [0.003, 0.01],
+    "NEURONS": [(512, 1024), (1024, 2048)],
+    "EPOCHS": [100, 300, 500],
     "NAME": "_"
 }
-
-# SRC_PROFILE = {
-#     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
-#     "TEST_SIZE": 0.2,
-#     "LAGS": 36,
-#     "VAL_RATIO": 0.2,  # Validation ratio.
-#     "BATCH_SIZE": 128,
-#     "LEARNING_RATE": 0.1,
-#     "NEURONS": (256, 512),
-#     "EPOCHS": [300],
-#     "NAME": "_"
-# }
 
 def df_loader() -> pd.DataFrame:
     df = pd.read_csv(
@@ -68,7 +56,8 @@ if __name__ == "__main__":
     with tqdm.trange(len(profile_set)) as prg:
         for i in prg:
             PROFILE = profile_set[i]
-            prg.set_description(f"n={PROFILE['NEURONS']};total:")
+            prg.set_description(
+                f"n={PROFILE['NEURONS']};l={PROFILE['LAGS']};a={PROFILE['LEARNING_RATE']};Total")
             lstm_controls.core(
                 **PROFILE, 
                 profile_record=PROFILE,
