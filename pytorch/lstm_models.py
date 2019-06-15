@@ -87,7 +87,7 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
             h_t, c_t = self.lstm1(input_t, (h_t, c_t))
             h_t2, c_t2 = self.lstm2(h_t, (h_t2, c_t2))
             out = self.linear(h_t2)  # (batchsize, 1) single time step output
-            print(f"Time step {i}: {out.shape}")
+            # print(f"Time step {i}: {out.shape}")
             out_seq.append(out)
         # out_seq @ (batchsize, lags)
         # assert out_seq.shape == (inputs.size(1), self.lags)
