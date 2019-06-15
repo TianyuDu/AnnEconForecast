@@ -96,9 +96,11 @@ def core(
         mode="Nto1", lag=LAGS, shuffle=True, batch_size=BATCH_SIZE, validation_ratio=VAL_RATIO,
         pin_memory=False
     )
+    if verbose:
+        print(f"Training Set @ {len(train_ds)}\nValidation Set: @ {len(val_ds)}")
     # build the model
-    # net = lstm_models.PoolingLSTM(lags=LAGS, neurons=NEURONS)
-    net = lstm_models.LastOutLSTM(neurons=NEURONS)
+    net = lstm_models.PoolingLSTM(lags=LAGS, neurons=NEURONS)
+    # net = lstm_models.LastOutLSTM(neurons=NEURONS)
     
     # ==== Move everything to GPU (if avaiable) ====
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
@@ -122,6 +124,8 @@ def core(
     with tqdm.trange(EPOCHS) as prg, SummaryWriter(comment=NAME) as writer:
         for i in prg:
             # ======== Training Phase ========
+            if verbose:
+                print(f"======== Training Phase @ Epoch {i} ========")
             train_loss = []
             # TODO: rename all data to feature
             for batch_idx, (data, target) in enumerate(train_dl):
@@ -147,6 +151,8 @@ def core(
             writer.add_scalars("loss/rmse", {"Train": _rmse(train_loss)}, i)
             
             # ======== Validation Phase ========
+            if verbose:
+                print(f"======== Validation Phase @ Epoch {i} ========")
             if i % 10 == 0:
                 val_loss = []
                 with torch.no_grad():
@@ -174,7 +180,9 @@ def core(
             f.write(encoded)
 
         # Begin to predict on test set, no need to track gradient here.
-        # ==== training set ====
+        # ======== Testing Phase ========
+        if verbose:
+            print("======== Testing Phase ========")
         with torch.no_grad():
             gen_test = SlpGenerator.SlpGenerator(df_test, verbose=False)
             fea_df, tar_df = gen_test.get_many_to_one(lag=LAGS)
