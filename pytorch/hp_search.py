@@ -8,7 +8,7 @@ sys.path.extend(["./core", "./core/tools"])
 
 import matplotlib
 c = input("Use Agg as matplotlib (avoid tkinter)[y/n]: ")
-if c.lower() == "y":
+if c.lower() in ["y", ""]:
     matplotlib.use("agg")
 from matplotlib import pyplot as plt
 
