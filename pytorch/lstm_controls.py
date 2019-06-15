@@ -145,6 +145,7 @@ def core(
                 train_loss.append(loss.data.item())
                 loss.backward()
                 optimizer.step()
+                raise Exception("Debug")
             # MSE Loss
             writer.add_scalars("loss/mse", {"Train": np.mean(train_loss)}, i)
             # RMSE Loss
@@ -221,9 +222,3 @@ def core(
                 "Test set predictions", fig, global_step=EPOCHS
             )
 
-# with torch.no_grad():
-#     future = 1
-#     pred_test = seq(val_ds.tensors[0], future=future)
-#     loss = criterion(pred_test[:, :-future], val_ds.tensors[1])
-#     print('test loss:', loss.item())
-#     # y = pred.detach().numpy()  # Fetch the result.
