@@ -27,13 +27,13 @@ from ProfileLoader import ProfileLoader
 SRC_PROFILE = {
     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
     "TEST_SIZE": 0.2,
-    "LAGS": [12, 16, 20],
+    "LAGS": [20, 32],
     "VAL_RATIO": 0.2,  # Validation ratio.
     "BATCH_SIZE": [32, 128],
-    "LEARNING_RATE": [0.003, 0.01],
-    "NEURONS": [(512, 1024), (1024, 2048)],
-    "EPOCHS": [100, 300, 500],
-    "NAME": "_"
+    "LEARNING_RATE": [0.003, 0.001],
+    "NEURONS": [(2048, 1024), (1024, 2048), (2048, 4096)],
+    "EPOCHS": [100, 300],
+    "NAME": "high_complex"
 }
 
 def df_loader() -> pd.DataFrame:
