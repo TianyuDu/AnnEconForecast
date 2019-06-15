@@ -36,6 +36,18 @@ SRC_PROFILE = {
     "NAME": "high_complex"
 }
 
+SRC_PROFILE = {
+    "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
+    "TEST_SIZE": 0.2,
+    "LAGS": 6,
+    "VAL_RATIO": 0.2,  # Validation ratio.
+    "BATCH_SIZE": 32,
+    "LEARNING_RATE": [0.01],
+    "NEURONS": [(256, 512)],
+    "EPOCHS": [1],
+    "NAME": "high_complex"
+}
+
 def df_loader() -> pd.DataFrame:
     df = pd.read_csv(
         "/home/ec2-user/AnnEconForecast/data/CPIAUCSL_monthly_change.csv",
@@ -50,7 +62,7 @@ def df_loader() -> pd.DataFrame:
     return df
 
 if __name__ == "__main__":
-    if input("Create new experiments?[y/n] ").lower() == "y":
+    if input("Create new experiments?[y/n] ").lower() in ["y", ""]:
         profile_set = gen_hparam_set(SRC_PROFILE)
     else:
         path = input("Directory of profiles: ")
@@ -68,6 +80,6 @@ if __name__ == "__main__":
                 **PROFILE, 
                 profile_record=PROFILE,
                 raw_df=raw_df,
-                verbose=False
+                verbose=True
             )
     print(f"\nTotal time taken: {datetime.now() - start}")
