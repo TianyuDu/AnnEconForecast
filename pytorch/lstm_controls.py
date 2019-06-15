@@ -106,8 +106,9 @@ def core(
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     if verbose:
         print("Device selected: ", device)
-
-    torch.set_default_tensor_type('torch.cuda.FloatTensor')
+    
+    if device.type == "cuda":
+        torch.set_default_tensor_type('torch.cuda.FloatTensor')
     # ==== Unnecessary ====
     train_dl = DeviceDataLoader(train_dl, device)
     val_dl = DeviceDataLoader(val_dl, device)
