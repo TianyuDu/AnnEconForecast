@@ -79,7 +79,7 @@ if __name__ == "__main__":
             PROFILE = profile_set[i]
             prg.set_description(
                 f"n={PROFILE['NEURONS']};l={PROFILE['LAGS']};a={PROFILE['LEARNING_RATE']};Total")
-            lstm_controls.core(
+            nnar_controls.core(
                 **PROFILE, 
                 profile_record=PROFILE,
                 raw_df=raw_df,
