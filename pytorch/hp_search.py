@@ -24,7 +24,7 @@ from ProfileLoader import ProfileLoader
 
 # For sunspot, train_size = 231, test_size = 58
 
-SRC_PROFILE = {
+LSTM_PROFILE = {
     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
     "TEST_SIZE": 0.2,
     "LAGS": [20, 32],
@@ -36,7 +36,7 @@ SRC_PROFILE = {
     "NAME": "high_complex"
 }
 
-SRC_PROFILE = {
+ANN_PROFILE = {
     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
     "TEST_SIZE": 0.2,
     "LAGS": 6,
@@ -48,9 +48,11 @@ SRC_PROFILE = {
     "NAME": "high_complex"
 }
 
+SRC_PROFILE = ANN_PROFILE
+
 def df_loader() -> pd.DataFrame:
     df = pd.read_csv(
-        "/home/ec2-user/AnnEconForecast/data/CPIAUCSL_monthly_change.csv",
+        "./data/CPIAUCSL_monthly_change.csv",
         index_col=0,
         date_parser=lambda x: datetime.strptime(x, "%Y-%m-%d"),
         engine="c"
