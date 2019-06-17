@@ -145,9 +145,9 @@ class SlpGenerator(GenericGenerator):
         x_train, y_train, x_val, y_val = map(
             torch.tensor, (x_train, y_train, x_val, y_val)
         )
-
-        assert batch_size <= x_train.shape[0] and batch_size <= x_val.shape[0],\
-            "Batch size cannot be greater than number of training or validation instances."
+        # if validation_ratio > 0:
+        #     assert batch_size <= x_train.shape[0] and batch_size <= x_val.shape[0],\
+        #         "Batch size cannot be greater than number of training or validation instances."
 
         train_ds = TensorDataset(x_train, y_train)
         train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=shuffle, pin_memory=pin_memory)

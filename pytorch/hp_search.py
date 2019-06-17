@@ -65,7 +65,7 @@ def df_loader() -> pd.DataFrame:
     return df
 
 if __name__ == "__main__":
-    if input("Create new experiments?[y/n] ").lower() in ["y", ""]:
+    if input("Create a new experiment?[y/n] ").lower() in ["y", ""]:
         profile_set = gen_hparam_set(SRC_PROFILE)
     else:
         path = input("Directory of profiles: ")
@@ -74,17 +74,24 @@ if __name__ == "__main__":
     print("Cuda avaiable: ", torch.cuda.is_available())
     
     # Expand lstm profiles
+    # profile_set_expand = list()
+    # for p in profile_set:
+    #     if "lstm" in p["NAME"]:
+    #         for i in [True, False]:
+    #             p_expand = p.copy()
+    #             p_expand["POOLING"] = i
+    #             profile_set_expand.append(p_expand)
+    #     elif "nnar" in p["NAME"]:
+    #         profile_set_expand.append(p)
+    #     else:
+    #         raise Exception
+    
+    # Reset validation ratio to 0
     profile_set_expand = list()
     for p in profile_set:
-        if "lstm" in p["NAME"]:
-            for i in [True, False]:
-                p_expand = p.copy()
-                p_expand["POOLING"] = i
-                profile_set_expand.append(p_expand)
-        elif "nnar" in p["NAME"]:
-            profile_set_expand.append(p)
-        else:
-            raise Exception
+        p_modified = p.copy()
+        p_modified["VAL_RATIO"] = 0.05
+        profile_set_expand.append(p_modified)
     
     start = datetime.now()
     raw_df = df_loader()
