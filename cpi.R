@@ -20,8 +20,7 @@ ts_all <- xts(x=df[c("CPIAUCSL")], order.by=anytime(df$DATE))
 autoplot(ts_all) +
     ggtitle("Consumer Price Index for All Urban Consumers: All Items (CPIAUCSL)") +
     xlab("Date") +
-    ylab("CPI") +
-    theme(plot.title = element_text(size=8, face="bold"))
+    ylab("Monthly Growth in Consumer Price Index (Percentage)")
 
 # Train and test spliting
 train_size <- as.integer(0.8 * length(ts_all))
@@ -53,10 +52,13 @@ autoplot(transformed) +
 adf.test(transformed)
 
 # Find the Best ARIMA Profile
-auto.arima(ts_train$CPIAUCSL, max.p=10, max.P=10, max.q=10, max.Q=10, max.d=10, max.D=10, stationary=FALSE, trace=TRUE)
+auto.arima(
+    ts_train$CPIAUCSL, max.order=30, max.d=3, max.D=3,
+    stationary=FALSE, trace=TRUE, stepwise=FALSE, approximation=FALSE,
+    ic="bic")
 
 # ==== Fit and Evaluate the Model ====
-profile <- c(6, 1, 2)
+profile <- c(5, 1, 3)
 model <- arima(ts_train, order=profile)
 res <- residuals(model)
 mse_train <- mean(res**2)
