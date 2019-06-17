@@ -36,7 +36,11 @@ PROFILE = {
     "LOG_NAME": "untitled"  # Name for tensorboard logs.
 }
 
-if __name__ == "__main__":
+
+def core(
+    profile_record: dict,
+    raw_df: pd.DataFrame
+    ) -> None:
     globals().update(PROFILE)
     try:
         input_name = input("Log name ([Enter] for default name): ")
