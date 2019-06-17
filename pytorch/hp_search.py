@@ -72,17 +72,39 @@ if __name__ == "__main__":
         loader = ProfileLoader(path)
         profile_set = loader.get_all()
     print("Cuda avaiable: ", torch.cuda.is_available())
+    
+    # Expand lstm profiles
+    profile_set_expand = list()
+    for p in profile_set:
+        if "lstm" in p["NAME"]:
+            for i in [True, False]:
+                p_expand = p.copy()
+                p_expand["POOLING"] = i
+                profile_set_expand.append(p_expand)
+        elif "nnar" in p["NAME"]:
+            profile_set_expand.append(p)
+        else:
+            raise Exception
+    
     start = datetime.now()
     raw_df = df_loader()
-    with tqdm.trange(len(profile_set)) as prg:
+    with tqdm.trange(len(profile_set_expand)) as prg:
         for i in prg:
-            PROFILE = profile_set[i]
+            PROFILE = profile_set_expand[i]
             prg.set_description(
                 f"n={PROFILE['NEURONS']};l={PROFILE['LAGS']};a={PROFILE['LEARNING_RATE']};Total")
-            nnar_controls.core(
-                **PROFILE, 
-                profile_record=PROFILE,
-                raw_df=raw_df,
-                verbose=False
-            )
+            if "lstm" in PROFILE["NAME"]:
+                lstm_controls.core(
+                    **PROFILE, 
+                    profile_record=PROFILE,
+                    raw_df=raw_df,
+                    verbose=False
+                )
+            elif "nnar" in PROFILE["NAME"]:
+                nnar_controls.core(
+                    **PROFILE, 
+                    profile_record=PROFILE,
+                    raw_df=raw_df,
+                    verbose=False
+                )
     print(f"\nTotal time taken: {datetime.now() - start}")
