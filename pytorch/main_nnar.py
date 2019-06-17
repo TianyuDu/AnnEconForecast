@@ -19,8 +19,7 @@ import SlpGenerator
 plt.style.use("seaborn-dark")
 
 
-
-# Settings 
+# Settings
 CPIAUCSUL_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/CPIAUCSL.csv"
 SUNSPOT_DATA = "/Users/tianyudu/Documents/Academics/EconForecasting/AnnEconForecast/data/sunspots.csv"
 SUNSPOT_DATA_EC2 = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv"
@@ -28,13 +27,13 @@ SUNSPOT_DATA_EC2 = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv
 # Let's call hyper-parameters profile.
 PROFILE = {
     "MODEL": "NNAR",
-    "TRAIN_SIZE": 231, # Include both training and validation sets.
+    "TRAIN_SIZE": 231,  # Include both training and validation sets.
     "TEST_SIZE": 58,
     "LAGS": 6,
-    "VAL_RATIO": 0.2, # Validation ratio.
+    "VAL_RATIO": 0.2,  # Validation ratio.
     "NEURONS": (64, 128),
     "EPOCHS": 100,
-    "LOG_NAME": "untitled" # Name for tensorboard logs.
+    "LOG_NAME": "untitled"  # Name for tensorboard logs.
 }
 
 if __name__ == "__main__":
@@ -45,7 +44,7 @@ if __name__ == "__main__":
         LOG_NAME = input_name
     except AssertionError:
         print(f"Default name: {LOG_NAME} is used.")
-    
+
     df = pd.read_csv(
         SUNSPOT_DATA,
         index_col=0,
@@ -82,7 +81,8 @@ if __name__ == "__main__":
             writer.add_scalars(
                 "loss/mse", {"Train": np.mean(train_loss)}, i)
             # Write RMSE
-            func = lambda x: np.sqrt(np.mean(x))
+
+            def func(x): return np.sqrt(np.mean(x))
             writer.add_scalars(
                 "loss/rmse", {"Train": func(train_loss)}, i)
             if i % 5 == 0:
