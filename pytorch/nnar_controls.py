@@ -4,8 +4,10 @@ NNAR, neural network auto-regression.
 """
 import json
 from datetime import datetime
+from typing import Tuple, Union
 
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
 import numpy as np
 import pandas as pd
 import torch
@@ -56,11 +58,12 @@ def core(
     NAME: str    
     ) -> None:
     if verbose:
-        input_name = input("Log name ([Enter] for default name): ")
-        assert input_name != ""
-        LOG_NAME = input_name
-    except AssertionError:
-        print(f"Default name: {LOG_NAME} is used.")
+        try:
+            input_name = input("Log name ([Enter] for default name): ")
+            assert input_name != ""
+            LOG_NAME = input_name
+        except AssertionError:
+            print(f"Default name: {LOG_NAME} is used.")
 
 
     # ======== Prepare the Dataset ========
