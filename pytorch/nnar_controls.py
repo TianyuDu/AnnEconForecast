@@ -26,34 +26,44 @@ SUNSPOT_DATA_EC2 = "/home/ec2-user/environment/AnnEconForecast/data/sunspots.csv
 
 # Let's call hyper-parameters profile.
 PROFILE = {
-    "MODEL": "NNAR",
-    "TRAIN_SIZE": 231,  # Include both training and validation sets.
-    "TEST_SIZE": 58,
+    "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
+    "TEST_SIZE": 0.2,
     "LAGS": 6,
     "VAL_RATIO": 0.2,  # Validation ratio.
+    "BATCH_SIZE": 32,
+    "LEARNING_RATE": 0.05,
     "NEURONS": (64, 128),
     "EPOCHS": 100,
-    "LOG_NAME": "untitled"  # Name for tensorboard logs.
+    "NAME": "example"  # Name for tensorboard logs.
 }
 
 
 def core(
     profile_record: dict,
-    raw_df: pd.DataFrame
+    raw_df: pd.DataFrame,
+    verbose: bool,
+        # set verbose=False when running hyper-parameter search.
+    # To ensure progress bar work correctly
+    # ==== Parameter from profile ====
+    TRAIN_SIZE: Union[int, float],
+    TEST_SIZE: Union[int, float],
+    LAGS: int,
+    VAL_RATIO: float,
+    BATCH_SIZE: int,
+    LEARNING_RATE: float,
+    NEURONS: Tuple[int],
+    EPOCHS: int,
+    NAME: str    
     ) -> None:
-    globals().update(PROFILE)
-    try:
+    if verbose:
         input_name = input("Log name ([Enter] for default name): ")
         assert input_name != ""
         LOG_NAME = input_name
     except AssertionError:
         print(f"Default name: {LOG_NAME} is used.")
 
-    df = pd.read_csv(
-        SUNSPOT_DATA,
-        index_col=0,
-        date_parser=lambda x: datetime.strptime(x, "%Y")
-    )
+    df = raw_df.copy()
+    
     df_train, df_test = df[:TRAIN_SIZE], df[-TEST_SIZE:]
     print(f"Train&validation size: {len(df_train)}, test size: {len(df_test)}")
 
