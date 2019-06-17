@@ -36,6 +36,7 @@ class DeviceDataLoader():
 
 # Example Profile
 profile = {
+    "POOLING": True,
     # data
     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
     "TEST_SIZE": 0.2,
@@ -58,6 +59,7 @@ def core(
     # set verbose=False when running hyper-parameter search.
     # To ensure progress bar work correctly
     # ==== Parameter from profile ====
+    POOLING: bool, # Use pooling network or not.
     TRAIN_SIZE: Union[int, float],
     TEST_SIZE: Union[int, float],
     LAGS: int,
@@ -99,8 +101,10 @@ def core(
     if verbose:
         print(f"Training Set @ {len(train_ds)}\nValidation Set: @ {len(val_ds)}")
     # build the model
-    net = lstm_models.PoolingLSTM(lags=LAGS, neurons=NEURONS)
-    # net = lstm_models.LastOutLSTM(neurons=NEURONS)
+    if POOLING:
+        net = lstm_models.PoolingLSTM(lags=LAGS, neurons=NEURONS)
+    else:
+        net = lstm_models.LastOutLSTM(neurons=NEURONS)
     
     # ==== Move everything to GPU (if avaiable) ====
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
