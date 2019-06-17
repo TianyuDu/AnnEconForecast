@@ -18,6 +18,7 @@ import tqdm
 import torch
 
 import lstm_controls
+import nnar_controls
 from param_set_generator import gen_hparam_set
 import DIRS
 from ProfileLoader import ProfileLoader
@@ -45,7 +46,7 @@ ANN_PROFILE = {
     "LEARNING_RATE": [0.03, 0.01, 0.003, 0.001],
     "NEURONS": [(64, 128), (128, 256), (256, 512)],
     "EPOCHS": [500, 1000],
-    "NAME": "ann_test"
+    "NAME": "NNAR"
 }
 
 SRC_PROFILE = ANN_PROFILE
