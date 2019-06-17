@@ -108,10 +108,11 @@ def core(
         print("Device selected: ", device)
     
     if device.type == "cuda":
-        torch.set_default_tensor_type('torch.cuda.FloatTensor')
+        torch.set_default_tensor_type("torch.cuda.FloatTensor")
+    
     # ==== Unnecessary ====
-    train_dl = DeviceDataLoader(train_dl, device)
-    val_dl = DeviceDataLoader(val_dl, device)
+    # train_dl = DeviceDataLoader(train_dl, device)
+    # val_dl = DeviceDataLoader(val_dl, device)
     # ==== end ====
 
     net.float()  # Cast all floating point parameters and buffers to double datatype
@@ -145,7 +146,7 @@ def core(
                 train_loss.append(loss.data.item())
                 loss.backward()
                 optimizer.step()
-                raise Exception("Debug")
+                # raise Exception("Debug")
             # MSE Loss
             writer.add_scalars("loss/mse", {"Train": np.mean(train_loss)}, i)
             # RMSE Loss
