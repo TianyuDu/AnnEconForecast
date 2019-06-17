@@ -33,26 +33,26 @@ LSTM_PROFILE = {
     "LEARNING_RATE": [0.003, 0.001],
     "NEURONS": [(2048, 1024), (1024, 2048), (2048, 4096)],
     "EPOCHS": [100, 300],
-    "NAME": "high_complex"
+    "NAME": "high_complex_lstm"
 }
 
 ANN_PROFILE = {
     "TRAIN_SIZE": 0.8,  # Include both training and validation sets.
     "TEST_SIZE": 0.2,
-    "LAGS": 6,
+    "LAGS": [6, 12, 20, 32],
     "VAL_RATIO": 0.2,  # Validation ratio.
     "BATCH_SIZE": 32,
-    "LEARNING_RATE": [0.01],
-    "NEURONS": [(256, 512)],
-    "EPOCHS": [1],
-    "NAME": "high_complex"
+    "LEARNING_RATE": [0.03, 0.01, 0.003, 0.001],
+    "NEURONS": [(64, 128), (128, 256), (256, 512)],
+    "EPOCHS": [500, 1000],
+    "NAME": "ann_test"
 }
 
 SRC_PROFILE = ANN_PROFILE
 
 def df_loader() -> pd.DataFrame:
     df = pd.read_csv(
-        "./data/CPIAUCSL_monthly_change.csv",
+        "/home/ec2-user/AnnEconForecast/data/CPIAUCSL_monthly_change.csv",
         index_col=0,
         date_parser=lambda x: datetime.strptime(x, "%Y-%m-%d"),
         engine="c"
