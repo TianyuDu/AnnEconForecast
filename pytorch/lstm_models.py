@@ -93,7 +93,7 @@ class PoolingLSTM(StackedLSTM, torch.nn.Module):
         # assert out_seq.shape == (inputs.size(1), self.lags)
         # Single step forecasting, using the pooling layer.
         out_seq = torch.stack(out_seq, dim=1).squeeze()
-        assert out_seq.shape == inputs.shape
+        # assert len(out_seq) == inputs.shape[1], f"{len(out_seq)} != {inputs.shape[1]}"
         # For each training instance:
         # INPUT: (x[t-L], ..., x[t-1])
         # OUT_SEQ: (x-hat[t-L+1], x-hat[t-L+2], ..., x-hat[t])
