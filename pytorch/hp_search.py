@@ -82,6 +82,6 @@ if __name__ == "__main__":
                 **PROFILE, 
                 profile_record=PROFILE,
                 raw_df=raw_df,
-                verbose=True
+                verbose=False
             )
     print(f"\nTotal time taken: {datetime.now() - start}")
