@@ -87,11 +87,17 @@ if __name__ == "__main__":
     #         raise Exception
     
     # Reset validation ratio to 0
+    # profile_set_expand = list()
+    # for p in profile_set:
+    #     p_modified = p.copy()
+    #     p_modified["VAL_RATIO"] = 0.05
+    #     profile_set_expand.append(p_modified)
+    
     profile_set_expand = list()
-    for p in profile_set:
-        p_modified = p.copy()
-        p_modified["VAL_RATIO"] = 0.05
-        profile_set_expand.append(p_modified)
+    for i in range(30):
+        p = profile_set[0].copy()
+        p["EPOCHS"] = (i + 1) * 50
+        profile_set_expand.append(p)
     
     start = datetime.now()
     raw_df = df_loader()
