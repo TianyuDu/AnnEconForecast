@@ -73,7 +73,7 @@ pbr==5.1.2
 pep8==1.7.1
 pexpect==4.6.0
 pickleshare==0.7.5
-Pillow==5.4.1
+Pillow==6.2.0
 ply==3.11
 poyo==0.4.2
 prometheus-client==0.6.0
